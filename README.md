@@ -1,1 +1,1 @@
-# FLAG-Camp-team1-Community-Management
+# FLAG Camp team1 project: Community Management Platform
