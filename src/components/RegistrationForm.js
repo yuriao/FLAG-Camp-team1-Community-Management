@@ -1,7 +1,7 @@
 import React,{Component,Fragment} from "react";
 
 import {Radio, Row, Col,Form, Input, Button, Checkbox } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+
 
 class RegisterForm extends Component{
     constructor(){
