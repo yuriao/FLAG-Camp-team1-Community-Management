@@ -1,0 +1,8 @@
+.payment {
+    display: inherit;
+    width: 80%;
+    /* float: right; */
+    height: 200px;
+    border: solid;
+    margin-top: 50px;
+}

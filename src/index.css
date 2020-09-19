@@ -1,6 +1,8 @@
 @import "./styles/Navigation.css";
 @import "./styles/TicketingManager.css";
 @import "./styles/TicketQuickShot.css";
+@import '~antd/dist/antd.css';
+@import "./styles/RegistrationLogin.css";
 
 body {
   margin: 0;
