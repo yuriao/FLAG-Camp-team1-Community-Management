@@ -1,0 +1,33 @@
+.form-wrap{
+    display: flex;
+    width: 500px;
+    /* height: 100vh; */
+    margin: auto;
+    margin-top: 100px;
+    margin-left: 300px;
+    align-items: center;
+    
+    
+    }
+    .form-wrap div{
+        width: 100%;
+       
+    }
+    
+    h5{
+        float: left;
+        margin-right: 260px;
+    }
+
+   Form{
+     
+       width: 400px;
+   }
+   .login-form-button{
+      color:black;
+   
+   }
+
+   label{
+      float: left;
+   }
