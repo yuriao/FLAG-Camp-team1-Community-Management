@@ -7,6 +7,7 @@ import TicketingManager from './pages/TicketingManager'
 import TicketingResident from './pages/TicketingResident'
 import RegistrationLogin from './pages/RegistrationLogIn.js';
 import RegistrationForm from './components/RegistrationForm.js';
+import DashboardResident from './pages/DashboardResident';
 
 function App() {
   return (
@@ -43,6 +44,9 @@ function App() {
         <RegistrationForm/>
       }/>
 
+      <Route exact path='/DashboardResident' render={() =>
+        <DashboardResident/>
+      }/>
     </Router>
   );
 }
