@@ -7,7 +7,7 @@ import TicketingResident from './pages/TicketingResident';
 
 ReactDOM.render(
   <React.StrictMode>
-  <TicketingResident />
+    <TicketingResident />
   </React.StrictMode>,
   document.getElementById('root')
 );
