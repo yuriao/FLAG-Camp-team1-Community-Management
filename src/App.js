@@ -5,6 +5,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import TicketingManager from './pages/TicketingManager'
 import TicketingResident from './pages/TicketingResident'
+import RegistrationLogin from './pages/RegistrationLogIn.js';
+import RegistrationForm from './components/RegistrationForm.js';
 
 function App() {
   return (
@@ -33,6 +35,14 @@ function App() {
       <Route exact path='/TicketingManager' render={() =>
         <TicketingManager/>
       }/>
+      <Route exact path='/login' render={() =>
+        <RegistrationLogin/>
+      }/>
+
+    <Route exact path='/register' render={() =>
+        <RegistrationForm/>
+      }/>
+
     </Router>
   );
 }
