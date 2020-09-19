@@ -1,0 +1,26 @@
+.ticketQuickShotBasePanel{
+    margin-top:15px;
+    margin-left:10px;
+    width:98%;
+    height:175px;
+    background-color:  rgb(240,240,240);
+    box-shadow: 5px 5px rgb(130,130,130);
+}
+
+.ticketQuickShotPanel{
+    margin-top:10px;
+    margin-left:30px;
+}
+
+.subjectTag{
+    font-size:30px;
+}
+
+.ticketLink{
+    margin-top:10px;
+}
+
+.ticketQuickShotBasePanel:hover{
+    background-color:  rgb(180,240,240);
+    box-shadow: 5px 5px rgb(180,180,180);
+}
