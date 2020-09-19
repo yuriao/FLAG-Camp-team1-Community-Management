@@ -1,3 +1,8 @@
+@import "./styles/TicketingResident.css";
+@import "./styles/Navigation.css";
+@import "./styles/Footer.css";
+@import "./styles/Button.css";
+
 .App {
   text-align: center;
 }
