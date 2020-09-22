@@ -14,24 +14,23 @@ import lombok.Setter;
 
 import javax.persistence.JoinColumn;
 
-
 @Entity
-@Table(name="ticket_work_assignee")
+@Table(name = "ticket_work_assignee")
 @Setter
 @Getter
-public class TicketWorkAssignee implements Serializable{
+public class TicketWorkAssignee implements Serializable {
 
 	private static final long serialVersionUID = -2455867938054036364L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	
+
 	@ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-	
+	@JoinColumn(name = "user_id")
+	private User user;
+
 	@ManyToOne
-    @JoinColumn(name = "ticket_id")
-    private Ticket ticket;
+	@JoinColumn(name = "ticket_id")
+	private Ticket ticket;
 }

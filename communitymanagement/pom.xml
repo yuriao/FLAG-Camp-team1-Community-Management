@@ -1,20 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>communitymanagement</groupId>
-  <artifactId>communitymanagement</artifactId>
-  <packaging>war</packaging>
-  <version>1.0</version>
-  <name>communitymanagement Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-  
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>communitymanagement</groupId>
+	<artifactId>communitymanagement</artifactId>
+	<packaging>war</packaging>
+	<version>1.0</version>
+	<name>communitymanagement Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
 		<springframework.version>5.2.3.RELEASE</springframework.version>
 		<maven.compiler.source>14</maven.compiler.source>
 		<maven.compiler.target>14</maven.compiler.target>
-  </properties>
-  
-  <dependencies>
+	</properties>
+
+	<dependencies>
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
@@ -171,17 +172,17 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.18</version>
 		</dependency>
-		
+
 		<dependency>
-	    	<groupId>org.projectlombok</groupId>
-	    	<artifactId>lombok</artifactId>
-	    	<version>1.18.12</version>
-    	<scope>provided</scope>
-    </dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.12</version>
+			<scope>provided</scope>
+		</dependency>
 
 	</dependencies>
 
-  <build>
-    <finalName>communitymanagement</finalName>
-  </build>
+	<build>
+		<finalName>communitymanagement</finalName>
+	</build>
 </project>
