@@ -18,7 +18,7 @@ import java.sql.Timestamp;
 
 
 @Entity
-@Table(name="TicketComments")
+@Table(name="ticket_comments")
 @Setter
 @Getter
 public class TicketComments implements Serializable {

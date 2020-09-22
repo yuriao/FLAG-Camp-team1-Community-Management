@@ -16,7 +16,7 @@ import javax.persistence.JoinColumn;
 
 
 @Entity
-@Table(name="TicketWorkASsignee")
+@Table(name="ticket_work_assignee")
 @Setter
 @Getter
 public class TicketWorkAssignee implements Serializable{
