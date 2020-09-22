@@ -9,15 +9,15 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/communitymanagement-servlet.xml,
+			/WEB-INF/communitymanagement-servlet.xml
 		</param-value>
 	</context-param>
 	
 	<!-- for authentication and authorization -->
-	<filter>
+<!-- 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>	
-	</filter>
+	</filter> -->
 	
 <!-- 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
@@ -31,7 +31,7 @@
 		</listener-class>
 	</listener>
 
-	<servlet>
+ 	<servlet>
 		<servlet-name>communitymanagement</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 	</servlet>
