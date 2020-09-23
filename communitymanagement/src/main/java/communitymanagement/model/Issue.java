@@ -28,7 +28,7 @@ public class Issue implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
-	@Column(name = "type")
+	@Column(name = "issue_type")
 	private String issueType;
 
 }
