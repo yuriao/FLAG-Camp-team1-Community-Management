@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -58,8 +60,10 @@ public class Ticket implements Serializable {
 	private Timestamp fixDate;
 	
 	@Column(name = "priority")
+	@Enumerated(EnumType.ORDINAL)
 	private TicketPriority priority;
 	
 	@Column(name = "status")
+	@Enumerated(EnumType.ORDINAL)
 	private TicketStatus status;
 }
