@@ -60,10 +60,10 @@ public class Ticket implements Serializable {
 	private Timestamp fixDate;
 	
 	@Column(name = "priority")
-	@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	private TicketPriority priority;
 	
 	@Column(name = "status")
-	@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	private TicketStatus status;
 }
