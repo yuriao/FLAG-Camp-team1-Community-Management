@@ -11,9 +11,18 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.JoinColumn;
+
 @Entity
 @Table(name = "issue")
+@Setter
+@Getter
 public class Issue implements Serializable {
+	
+	private static final long serialVersionUID = -2455867938054036364L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,35 +30,5 @@ public class Issue implements Serializable {
 	
 	@Column(name = "type")
 	private String issueType;
-
-	@OneToOne(mappedBy = "issueId")
-	private IssueCategory issueCategory;
-	
-	
-	public IssueCategory getIssueCategory() {
-		return issueCategory;
-	}
-
-	public void setIssueCategory(IssueCategory issueCategory) {
-		this.issueCategory = issueCategory;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getIssueType() {
-		return issueType;
-	}
-
-	public void setIssueType(String issueType) {
-		this.issueType = issueType;
-	}
-	
-	
 
 }

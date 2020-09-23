@@ -10,42 +10,24 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.sql.Timestamp;
+
 @Entity
 @Table(name = "location")
+@Setter
+@Getter
 public class Location implements Serializable {
 
+	private static final long serialVersionUID = -2455867938054036364L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	
-	@Column(name = "type")
+	@Column(name = "location_type")
 	private String locationType;
-
-	@OneToOne(mappedBy = "issueId")
-	private IssueCategory issueCategory;
-	
-	public IssueCategory getIssueCategory() {
-		return issueCategory;
-	}
-
-	public void setIssueCategory(IssueCategory issueCategory) {
-		this.issueCategory = issueCategory;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getLocationType() {
-		return locationType;
-	}
-
-	public void setLocationType(String locationType) {
-		this.locationType = locationType;
-	}
 	
 }
