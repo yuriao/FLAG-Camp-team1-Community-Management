@@ -3,13 +3,8 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import {Table} from 'antd';
 import {Button} from 'antd';
-import Blank from '../components/Blank';
-import DropDown from "../components/DropDown";
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 
-class TicketingManager extends Component {
+class TicketingStaff extends Component {
     constructor(){
         super();
         this.state = {
@@ -43,12 +38,6 @@ class TicketingManager extends Component {
     }
     // the point is, we only display 7 days on page, so only need 7 arrays. for exact days info, will pass from db and will add checking codes later
     // if need props, use this.props to access
-    addTickets(){
-        let cDivs = this.state.allTicketsTag;
-        //fetchAPI to create ticket
-        cDivs.push('tk')
-        this.setState({customDiv: cDivs })
-      }
 
     refershTickets(){
         let cDivs = this.state.allTicketsTag;
@@ -87,8 +76,8 @@ class TicketingManager extends Component {
             dataIndex: 'priority',
           },    
           {
-            title: 'AssignStaff',
-            dataIndex: 'assignee',
+            title: 'To Do',
+            dataIndex: 'acceptDecline',
           },      
         ];
         this.state.allTicketsTag.map((cdiv, i) => {
@@ -100,7 +89,7 @@ class TicketingManager extends Component {
                 created: this.state.allTicketsContent[i].created, 
                 category: this.state.allTicketsContent[i].category, 
                 priority: this.state.allTicketsContent[i].priority,
-                assignee: <DropDown elements={['Engineer1','Engineer2']}/>
+                acceptDecline: <div><Button>Accept</Button><Button>Decline</Button></div>
 
           })
         });
@@ -111,55 +100,16 @@ class TicketingManager extends Component {
                 <Navigation/>
 
                 <div class="managerWelcome">
-                    Welcome Manager
+                    Welcome Staff
                 </div>
-                <Container fluid>
-                  <Row>
-                    <Col xs={4}>
-                      <h2> Submit a Work Order </h2>
-                      <div>
-                          <Row classname='TicketSubmitManager'>  
-                            <Col>
-                                <Blank text="Home" />
-                                <Blank text="First Name" />
-                                <Blank text="Last Name" />
-                                <p>Description</p>
-                                <input text="Description" className = "description-box"></input>
-                                
-                            </Col>                  
-                            <Col>
-                                <Blank text="Email" />
-                                <Blank text="Phone" />
-                                <DropDown elements={['phone','email']} description="Contact Method" />
-                                <DropDown elements={['pos1','pos2']} description="Location" />
-                                <DropDown elements={['electricity','water','flooring','painting','windows/doors','yard','pest control','locksmith','trash','yard/pool','misc']} description="Category" />
-                            
-                            </Col>    
-                          </Row>
-                          <Row classname='allButtons'> 
-                            <Col>
-                                <Button>Submit</Button>
-                            </Col>
-                            <Col>
-                                <Button>Cancel</Button>
-                            </Col>
-                          </Row>
-                          
-                      </div> 
-                    </Col>
-                    <Col>
-                      <h2> Existing Work Orders </h2>
-                      <Button>Refersh Ticket</Button>
-                      <br/>
-                      <Table scroll={{y:400}} dataSource={datasource} columns={columns} />
-                    </Col>
-                  </Row>
-                </Container>
-                
+                <h2> Your Orders </h2>
+                <Button>Refersh Ticket</Button>
+                <br/>
+                <Table scroll={{y:500}} dataSource={datasource} columns={columns} />
                 <Footer/>
             </div>
         );
     }
 }
 
-export default TicketingManager;
+export default TicketingStaff;
