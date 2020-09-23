@@ -1,11 +1,13 @@
 .nav{
     width: 100%;
     padding: 20px;
+
     background-color: grey;
 }
 
 .left-nav {
-    margin-right:10%;
+    margin-left: 20px;
+    margin-right:5%;
     color:white;
     font-weight: bold;
 }
