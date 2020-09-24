@@ -6,10 +6,12 @@ import React,{Component,Fragment} from "react";
  class Login extends Component{
      constructor(){
          super();
-         this.state  = {};
+         this.state  = {
+             value:0
+         };
  
      }
-       onFinish = values => {
+       onFinish = (values) => {
          console.log('Received values of form: ', values);
        };
  
@@ -30,8 +32,8 @@ import React,{Component,Fragment} from "react";
          return(
                   <Fragment>
                      <div className = "form-header">
-                         <h5 className = "column">Login</h5>
-                         <span onClick={this.toggleForm}>Sign Up</span> 
+                         <p className = "column">Login</p>
+                     
                      </div>
                       
                      <div className = "form-content">
@@ -40,15 +42,15 @@ import React,{Component,Fragment} from "react";
                                  name="normal_login"
                                  className="login-form"
                                  initialvalues={{ remember: true }}
-                                 onFinish={()=>this.onFinish}
+                                 onFinish={this.onFinish}
                                  >
-                                 <div className= "inputbox">
+                               
                                  <Form.Item
-                                      name="username"
-                                     rules={[{ required: true, message: 'Please input your Username!' }]}
+                                      name="email"
+                                     rules={[{ required: true, message: 'Please input your Email!' }]}
                                  >
-                                     
-                                 <Input  prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+                                      
+                                 <Input type = "email" prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
                                  </Form.Item>
  
                                  <Form.Item
@@ -62,19 +64,6 @@ import React,{Component,Fragment} from "react";
                                  />
                                  </Form.Item>
  
-                                 </div>
-                                
- 
-                                 <Form.Item>
-                                    
-                                     <Radio.Group onChange={this.onChange} value={this.state.value}>
-                                         <Radio value={1}>Resident</Radio>
-                                         <Radio value={2}>Manager</Radio>
-                                         <Radio value={3}>Maintanence</Radio>
-                                      
-                                     </Radio.Group>
-              
-                                 </Form.Item>
                                  
                                  <Form.Item>
                             
