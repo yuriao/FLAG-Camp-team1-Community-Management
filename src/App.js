@@ -8,6 +8,7 @@ import TicketingResident from './pages/TicketingResident'
 import RegistrationLogin from './pages/RegistrationLogIn.js';
 import RegistrationForm from './components/RegistrationForm.js';
 import DashboardResident from './pages/DashboardResident';
+import Calender from './pages/Calender';
 
 function App() {
   return (
@@ -46,6 +47,10 @@ function App() {
 
       <Route exact path='/DashboardResident' render={() =>
         <DashboardResident/>
+      }/>
+
+      <Route exact path='/Calender' render={() =>
+        <Calender/>
       }/>
     </Router>
   );
