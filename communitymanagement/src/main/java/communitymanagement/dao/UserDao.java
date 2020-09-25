@@ -14,48 +14,44 @@ import communitymanagement.model.UserType;
 public class UserDao {
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	public void addUser(User user) {
-
 		user.setEnabled(true);
-        Session session = null;
+		Session session = null;
 
-        try {
-            session = sessionFactory.openSession();
-            session.beginTransaction();
-            session.save(user);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            session.getTransaction().rollback();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-		
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.save(user);
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
 	}
-		
-		
-		
+
 	public User getUserByUserId(int id) {
 		User user = null;
 		try (Session session = sessionFactory.openSession()) {
-                    session.beginTransaction();
+			session.beginTransaction();
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
 			Root<User> root = criteriaQuery.from(User.class);
 			criteriaQuery.select(root).where(builder.equal(root.get("id"), id));
 			user = session.createQuery(criteriaQuery).getSingleResult();
-                    session.getTransaction().commit();
+			session.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if (user != null)
 			return user;
 		return null;
-		
-		
+
 	}
 
 }
