@@ -6,9 +6,12 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import TicketingManager from './pages/TicketingManager'
 import TicketingStaff from './pages/TicketingStaff'
 import TicketingResident from './pages/TicketingResident'
-import RegistrationLogin from './pages/RegistrationLogIn.js';
-import RegistrationForm from './components/RegistrationForm.js';
+
 import DashboardResident from './pages/DashboardResident';
+
+import Login from './pages/Login';
+
+
 
 function App() {
   return (
@@ -41,12 +44,9 @@ function App() {
         <TicketingStaff/>
       }/>
       <Route exact path='/login' render={() =>
-        <RegistrationLogin/>
+        <Login/>
       }/>
 
-    <Route exact path='/register' render={() =>
-        <RegistrationForm/>
-      }/>
 
       <Route exact path='/DashboardResident' render={() =>
         <DashboardResident/>
