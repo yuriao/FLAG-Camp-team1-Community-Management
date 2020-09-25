@@ -14,14 +14,19 @@
        
     }
     
-    h5{
+    p{
         float: left;
-        margin-right: 260px;
+       
+        /* margin-right: 260px;
+        margin-bottom: 50px; */
+    }
+    .form-header{
+        margin-bottom: 50px;
     }
 
    Form{
-     
-       width: 400px;
+       
+       width: 80%;
    }
    .login-form-button{
       color:black;
@@ -31,3 +36,29 @@
    label{
       float: left;
    }
+
+   .registerform-header{
+       margin-bottom: 70px;
+   }
+
+
+   .main {
+    margin: 20px;
+    
+}
+
+
+.leftPart{
+/* background-color: black; */
+width: 40%;
+height: 700px;
+/* margin-right: 100px; */
+float: right;
+padding-left: 50px;
+
+}
+.rightPart{
+    width: 60%;
+    height: 700px;
+    padding-left: 50px;
+}

@@ -4,4 +4,6 @@
     background-color: grey;
     padding-top: 20px;
     padding-bottom: 20px;
+    position: fixed;
+    bottom: 0;
 }
