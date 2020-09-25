@@ -16,17 +16,7 @@ public class UserDao {
 	private SessionFactory sessionFactory;
 	
 	public void addUser(User user) {
-//		UserType type = user.getUserType();
-//		if (type.equals(UserType.RESIDENT)) {
-//			ResidentDao r = new ResidentDao();
-//			r.addResident(user);
-//		} else if (type.equals(UserType.MANAGER)) {
-//			
-//		} else if (type.equals(UserType.STAFF) ) {
-//			
-//		}
-//		
-//	}
+
 		user.setEnabled(true);
         Session session = null;
 
@@ -48,14 +38,14 @@ public class UserDao {
 		
 		
 		
-	public User getUserByUserName(String userName) {
+	public User getUserByUserId(int id) {
 		User user = null;
 		try (Session session = sessionFactory.openSession()) {
                     session.beginTransaction();
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
 			Root<User> root = criteriaQuery.from(User.class);
-			criteriaQuery.select(root).where(builder.equal(root.get("emailId"), userName));
+			criteriaQuery.select(root).where(builder.equal(root.get("id"), id));
 			user = session.createQuery(criteriaQuery).getSingleResult();
                     session.getTransaction().commit();
 		} catch (Exception e) {

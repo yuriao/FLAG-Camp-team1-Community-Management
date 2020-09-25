@@ -18,8 +18,8 @@ public class UserService {
     public void addUser(User user) {
     	userDao.addUser(user);
     }
-    public void getUserByUserName(String userName) {
-    	userDao.getUserByUserName(userName);
+    public void getUserByUserId(int id) {
+    	userDao.getUserByUserId(id);
     }
     
 
