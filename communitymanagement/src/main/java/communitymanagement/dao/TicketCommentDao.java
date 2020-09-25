@@ -3,14 +3,12 @@ package communitymanagement.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import communitymanagement.model.Ticket;
 import communitymanagement.model.TicketComment;
 
 @Repository
@@ -37,12 +35,11 @@ public class TicketCommentDao {
 		}
 	}
 	
-	public List<TicketComment> getAllTicketComments(Ticket ticket) {
+	public List<TicketComment> getAllTicketComments(int ticketId) {
 		List<TicketComment> ticketComment = new ArrayList<>();
-		int id = ticket.getId();
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
-			ticketComment = session.createCriteria(TicketComment.class).add(Restrictions.eq("ticket_id" ,id)).list();
+			ticketComment = session.createCriteria(TicketComment.class).add(Restrictions.eq("ticket_id" ,ticketId)).list();
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();

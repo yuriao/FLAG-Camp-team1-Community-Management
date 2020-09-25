@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import communitymanagement.dao.TicketCommentDao;
 import communitymanagement.model.TicketComment;
-import communitymanagement.model.Ticket;
 
 @Service
 public class TicketCommentService {
@@ -19,8 +18,8 @@ public class TicketCommentService {
 		ticketCommentDao.addTicketComment(ticketComment);
 	}
 	
-	public List<TicketComment> getAllTicketComments(Ticket ticket) {
-		return ticketCommentDao.getAllTicketComments(ticket);
+	public List<TicketComment> getAllTicketComments(int ticketId) {
+		return ticketCommentDao.getAllTicketComments(ticketId);
 	}
 	
 }
