@@ -22,6 +22,7 @@ public class TicketWorkAssigneeDao {
 	public void addTickeWorkAssignee(TicketWorkAssignee ticketWorkAssignee) {
 
 		Session session = null;
+
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
@@ -38,7 +39,9 @@ public class TicketWorkAssigneeDao {
 	}
 
 	public void deleteTickeWorkAssigneeById(int ticketWorkAssigneeId) {
+
 		Session session = null;
+
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
@@ -57,8 +60,12 @@ public class TicketWorkAssigneeDao {
 	}
 
 	public List<TicketWorkAssignee> getAllTicketWorkAssineeByTicketId(int ticketId) {
+
 		List<TicketWorkAssignee> ticketWorkAssignees = new ArrayList<>();
-		try (Session session = sessionFactory.openSession()) {
+		Session session = null;
+
+		try {
+			session = sessionFactory.openSession();
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 			CriteriaQuery<TicketWorkAssignee> criteriaQuery = criteriaBuilder.createQuery(TicketWorkAssignee.class);
@@ -68,13 +75,22 @@ public class TicketWorkAssigneeDao {
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
+
 		return ticketWorkAssignees;
 	}
 
 	public List<TicketWorkAssignee> getAllTicketWorkAssineeByUserId(int userId) {
+
 		List<TicketWorkAssignee> ticketWorkAssignees = new ArrayList<>();
-		try (Session session = sessionFactory.openSession()) {
+		Session session = null;
+
+		try {
+			session = sessionFactory.openSession();
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 			CriteriaQuery<TicketWorkAssignee> criteriaQuery = criteriaBuilder.createQuery(TicketWorkAssignee.class);
@@ -84,6 +100,10 @@ public class TicketWorkAssigneeDao {
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 		return ticketWorkAssignees;
 	}

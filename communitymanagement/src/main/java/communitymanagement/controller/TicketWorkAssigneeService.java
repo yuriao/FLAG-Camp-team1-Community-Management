@@ -16,7 +16,6 @@ public class TicketWorkAssigneeService {
 
 	public void addTickeWorkAssignee(TicketWorkAssignee ticketWorkAssignee) {
 		ticketWorkAssigneeDao.addTickeWorkAssignee(ticketWorkAssignee);
-
 	}
 
 	public void deleteTickeWorkAssigneeById(int ticketWorkAssigneeId) {
@@ -30,5 +29,4 @@ public class TicketWorkAssigneeService {
 	public List<TicketWorkAssignee> getAllTicketWorkAssineeByUserId(int userId) {
 		return ticketWorkAssigneeDao.getAllTicketWorkAssineeByUserId(userId);
 	}
-
 }
