@@ -28,6 +28,6 @@ public class StaffCategory implements Serializable {
     @Column(name = "category")
     private String category;
 
-    @OneToMany(mappedBy = "staff_category")
+    @OneToMany(mappedBy = "staffCategory")
     private List<Staff> staff;
 }

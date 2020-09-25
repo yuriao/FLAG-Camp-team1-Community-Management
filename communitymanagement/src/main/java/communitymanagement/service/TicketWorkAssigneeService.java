@@ -1,4 +1,4 @@
-package communitymanagement.controller;
+package communitymanagement.service;
 
 import java.util.List;
 
