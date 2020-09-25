@@ -17,10 +17,10 @@ import lombok.Setter;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "ticket_comments")
+@Table(name = "ticket_comment")
 @Setter
 @Getter
-public class TicketComments implements Serializable {
+public class TicketComment implements Serializable {
 	private static final long serialVersionUID = -2455760938564036364L;
 
 	@Id
