@@ -30,6 +30,6 @@ public class Issue implements Serializable {
 	@Column(name = "issue_type")
 	private String issueType;
 
-	@OneToMany(mappedBy = "issue", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "issue")
 	private List<WorkAssignment> workAssignments;
 }
