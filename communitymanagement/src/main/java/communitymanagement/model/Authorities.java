@@ -23,7 +23,7 @@ public class Authorities implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	private int user_id;
+	private int userId;
 
 	private String authorities;
 }
