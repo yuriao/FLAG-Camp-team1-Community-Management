@@ -8,8 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "staff_category")
@@ -25,4 +27,7 @@ public class StaffCategory implements Serializable {
 
     @Column(name = "category")
     private String category;
+
+    @OneToMany(mappedBy = "staff_category")
+    private List<Staff> staff;
 }

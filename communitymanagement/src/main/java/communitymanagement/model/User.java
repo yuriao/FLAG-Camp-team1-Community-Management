@@ -68,5 +68,5 @@ public class User implements Serializable {
 	private List<TicketWorkAssignee> ticketWorkAssignee;
 
 	@OneToMany(mappedBy = "user")
-	private List<TicketComments> ticketComments;
+	private List<TicketComment> ticketComment;
 }
