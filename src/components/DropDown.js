@@ -11,7 +11,7 @@ class DropDown extends Component {
         }
 
         return (
-            <div>
+            <div className="DropDown">
                 <p>{this.props.description}</p>
                 <select>
                     {items}
