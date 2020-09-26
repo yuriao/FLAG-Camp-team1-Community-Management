@@ -9,45 +9,42 @@ import TicketingResident from './pages/TicketingResident'
 
 import DashboardResident from './pages/DashboardResident';
 import Calender from './pages/Calender';
-
 import Login from './pages/Login';
-
-
+import DashboardManager from './pages/DashboardManager';
 
 function App() {
   return (
-  <Router basename={'/'}>
+    <Router basename={'/'}>
       <Route exact path='/' render={() =>
         <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <p>
+              Edit <code>src/App.js</code> and save to reload.
           </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
+            <a
+              className="App-link"
+              href="https://reactjs.org"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn React
           </a>
-        </header>
+          </header>
         </div>
-      }/>
+      } />
       <Route exact path='/TicketingResident' render={() =>
-        <TicketingResident/>
-      }/>
+        <TicketingResident />
+      } />
       <Route exact path='/TicketingManager' render={() =>
-        <TicketingManager/>
-      }/>
+        <TicketingManager />
+      } />
       <Route exact path='/TicketingStaff' render={() =>
-        <TicketingStaff/>
-      }/>
+        <TicketingStaff />
+      } />
       <Route exact path='/login' render={() =>
         <Login/>
       }/>
-
 
       <Route exact path='/DashboardResident' render={() =>
         <DashboardResident/>
@@ -56,6 +53,19 @@ function App() {
       <Route exact path='/Calender' render={() =>
         <Calender/>
       }/>
+
+
+      <Route exact path='/register' render={() =>
+        <RegistrationForm />
+      } />
+
+      <Route exact path='/DashboardResident' render={() =>
+        <DashboardResident />
+      } />
+
+      <Route exact path='/DashboardManager' render={() =>
+        <DashboardManager />
+      } />
     </Router>
   );
 }
