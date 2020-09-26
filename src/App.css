@@ -2,14 +2,11 @@
 @import "./styles/Navigation.css";
 @import "./styles/Footer.css";
 @import "./styles/Button.css";
-<<<<<<< HEAD
 
 @import "./styles/WorkOrder.css";
 @import "./styles/Calender.css";
 @import "./styles/Payment.css";
-=======
 @import "./styles/RegistrationLogin.css";
->>>>>>> 4bf69454... login page adjusted
 
 .App {
   text-align: center;
