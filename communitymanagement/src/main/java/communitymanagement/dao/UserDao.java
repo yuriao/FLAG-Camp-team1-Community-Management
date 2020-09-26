@@ -10,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import communitymanagement.model.User;
 import communitymanagement.model.UserType;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class UserDao {
+
 	@Autowired
 	private SessionFactory sessionFactory;
 
