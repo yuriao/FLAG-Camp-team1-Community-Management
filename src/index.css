@@ -3,7 +3,7 @@
 @import "./styles/TicketQuickShot.css";
 @import '~antd/dist/antd.css';
 @import "./styles/RegistrationLogin.css";
-@import "./styles/Calendaer.css";
+@import "./styles/Calender.css";
 
 body {
   margin: 0;
