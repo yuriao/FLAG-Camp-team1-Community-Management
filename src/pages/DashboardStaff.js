@@ -193,19 +193,21 @@ class DashboardStaff extends Component {
                         </div>
                     </div>
 
+
+
+                    <div className="work-order">
+                        <h5>Completed Work Orders</h5>
+                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={completed} />
+                    </div>
+                </div>
+
+                <div className="dashboard-main">
                     <div className="work-order">
                         <h5> Work Order In Progress</h5>
                         <Table scroll={{ y: 500 }} dataSource={datasource} columns={columns} />
                         <div>
                             <Button content="View Calendar"></Button>
                         </div>
-                    </div>
-                </div>
-
-                <div className="dashboard-main">
-                    <div className="work-order">
-                        <h5>Completed Work Orders</h5>
-                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={completed} />
                     </div>
                 </div>
 
