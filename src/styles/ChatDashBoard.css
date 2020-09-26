@@ -1,0 +1,16 @@
+.chat-item {
+    margin-top: 20px;
+}
+
+.chat-title {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.sender {
+    margin-right:5%;
+}
+
+.chat-dashboard{
+    padding-bottom: 0px;
+}

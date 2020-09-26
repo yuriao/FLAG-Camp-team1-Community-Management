@@ -33,11 +33,11 @@ class TicketingResident extends Component {
                     <p>Description</p>
                     <input text="Description" className = "description-box"></input>
                     <div className="buttons">
-                        <Button text="SUBMIT" />
-                        <Button text="CANCEL" />
+                        <Button text = "test"/>
+                        
                     </div>
                 </div>
-                <Footer />
+             
             </div>
         );
     }
