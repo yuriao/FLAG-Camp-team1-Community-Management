@@ -18,7 +18,9 @@ class Dashboard extends Component {
                 "subject": "water leak",
                 "created": "2020-09-18T14:48:00",
                 "category": "water",
-                "priority": "high"
+                "priority": "high",
+                "status": "open",
+                "review": <Button className="review-btn" content="review" />
             },
             {
                 "ticket_id": "0032134",
@@ -26,7 +28,9 @@ class Dashboard extends Component {
                 "subject": "bear sleeping on sofa",
                 "created": "2020-09-11T14:48:00",
                 "category": "misc",
-                "priority": "medium"
+                "priority": "medium",
+                "status": "assigned",
+                "review": <Button className="review-btn" content="review" />
             },
             {
                 "ticket_id": "0123435",
@@ -34,7 +38,9 @@ class Dashboard extends Component {
                 "subject": "sink clog",
                 "created": "2020-09-11T14:48:00",
                 "category": "sink",
-                "priority": "medium"
+                "priority": "medium",
+                "status": "in progress",
+                "review": <Button className="review-btn" content="review" />
             }
             ],
             news: [{
@@ -48,11 +54,11 @@ class Dashboard extends Component {
             {
                 "subject": "news3",
                 "date": "mm/dd/yy"
-            }, 
+            },
             {
                 "subject": "news4",
                 "date": "mm/dd/yy"
-            }, 
+            },
             {
                 "subject": "news5",
                 "date": "mm/dd/yy"
@@ -130,7 +136,36 @@ class Dashboard extends Component {
             title: 'Priority',
             dataIndex: 'priority',
         },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+        },
         ];
+
+
+        let completed = [{
+            title: 'Ticket ID',
+            dataIndex: 'ticket_id',
+            render: (text) => <a>{text}</a>,
+        },
+        {
+            title: 'Subject',
+            dataIndex: 'subject',
+        },
+        {
+            title: 'Category',
+            dataIndex: 'category',
+        },
+        {
+            title: 'Priority',
+            dataIndex: 'priority',
+        },
+        {
+            title: 'Review',
+            dataIndex: 'review',
+        },
+        ];
+
         this.state.allTicketsTag.map((cdiv, i) => {
             datasource.push({
                 key: i,
@@ -140,8 +175,8 @@ class Dashboard extends Component {
                 created: this.state.allTicketsContent[i].created,
                 category: this.state.allTicketsContent[i].category,
                 priority: this.state.allTicketsContent[i].priority,
-
-
+                status: this.state.allTicketsContent[i].status,
+                review: this.state.allTicketsContent[i].review,
             })
         });
 
@@ -166,10 +201,17 @@ class Dashboard extends Component {
                     </div>
                 </div>
 
-                <div className="dashboard-main work-order">
-                    <h5>Existing Work Orders</h5>
-                    <Table scroll={{ y: 500 }} dataSource={datasource} columns={columns} />
-                    <Button content="View Calendar"></Button>
+                <div className="dashboard-main">
+                    <div className="work-order">
+                        <h5>Existing Work Orders</h5>
+                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={columns} />
+                        <Button content="View Calendar"></Button>
+                    </div>
+
+                    <div className="work-order">
+                        <h5>Completed Work Orders</h5>
+                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={completed} />
+                    </div>
                 </div>
 
                 <Footer />
