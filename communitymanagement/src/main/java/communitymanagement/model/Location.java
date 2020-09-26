@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import java.sql.Timestamp;
 
 @Entity
 @Table(name = "location")

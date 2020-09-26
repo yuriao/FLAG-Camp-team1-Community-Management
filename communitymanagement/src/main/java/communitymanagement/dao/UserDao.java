@@ -7,10 +7,14 @@ import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import communitymanagement.model.User;
+<<<<<<< HEAD
 import communitymanagement.model.UserType;
 import org.springframework.stereotype.Repository;
+=======
+>>>>>>> 1e7305d705d2a37388588d941e05681c6cde2eff
 
 @Repository
 public class UserDao {
