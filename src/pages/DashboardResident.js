@@ -185,7 +185,7 @@ class Dashboard extends Component {
                 <Navigation />
                 <div className="dashboard-main">
                     <div className="balance">
-                        <p>Balance Due:</p>
+                        <div>Balance Due:</div>
                         <h1>$0.00</h1>
                         <Button className="center" content="Make a Payment" />
                         <Button className="center" content="Submit a Work Order" />

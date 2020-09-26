@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
+import { Input } from 'antd';
 
 class Blank extends Component {
     render() {
         return (
             <div className="blank">
                 <p>{this.props.text}</p>
-                <input type="text" required>
-                </input>
+                <Input placeholder={this.props.text} />
             </div>
         );
     }

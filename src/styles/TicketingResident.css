@@ -8,8 +8,9 @@
 }
 
 .ticket-btn {
-    display:block !important;
     width:150px !important;
+    margin-right: 20px;
+    margin-top: 20px;
 }
 
 .ticket-history-btn{
@@ -20,4 +21,8 @@
 .maintenance-history {
     width:650px !important;
     margin-left:0px !important;
+}
+
+.ticketing-subtitle {
+    margin-top: 5%;
 }
