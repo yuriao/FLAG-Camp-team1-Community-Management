@@ -8,6 +8,7 @@ import TicketingStaff from './pages/TicketingStaff'
 import TicketingResident from './pages/TicketingResident'
 
 import DashboardResident from './pages/DashboardResident';
+import Calender from './pages/Calender';
 
 import Login from './pages/Login';
 
@@ -50,6 +51,10 @@ function App() {
 
       <Route exact path='/DashboardResident' render={() =>
         <DashboardResident/>
+      }/>
+
+      <Route exact path='/Calender' render={() =>
+        <Calender/>
       }/>
     </Router>
   );
