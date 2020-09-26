@@ -47,18 +47,14 @@ function App() {
         <Login/>
       }/>
 
-      <Route exact path='/DashboardResident' render={() =>
-        <DashboardResident/>
-      }/>
-
       <Route exact path='/Calender' render={() =>
         <Calender/>
       }/>
 
 
-      <Route exact path='/register' render={() =>
+      {/* <Route exact path='/register' render={() =>
         <RegistrationForm />
-      } />
+      } /> */}
 
       <Route exact path='/DashboardResident' render={() =>
         <DashboardResident />
