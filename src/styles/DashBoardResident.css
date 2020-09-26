@@ -3,6 +3,7 @@
     display: inline-block;
     height: -webkit-fill-available;
     margin-right:20px;
+    vertical-align:top;
 }
 
 .balance {
@@ -56,9 +57,9 @@
 }
 
 .work-order{
-    width:45%;
-    float:right;
-    margin-right:5%;
-    margin-top:5%;
-    margin-left:0px !important;
+    margin-top:10%;
+}
+
+.review-btn{
+    width:80px !important;
 }
