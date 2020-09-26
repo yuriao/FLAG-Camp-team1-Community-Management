@@ -1,0 +1,64 @@
+.dashboard-main{
+    width:45%;
+    display: inline-block;
+    height: -webkit-fill-available;
+    margin-right:20px;
+}
+
+.balance {
+    margin-top: 10%;
+    text-align: center;
+    background: #dedcdc9d;
+    border-color:  #dedcdc9d;
+    border-width:1px;
+    border-style: solid;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.welcome {
+    margin-left: 5%;
+}
+
+.dashboard-item {
+    margin-top:10%;
+    background: #dedcdc9d;
+    border-color:  #dedcdc9d;
+    border-width:1px;
+    border-style: solid;
+    margin-left: 5%;
+    margin-right: 5%;
+    font-family: Proxima Nova, sans-serif;
+    padding: 2%;
+}
+
+.chat-button {
+    margin-top:5%;
+}
+
+.id-ticket {
+    margin-right: 5%;
+}
+
+.status-ticket {
+    float:right;
+}
+
+.top {
+    position:relative;
+    top:0px;
+}
+
+.work-order{
+    width:45%;
+    float:right;
+    margin-right:5%;
+    margin-top:5%;
+    margin-left:0px !important;
+}
