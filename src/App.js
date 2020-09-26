@@ -11,6 +11,7 @@ import DashboardResident from './pages/DashboardResident';
 import Calender from './pages/Calender';
 import Login from './pages/Login';
 import DashboardManager from './pages/DashboardManager';
+import DashboardStaff from './pages/DashboardStaff';
 
 function App() {
   return (
@@ -65,6 +66,10 @@ function App() {
 
       <Route exact path='/DashboardManager' render={() =>
         <DashboardManager />
+      } />
+
+      <Route exact path='/DashboardStaff' render={() =>
+        <DashboardStaff />
       } />
     </Router>
   );
