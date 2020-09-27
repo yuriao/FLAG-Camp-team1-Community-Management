@@ -30,7 +30,7 @@ class DropDown extends Component {
         return (
             <div className="DropDown">
                 <p>{this.props.description}</p>
-                <select onChange={this.sendData}>
+                <select className="DropDownSelect" onChange={this.sendData}>
                     {items}
                 </select>
             </div>
