@@ -16,4 +16,8 @@ public class StaffCategoryService {
     public List<StaffCategory> getAllStaffCategory() {
         return staffCategoryDao.getAllStaffCategory();
     }
+    
+    public StaffCategory getStaffCategoryById(int staffCategoryId) {
+    	return staffCategoryDao.getStaffCategoryById(staffCategoryId);
+    }
 }

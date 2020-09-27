@@ -52,5 +52,9 @@ public class TicketService {
 	public List<Ticket> getTicketsByUser(int userId) {
 		return ticketDao.getAllTicketsByUserId(userId);
 	}
+	
+	public List<Ticket> getAllTickets() {
+		return ticketDao.getAllTickets();
+	}
 
 }

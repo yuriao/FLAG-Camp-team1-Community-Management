@@ -82,4 +82,21 @@ public class TicketDao {
 			}
 		}
 	}
+	
+	public List<Ticket> getAllTickets() {
+		List<Ticket> tickets = new ArrayList<Ticket>();
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+			CriteriaQuery<Ticket> criteriaQuery = criteriaBuilder.createQuery(Ticket.class);
+			Root<Ticket> root = criteriaQuery.from(Ticket.class);
+			criteriaQuery.select(root);
+			tickets = session.createQuery(criteriaQuery).getResultList();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return tickets;
+	}
 }

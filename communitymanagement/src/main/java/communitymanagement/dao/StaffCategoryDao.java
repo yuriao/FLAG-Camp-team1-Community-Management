@@ -1,6 +1,8 @@
 package communitymanagement.dao;
 
 import communitymanagement.model.StaffCategory;
+import communitymanagement.model.User;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +35,23 @@ public class StaffCategoryDao {
         }
 
         return staffCategories;
+    }
+    
+    public StaffCategory getStaffCategoryById(int staffCategoryId) {
+    	StaffCategory staffCategory = null;
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<StaffCategory> criteriaQuery = builder.createQuery(StaffCategory.class);
+			Root<StaffCategory> root = criteriaQuery.from(StaffCategory.class);
+			criteriaQuery.select(root).where(builder.equal(root.get("id"), staffCategoryId));
+			staffCategory = session.createQuery(criteriaQuery).getSingleResult();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (staffCategory != null)
+			return staffCategory;
+		return null;
     }
 }
