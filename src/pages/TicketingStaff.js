@@ -3,7 +3,8 @@ import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import {Table} from 'antd';
 import {Button} from 'antd';
-
+import {Space} from 'antd';
+import Ajax from '../components/AJAX'
 class TicketingStaff extends Component {
     constructor(){
         super();
@@ -39,12 +40,97 @@ class TicketingStaff extends Component {
     // the point is, we only display 7 days on page, so only need 7 arrays. for exact days info, will pass from db and will add checking codes later
     // if need props, use this.props to access
 
-    refershTickets(){
-        let cDivs = this.state.allTicketsTag;
-        //fetchAPI to get all tickets
-        cDivs.push('tk')
-        this.setState({customDiv: cDivs })
-      }
+    refershTickets=()=>{
+      Ajax('GET', '/tickets/staff?'+sessionStorage.username, [],
+        // successful callback
+        function(res) {
+          let items = JSON.parse(res);
+          if (!items || items.length === 0) {
+            console.log('No tickets.');
+          } else {
+            let cDivs = items;
+            this.setState({customDiv: cDivs })
+          }
+        },
+        // failed callback
+        function() {
+          console.log('Cannot load tickets.');
+        }
+      );
+      
+    }
+
+    acceptTicket=()=>{
+      let ticketData = {
+        "ticket_id": Math.random().toString(12).substring(2, 9) + Math.random().toString(12).substring(2, 9),
+        //"user_id": sessionStorage.user_id,
+        "user_id": '123',
+        "firstName": this.state.firstName,
+        "lastName":  this.state.lastName,
+        "unit":this.state.unit,
+        "priority": this.state.priorty,
+        "subject": this.state.subject,
+        "location": this.state.location,
+        "issue": this.state.location,
+        "description": this.state.description,
+        "category": this.state.category,
+        "created": time,
+        "availability": "",
+        "assignee": "",
+        "fix_date":"",
+        "ticket_status":"",
+        "contact_method":this.state.contact_method,
+        "status":"open"
+      };
+      console.log(ticketData);
+      //fetchAPI to create ticket
+      Ajax('POST', "/tickets", ticketData,
+        // successful callback
+        function(res) {
+          console.log("good");
+        },
+        // failed callback
+        function() {
+          console.log('fail');
+        }
+      );
+    }
+
+    submitTicket=()=>{
+      let ticketData = {
+        "ticket_id": Math.random().toString(12).substring(2, 9) + Math.random().toString(12).substring(2, 9),
+        //"user_id": sessionStorage.user_id,
+        "user_id": '123',
+        "firstName": this.state.firstName,
+        "lastName":  this.state.lastName,
+        "unit":this.state.unit,
+        "priority": this.state.priorty,
+        "subject": this.state.subject,
+        "location": this.state.location,
+        "issue": this.state.location,
+        "description": this.state.description,
+        "category": this.state.category,
+        "created": time,
+        "availability": "",
+        "assignee": "",
+        "fix_date":"",
+        "ticket_status":"",
+        "contact_method":this.state.contact_method,
+        "status":"open"
+      };
+      console.log(ticketData);
+      //fetchAPI to create ticket
+      Ajax('POST', "/tickets", ticketData,
+        // successful callback
+        function(res) {
+          console.log("good");
+        },
+        // failed callback
+        function() {
+          console.log('fail');
+        }
+      );
+    }
 
     render() {
         let datasource=[];
@@ -89,7 +175,7 @@ class TicketingStaff extends Component {
                 created: this.state.allTicketsContent[i].created, 
                 category: this.state.allTicketsContent[i].category, 
                 priority: this.state.allTicketsContent[i].priority,
-                acceptDecline: <div><Button>Accept</Button><Button>Decline</Button></div>
+                acceptDecline: <div><Button onClick={this.acceptTickets(i)}>Accept</Button><Button>Decline</Button></div>
 
           })
         });
@@ -102,10 +188,12 @@ class TicketingStaff extends Component {
                 <div class="managerWelcome">
                     Welcome Staff
                 </div>
-                <h2> Your Orders </h2>
-                <Button>Refersh Ticket</Button>
-                <br/>
-                <Table scroll={{y:500}} dataSource={datasource} columns={columns} />
+                <h3> Your Orders </h3>
+                <Space direction="vertical">
+                  <Button>Refersh Ticket</Button>
+                  <Table scroll={{y:500}} dataSource={datasource} columns={columns} />
+                </Space>
+                
                 <Footer/>
             </div>
         );
