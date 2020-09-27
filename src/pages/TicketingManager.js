@@ -11,6 +11,41 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Ajax from '../components/AJAX'
 
+const columns=[{
+    title: 'Ticket ID',
+    dataIndex: 'ticket_id',
+    render: (text) => <a>{text}</a>,
+  },
+  {
+    title: 'Unit',
+    dataIndex: 'unit',
+  },
+  {
+    title: 'Subject',
+    dataIndex: 'subject',
+  },
+  {
+    title: 'Submitted time',
+    dataIndex: 'created',
+    sorter: (a, b) => Date.parse(a.created) - Date.parse(b.created),
+    sortDirections: ['descend', 'ascend'],
+  },
+  {
+    title: 'Category',
+    dataIndex: 'category',
+  },
+  {
+    title: 'Priority',
+    dataIndex: 'priority',
+    sorter: (a, b) => a.priortyidx - b.priortyidx,
+    sortDirections: ['descend', 'ascend'],
+  },    
+  {
+    title: 'Assign Staff',
+    dataIndex: 'assignee',
+  },  
+];
+
 class TicketingManager extends Component {
     constructor(){
         super();
@@ -58,11 +93,11 @@ class TicketingManager extends Component {
     }
     
     componentDidMount(){
-        this.ReloadPage();
+        this.ReloadTickets();
     }
 
     // refersh page function 
-    ReloadPage = ()=>{
+    ReloadTickets = ()=>{
       
       let all_assignees=this.state.possible_assignees;
       let dsource=[];
@@ -212,22 +247,26 @@ class TicketingManager extends Component {
               console.log('No tickets.');
             } else {
               
-              //remap priority
-              items.map((c,i) => {
-                if(items[i].priority.equals('high')){
-                  items[i].priorityIdx=3;
-                }
-                if(items[i].priority.equals('medium')){
-                  items[i].priorityIdx=2;
-                }
-                if(items[i].priority.equals('low')){
-                  items[i].priorityIdx=1;
-                }
+              let ttags = [];
+            
+                //convert priorty for sorting
+              items.map((cdiv,i)=>{
+              if(items[i].priorty.equals("high")){
+                items[i].priortyidx=3;
               }
-              );
-
-              this.setState({allTicketsContent: items })
-              this.ReloadPage();
+              if(items[i].priorty.equals("medium")){
+                items[i].priortyidx=2;
+              }
+              if(items[i].priorty.equals("low")){
+                items[i].priortyidx=1;
+              }
+  
+              ttags.push(i);
+            })
+  
+            this.setState({allticketsContent:items});
+            this.setState({allTicketsTag:ttags});
+            this.ReloadTickets();
             }
           },
           // failed callback
@@ -237,10 +276,25 @@ class TicketingManager extends Component {
         );
         
       }
+      
+    AssignmentCallBack = (childData) => {
+      let existingAssignments=this.state.assignment;
+      let tiid=childData.iid;
+      let asm=childData.assignment;
+      let obj={};
+      obj[tiid]=asm;
+      existingAssignments.push(obj);
+      this.setState(
+        {assignment:existingAssignments}
+      )
+    }
 
-    assignTickets=(childData)=>{
-      this.state.allTicketsContent[childData.iid].assignee=childData.assignee;
-      Ajax('PUT', "/tickets/{ticket_id}/assignees", ticketData,
+    assignTickets=(event)=>{
+      console.log(event.target.iid);
+      let obj=this.state.assignment.find(o=>o.tiid==event.target);
+      
+      this.state.allTicketsContent[event.target.iid].assignee=obj.tiid;
+      Ajax('POST', "/tickets", this.state.allTicketsContent[event.target.iid],
           // successful callback
           function(res) {
             console.log("good");
@@ -250,46 +304,32 @@ class TicketingManager extends Component {
             console.log('fail');
           }
         );
+      let i=event.target.iid;
+      let assigneeTagContent=<Button iid={i} onClick={this.cancelTicket}>Cancel</Button>;;
+      this.state.datasource[event.target.iid].assignee=assigneeTagContent;
+      this.setState();
+    }
+
+    cancelTickets=(event)=>{
+      this.state.allTicketsContent[event.target.iid].assignee="";
+      this.state.allTicketsContent[event.target.iid].status="open";
+      Ajax('POST', "/tickets", this.state.allTicketsContent[event.target.iid],
+          // successful callback
+          function(res) {
+            console.log("good");
+          },
+          // failed callback
+          function() {
+            console.log('fail');
+          }
+        );
+      let assigneeTagContent=<div><DropDown iid={event.target.iid} parentCallback = {this.AssignmentCallBack} elements={['Engineer1','Engineer2']}/><Button iid={event.target.iid} onClick={this.assignTickets}>Confirm</Button></div>;
+      this.state.datasource[event.target.iid].assignee=assigneeTagContent;
+      this.setState();
     }
 
     render() {
-        let columns=[{
-            title: 'Ticket ID',
-            dataIndex: 'ticket_id',
-            render: (text) => <a>{text}</a>,
-          },
-          {
-            title: 'Unit',
-            dataIndex: 'unit',
-          },
-          {
-            title: 'Subject',
-            dataIndex: 'subject',
-          },
-          {
-            title: 'Submitted time',
-            dataIndex: 'created',
-            sorter: (a, b) => Date.parse(a.created) - Date.parse(b.created),
-            sortDirections: ['descend', 'ascend'],
-          },
-          {
-            title: 'Category',
-            dataIndex: 'category',
-          },
-          {
-            title: 'Priority',
-            dataIndex: 'priority',
-            sorter: (a, b) => (a.priorityIdx) - (b.priorityIdx),
-            sortDirections: ['descend', 'ascend'],
-          },    
-          {
-            title: 'Assign Staff',
-            dataIndex: 'assignee',
-          },  
-           
-        ];
-        
-
+      console.log(this.state.datasource);
         return(
             <div>
                 <Navigation/>
@@ -331,7 +371,7 @@ class TicketingManager extends Component {
                       <h3> Existing Work Orders </h3>
                       <Space direction="vertical">
                         <Button>Refersh Ticket</Button>
-                        <Table scroll={{y:400}} dataSource={datasource} columns={columns} />
+                        <Table scroll={{y:400}} dataSource={this.state.datasource} columns={columns} />
                       </Space>
                     </Col>
                   </Row>
