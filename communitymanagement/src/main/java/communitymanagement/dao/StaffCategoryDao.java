@@ -1,18 +1,18 @@
 package communitymanagement.dao;
 
-import communitymanagement.model.StaffCategory;
-import communitymanagement.model.User;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
-import java.util.List;
+import communitymanagement.model.StaffCategory;
 
 @Repository
 public class StaffCategoryDao {
@@ -54,4 +54,41 @@ public class StaffCategoryDao {
 			return staffCategory;
 		return null;
     }
+    
+    public StaffCategory getStaffCategoryByName(String name) {
+    	StaffCategory staffCategory = null;
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<StaffCategory> criteriaQuery = builder.createQuery(StaffCategory.class);
+			Root<StaffCategory> root = criteriaQuery.from(StaffCategory.class);
+			criteriaQuery.select(root).where(builder.equal(root.get("category"), name));
+			staffCategory = session.createQuery(criteriaQuery).getSingleResult();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (staffCategory != null)
+			return staffCategory;
+		return null;
+    }
+    
+    public void addStaffCategory(StaffCategory staffCategory) {
+    	Session session = null;
+		try {
+			session = sessionFactory.openSession();
+			session.beginTransaction();
+			session.saveOrUpdate(staffCategory);
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		} 
+    }
+    
+    
 }

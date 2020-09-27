@@ -20,4 +20,12 @@ public class StaffCategoryService {
     public StaffCategory getStaffCategoryById(int staffCategoryId) {
     	return staffCategoryDao.getStaffCategoryById(staffCategoryId);
     }
+    
+    public void addStaffCategory(StaffCategory staffCategory) {
+    	staffCategoryDao.addStaffCategory(staffCategory);
+    }
+    
+    public StaffCategory getStaffCategoryByName(String name) {
+    	return staffCategoryDao.getStaffCategoryByName(name);
+    }
 }

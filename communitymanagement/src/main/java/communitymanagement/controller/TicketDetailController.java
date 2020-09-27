@@ -19,20 +19,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import communitymanagement.entity.AssigneeEntity;
 import communitymanagement.entity.AssigneeForm;
+import communitymanagement.entity.IssueCategoryForm;
 import communitymanagement.entity.ManagerTicketOverview;
 import communitymanagement.entity.ManagerTicketSystemResponse;
 import communitymanagement.entity.RegistrationForm;
 import communitymanagement.entity.SimpleResponse;
 import communitymanagement.entity.TicketCommentForm;
+import communitymanagement.entity.WorkAssignmentForm;
+import communitymanagement.model.IssueCategory;
 import communitymanagement.model.Manager;
 import communitymanagement.model.Resident;
 import communitymanagement.model.Staff;
 import communitymanagement.model.StaffCategory;
 import communitymanagement.model.Ticket;
 import communitymanagement.model.TicketComment;
+import communitymanagement.model.TicketStatus;
 import communitymanagement.model.TicketWorkAssignee;
 import communitymanagement.model.User;
 import communitymanagement.model.UserType;
+import communitymanagement.model.WorkAssignment;
+import communitymanagement.service.IssueCategoryService;
 import communitymanagement.service.StaffCategoryService;
 import communitymanagement.service.TicketCommentService;
 import communitymanagement.service.TicketService;
@@ -65,6 +71,9 @@ public class TicketDetailController {
 	@Autowired
 	AssigneeRecommendationFacadeImpl assigneeRecommendationFacadeImpl;
 	
+	@Autowired
+	IssueCategoryService issueCategoryService;
+	
 	@PostMapping("/registration")
 	public SimpleResponse createUser(@RequestBody RegistrationForm form) throws ParseException {
 		User user = new User();
@@ -80,11 +89,13 @@ public class TicketDetailController {
 			resident.setBirthday(bDay);
 			resident.setUnitNum(form.getUnitNum());
 			resident.setUser(user);
+			user.setUserType(UserType.RESIDENT);
 			user.setResident(resident);
 			user.setStaff(null);
 			user.setManager(null);
 		} else if (form.getUserType().equals("manager")) {
 			Manager manager = new Manager();
+			user.setUserType(UserType.MANAGER);
 			user.setManager(manager);
 			user.setResident(null);
 			user.setStaff(null);
@@ -94,6 +105,7 @@ public class TicketDetailController {
 			StaffCategory staffCategory = staffCategoryService.getStaffCategoryById(form.getStaffCategoryId());
 			staff.setStaffCategory(staffCategory);
 			staff.setUser(user);
+			user.setUserType(UserType.STAFF);
 			user.setStaff(staff);
 			user.setManager(null);
 			user.setResident(null);
@@ -106,12 +118,45 @@ public class TicketDetailController {
 		return simpleResponse;
 	}
 	
+	@PostMapping("/addStaffCategory")
+	public SimpleResponse addStaffCategory(@RequestBody StaffCategory staffCategory){
+		staffCategoryService.addStaffCategory(staffCategory);
+		SimpleResponse simpleResponse = SimpleResponse.builder().status("200").message("Done").build();
+		return simpleResponse;
+	}
+	
+	
+	@PostMapping("/addIssueCategory")
+	public SimpleResponse addIssueCategory(@RequestBody IssueCategoryForm form){
+		issueCategoryService.addIssueCategoryByName(form.getIssue(), form.getLocation());
+		SimpleResponse simpleResponse = SimpleResponse.builder().status("200").message("Done").build();
+		return simpleResponse;
+	}
+	
+	@PostMapping("/addWorkAssignment")
+	public SimpleResponse addWorkAssignment(@RequestBody WorkAssignmentForm form){
+		StaffCategory staffCategory = staffCategoryService.getStaffCategoryByName(form.getStaffCategoryName());
+		if (staffCategory == null) {
+			staffCategory = new StaffCategory();
+			staffCategory.setCategory(form.getStaffCategoryName());
+			staffCategoryService.addStaffCategory(staffCategory);
+		}
+		IssueCategory issueCategory = issueCategoryService.getIssueCategoryById(form.getIssueCategoryId());
+		WorkAssignment workAssignment = new WorkAssignment();
+		workAssignment.setIssue(issueCategory.getIssue());
+		workAssignment.setStaffCategory(staffCategory);
+		workAssignmentService.addWorkAssignment(workAssignment);
+		SimpleResponse simpleResponse = SimpleResponse.builder().status("200").message("Done").build();
+		return simpleResponse;
+	}
+	
+	
 	@PostMapping("/tickets/submit") 
 	public SimpleResponse createTicket(@RequestBody Ticket ticket, @RequestParam(value = "user") int userId){
 		User user = userService.getUserByUserId(userId);
 		ticket.setUser(user);
 		ticketService.addTicket(ticket);
-		SimpleResponse simpleResponse = SimpleResponse.builder().status("200").message("ticketCreated").build();
+		SimpleResponse simpleResponse = SimpleResponse.builder().status("200").message("Ticket created").build();
 		return simpleResponse;
 	}
 	
@@ -203,6 +248,10 @@ public class TicketDetailController {
 			ticketWorkAssignee.setUser(assignee);
 			ticketWorkAssigneeService.addTickeWorkAssignee(ticketWorkAssignee);
 		}
+		// update ticket status
+		ticket.setStatus(TicketStatus.ASSINGED);
+		ticketService.addTicket(ticket);
+		
 		SimpleResponse simpleResponse = SimpleResponse.builder().status("200").message("Ticket Assigned").build();
 		return simpleResponse;
 	}
