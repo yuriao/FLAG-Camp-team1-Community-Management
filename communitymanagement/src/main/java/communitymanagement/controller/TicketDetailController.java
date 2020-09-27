@@ -47,6 +47,7 @@ import communitymanagement.service.UserService;
 import communitymanagement.service.WorkAssignmentService;
 import communitymanagement.servicefacade.AssigneeRecommendationFacadeImpl;
 
+
 @RestController
 public class TicketDetailController {
 	
@@ -310,4 +311,5 @@ public class TicketDetailController {
 		
 		return simpleResponse;
 	}
+
 }

@@ -13,9 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import communitymanagement.model.Issue;
-import communitymanagement.model.Location;
-import communitymanagement.model.User;
 import communitymanagement.model.IssueCategory;
+import communitymanagement.model.Location;
 
 
 @Repository

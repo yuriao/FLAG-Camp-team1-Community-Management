@@ -1,0 +1,16 @@
+.news-item {
+    margin-top: 20px;
+}
+
+.news-title {
+    margin-bottom: 20px;
+    width: 500px;
+}
+
+.date {
+    float: right;
+}
+
+.news{
+    margin-bottom: 20%;
+}

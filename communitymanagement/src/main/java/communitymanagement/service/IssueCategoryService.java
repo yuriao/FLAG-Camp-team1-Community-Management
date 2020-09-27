@@ -24,11 +24,11 @@ public class IssueCategoryService {
 	public void addIssueCategory(Issue issue, Location location) {
 		issueCategoryDao.addIssueCategory(issue, location);
 	}
-	
+
 	public List<IssueCategory> getAlIssueCategories() {
 		return issueCategoryDao.getAlIssueCategories();
 	}
-	
+
 	public IssueCategory getIssueCategoryById(int issueCategoryId) {
 		return issueCategoryDao.getIssueCategoryById(issueCategoryId);
 	}

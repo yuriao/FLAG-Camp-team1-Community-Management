@@ -4,9 +4,11 @@ class WorkOrder extends Component {
     render() {
         return(
             <div className = "workorder"> 
-                <h2> {this.props.title}</h2>     
-                <p>{this.props.user}</p>
-                <p>{this.props.progress}</p>    
+                <span>{this.props.id}</span>     
+                <span>{this.props.subject}</span>
+                <span>{this.props.priority}</span>  
+                <span>{this.props.description}</span>
+                <span>{this.props.status}</span>
             </div>
         );
     }

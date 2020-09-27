@@ -7,7 +7,7 @@ import { Table } from 'antd';
 import News from "../components/News";
 import ChatDashboard from '../components/ChatDashboard';
 
-class Dashboard extends Component {
+class DashboardStaff extends Component {
     constructor() {
         super();
         this.state = {
@@ -19,8 +19,8 @@ class Dashboard extends Component {
                 "created": "2020-09-18T14:48:00",
                 "category": "water",
                 "priority": "high",
-                "status": "open",
-                "review": <Button className="review-btn" content="review" />
+                "status": "assigned",
+                "review": <Button className="review-btn" content="view" />
             },
             {
                 "ticket_id": "0032134",
@@ -30,7 +30,7 @@ class Dashboard extends Component {
                 "category": "misc",
                 "priority": "medium",
                 "status": "assigned",
-                "review": <Button className="review-btn" content="review" />
+                "review": <Button className="review-btn" content="view" />
             },
             {
                 "ticket_id": "0123435",
@@ -39,8 +39,8 @@ class Dashboard extends Component {
                 "created": "2020-09-11T14:48:00",
                 "category": "sink",
                 "priority": "medium",
-                "status": "in progress",
-                "review": <Button className="review-btn" content="review" />
+                "status": "assigned",
+                "review": <Button className="review-btn" content="view" />
             }
             ],
             news: [{
@@ -65,23 +65,23 @@ class Dashboard extends Component {
             },
             ],
             messages: [{
-                "sender": "manager",
-                "message": "your work order completed",
+                "sender": "unit 101",
+                "message": "noise complaint",
                 "date": "mm/dd/yy"
             },
             {
-                "sender": "manager",
-                "message": "your work order completed",
+                "sender": "unit 202",
+                "message": "review submitted",
                 "date": "mm/dd/yy"
             },
             {
-                "sender": "manager",
-                "message": "your work order completed",
+                "sender": "unit 303",
+                "message": "package missing",
                 "date": "mm/dd/yy"
             },
             {
-                "sender": "manager",
-                "message": "your work order completed",
+                "sender": "staff Ben",
+                "message": "order completed",
                 "date": "mm/dd/yy"
             },]
         }
@@ -183,34 +183,31 @@ class Dashboard extends Component {
         return (
             <div className="dashboard">
                 <Navigation />
+
                 <div className="dashboard-main">
-                    <div className="balance">
-                        <div>Balance Due:</div>
-                        <h1>$0.00</h1>
-                        <Button className="center" content="Make a Payment" />
-                        <Button className="center" content="Submit a Work Order" />
+                    <div className="work-order">
+                        <h5>Assigned Work Orders</h5>
+                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={columns} />
+                        <div>
+                            <Button content="Manage Your Orders"></Button>
+                        </div>
                     </div>
-                    <div className="chat-dashboard dashboard-item">
-                        <h5 className="chat-title">Messages</h5>
-                        {messageDivs}
-                        <Button className="chat-button" content="Let's Chat"></Button>
-                    </div>
-                    <div className="news dashboard-item">
-                        <h5 className="news-title">Community News</h5>
-                        {newsDivs}
+
+
+
+                    <div className="work-order">
+                        <h5>Completed Work Orders</h5>
+                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={completed} />
                     </div>
                 </div>
 
                 <div className="dashboard-main">
                     <div className="work-order">
-                        <h5>Existing Work Orders</h5>
+                        <h5> Work Order In Progress</h5>
                         <Table scroll={{ y: 500 }} dataSource={datasource} columns={columns} />
-                        <Button content="View Calendar"></Button>
-                    </div>
-
-                    <div className="work-order">
-                        <h5>Completed Work Orders</h5>
-                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={completed} />
+                        <div>
+                            <Button content="View Calendar"></Button>
+                        </div>
                     </div>
                 </div>
 
@@ -220,4 +217,4 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+export default DashboardStaff;

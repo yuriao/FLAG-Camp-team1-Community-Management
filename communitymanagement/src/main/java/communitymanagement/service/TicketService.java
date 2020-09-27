@@ -57,4 +57,7 @@ public class TicketService {
 		return ticketDao.getAllTickets();
 	}
 
+	public List<Ticket> getTicketsByUserIdWithTimeRange(int userId, Timestamp start, Timestamp end) {
+		return ticketDao.getTicketsByUserIdWithTimeRange(userId, start, end);
+	}
 }

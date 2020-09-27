@@ -1,5 +1,6 @@
 package communitymanagement.dao;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import communitymanagement.model.Staff;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,24 @@ public class TicketDao {
 		}
 		return ticket;
 	}
+
+	public List<Ticket> getTicketsByUserIdWithTimeRange(int userId, Timestamp start, Timestamp end) {
+		List<Ticket> tickets = new ArrayList<>();
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+			CriteriaQuery<Ticket> criteriaQuery = criteriaBuilder.createQuery(Ticket.class);
+			Root<Ticket> root = criteriaQuery.from(Ticket.class);
+			criteriaQuery.select(root).where(criteriaBuilder.greaterThanOrEqualTo(root.get("created"), start))
+										.where(criteriaBuilder.lessThanOrEqualTo(root.get("created"), end))
+										.where(criteriaBuilder.equal(root.get("user"), userId));
+			tickets = session.createQuery(criteriaQuery).getResultList();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tickets;
+	}
 	
 	public List<Ticket> getAllTicketsByUserId(int userId) {
 		List<Ticket> tickets = new ArrayList<>();
@@ -57,7 +77,23 @@ public class TicketDao {
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 			CriteriaQuery<Ticket> criteriaQuery = criteriaBuilder.createQuery(Ticket.class);
 			Root<Ticket> root = criteriaQuery.from(Ticket.class);
-			criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("user_id"), userId));
+			criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("user"), userId));
+			tickets = session.createQuery(criteriaQuery).getResultList();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tickets;
+	}
+
+	public List<Ticket> getAllTickets() {
+		List<Ticket> tickets = new ArrayList<>();
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+			CriteriaQuery<Ticket> criteriaQuery = criteriaBuilder.createQuery(Ticket.class);
+			Root<Ticket> root = criteriaQuery.from(Ticket.class);
+			criteriaQuery.select(root);
 			tickets = session.createQuery(criteriaQuery).getResultList();
 			session.getTransaction().commit();
 		} catch (Exception e) {

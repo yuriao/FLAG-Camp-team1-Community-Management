@@ -18,6 +18,8 @@ import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Setter
 @Getter
@@ -49,13 +51,15 @@ public class Ticket implements Serializable {
 	
 	@Column(name = "availability")
 	private String availability;
-	
+
+	@CreationTimestamp
 	@Column(name = "created")
 	private Timestamp created;
-	
+
+	@UpdateTimestamp
 	@Column(name = "updated")
 	private Timestamp updated;
-	
+
 	@Column(name = "fix_date")
 	private Timestamp fixDate;
 	

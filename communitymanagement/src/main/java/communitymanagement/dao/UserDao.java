@@ -13,6 +13,7 @@ import communitymanagement.model.User;
 
 @Repository
 public class UserDao {
+
 	@Autowired
 	private SessionFactory sessionFactory;
 
