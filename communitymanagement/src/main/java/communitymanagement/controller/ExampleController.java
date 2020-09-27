@@ -26,10 +26,10 @@ public class ExampleController {
 	// Can use @RequestBody, @PathVariable, @RequestParam
 	// try to POST http://localhost:8080/communitymanagement/example/5678?key=ThisIsGood
 	// with body
-    //	{
-    //       "first_name": "This",
-    //       "last_name": "that"
-    //	}
+	//    	{
+	//           "first_name": "This",
+	//           "last_name": "that"
+	//    	}
 	@PostMapping("/example/{example_id}")
 	public User returnUser(@RequestBody User user, @PathVariable("example_id") int exampleId, 
 			@RequestParam(value = "key", defaultValue = "") String key) {
