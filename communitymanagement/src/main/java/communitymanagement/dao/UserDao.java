@@ -55,5 +55,24 @@ public class UserDao {
 		return null;
 
 	}
+	
+	public boolean isUserNameExisted(String name) {
+		User user = null;
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+			Root<User> root = criteriaQuery.from(User.class);
+			criteriaQuery.select(root).where(builder.equal(root.get("userName"), name));
+			user = session.createQuery(criteriaQuery).getSingleResult();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (user != null)
+			return true;
+		return false;
+
+	}
 
 }

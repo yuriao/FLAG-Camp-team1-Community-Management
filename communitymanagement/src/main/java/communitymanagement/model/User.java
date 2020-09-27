@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,7 @@ import lombok.Setter;
 @Table(name = "user")
 @Setter
 @Getter
+@Builder
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -2454867938054036364L;

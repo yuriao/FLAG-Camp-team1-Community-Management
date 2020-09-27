@@ -1,5 +1,6 @@
 package communitymanagement.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ import java.util.Date;
 @Table(name = "resident")
 @Setter
 @Getter
+@Builder
 public class Resident implements Serializable {
 
     private static final long serialVersionUID = 9026229229061582805L;
