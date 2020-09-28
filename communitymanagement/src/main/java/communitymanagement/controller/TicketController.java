@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -100,4 +102,34 @@ public class TicketController {
 		return ticketsResident;
 	}
 	
+	@PostMapping("/tickets/{ticket_id}/staff-action")
+	public ResponseEntity<String> ticketStatusChangedByStaffAction(
+			@PathVariable(value = "ticket_id") int ticketId, @RequestBody Map<String, String> reqBody) {
+		// Get ticket
+		Ticket ticket = ticketService.getTicketById(ticketId);
+		if (ticket == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ticket with id " + ticketId + " not found!");
+		}
+
+		// Change status
+		String action = reqBody.get("action");
+		try {
+			if (action.equals("accept")) {
+				ticketService.updateTicketStatus(ticketId, TicketStatus.INPROGRESS);
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body("Staff accepted: ticket is in progress now");
+			} else if (action.equals("decline")) {
+				ticketService.updateTicketStatus(ticketId, TicketStatus.OPEN);
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body("Staff declined: reopen ticket");
+			} else if (action.equals("complete")) {
+				ticketService.updateTicketStatus(ticketId, TicketStatus.COMPLETE);
+				return ResponseEntity.status(HttpStatus.ACCEPTED).body("Staff completed: ticket is completed now");
+			} else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Action not acceptable: " + action);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
+		}
+	}
+
 }
