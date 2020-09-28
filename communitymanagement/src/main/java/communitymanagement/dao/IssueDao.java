@@ -34,9 +34,12 @@ public class IssueDao {
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
-			Issue issue = (Issue) session.get(Issue.class, issueId);
-			session.delete(issue);
-			session.getTransaction().commit();
+			// de-duplicate
+			Issue existingIssue = getIssueByName(issue.getIssueType());
+			if (existingIssue == null) {
+				session.saveOrUpdate(issue);
+				session.getTransaction().commit();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
