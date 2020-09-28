@@ -52,13 +52,13 @@ public class User implements Serializable {
 
 	private boolean enabled;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
 	private Manager manager;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
 	private Resident resident;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
 	private Staff staff;
 
 	@OneToMany(mappedBy = "user")
