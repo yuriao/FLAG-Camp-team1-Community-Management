@@ -33,9 +33,9 @@ public class RegistrationController {
 	@Autowired
 	private StaffCategoryService staffCategoryService;
 
-	@PostMapping("/registration/{user_type}")
+	@PostMapping("/registration/{userType}")
 	public ResponseEntity<String> registerUser(@RequestBody RegistrationForm form,
-			@PathVariable("user_type") String user_type) {
+			@PathVariable("userType") String userType) {
 
 		// check if this username has been registered
 		String userName = form.getUsername();
@@ -52,7 +52,7 @@ public class RegistrationController {
 			user.setPassword(form.getPassword());
 			user.setPhoneNumber(form.getPhone_number());
 
-			switch (user_type) {
+			switch (userType) {
 			case "resident":
 				Resident resident = new Resident();
 				resident.setUnitNum(form.getUnit_number());

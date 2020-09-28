@@ -12,9 +12,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import communitymanagement.model.Authorities;
 import communitymanagement.model.User;
-import communitymanagement.model.UserType;
 
 @Repository
 public class UserDao {
