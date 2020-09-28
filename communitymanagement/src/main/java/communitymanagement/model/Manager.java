@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Table(name = "manager")
 @Setter
 @Getter
-@Builder
+
 public class Manager implements Serializable {
 
     private static final long serialVersionUID = -3637231922902620347L;

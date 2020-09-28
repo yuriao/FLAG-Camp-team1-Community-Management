@@ -15,16 +15,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = "username")})
 @Setter
 @Getter
-@Builder
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -2454867938054036364L;
@@ -54,13 +53,13 @@ public class User implements Serializable {
 
 	private boolean enabled;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
 	private Manager manager;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
 	private Resident resident;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
+	@OneToOne(optional = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
 	private Staff staff;
 
 	@OneToMany(mappedBy = "user")

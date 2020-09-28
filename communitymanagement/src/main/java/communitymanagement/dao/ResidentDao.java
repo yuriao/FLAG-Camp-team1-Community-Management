@@ -25,6 +25,7 @@ public class ResidentDao {
         Authorities authorities = new Authorities();
         authorities.setAuthorities("ROLE_RESIDENT");
         authorities.setUserId(resident.getUser().getId());
+        authorities.setUserName(resident.getUser().getUserName());
 
         Session session = null;
 

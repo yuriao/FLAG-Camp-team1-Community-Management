@@ -25,6 +25,7 @@ public class ManagerDao {
         Authorities authorities = new Authorities();
         authorities.setAuthorities("ROLE_MANAGER");
         authorities.setUserId(manager.getUser().getId());
+        authorities.setUserName(manager.getUser().getUserName());
 
         Session session = null;
 

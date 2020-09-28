@@ -11,10 +11,12 @@ import communitymanagement.entity.SimpleResponse;
 import communitymanagement.model.Manager;
 import communitymanagement.model.Resident;
 import communitymanagement.model.Staff;
+import communitymanagement.model.StaffCategory;
 import communitymanagement.model.User;
 import communitymanagement.model.UserType;
 import communitymanagement.service.ManagerService;
 import communitymanagement.service.ResidentService;
+import communitymanagement.service.StaffCategoryService;
 import communitymanagement.service.StaffService;
 import communitymanagement.service.UserService;
 
@@ -25,6 +27,7 @@ public class RegistrationController {
 	private ManagerService managerService;
 	private ResidentService residentService;
 	private StaffService staffService;
+	private StaffCategoryService staffCategoryService;
 
 	@PostMapping("/registration/{user_type}")
 	public SimpleResponse registerUser(@RequestBody RegistrationForm form,
@@ -42,27 +45,58 @@ public class RegistrationController {
 		}
 
 		// add user
-		User user = User.builder().firstName(form.getFirst_name()).lastName(form.getLast_name())
-				.userName(form.getUsername()).password(form.getPassword()).phoneNumber(form.getPhone_number()).build();
+		User user = new User();
+		user.setFirstName(form.getFirst_name());
+		user.setLastName(form.getLast_name());
+		user.setUserName(form.getUsername());
+		user.setPassword(form.getPassword());
+		user.setPhoneNumber(form.getPhone_number());
 
 		switch (user_type) {
-		case "resident":
+		case "resident":	
+			Resident resident = new Resident();
+			resident.setUnitNum(form.getUnit_number());
+			resident.setBirthday(form.getBirthday());
+			resident.setUser(user);
+			
+			user.setResident(resident);
 			user.setUserType(UserType.RESIDENT);
-			Resident resident = Resident.builder().unitNum(form.getUnit_number()).birthday(form.getBirthday()).build();
-			residentService.addResident(resident);
+			user.setManager(null);
+			user.setStaff(null);
+			
+			userService.addUser(user);
+
 			break;
 		case "staff":
+			Staff staff = new Staff();
+			staff.setUser(user);
+			
+			StaffCategory staffCategory = staffCategoryService.getStaffCategoryById(10);
+			//form.getStaffCategoryId()
+			staff.setStaffCategory(staffCategory);
+			
 			user.setUserType(UserType.STAFF);
-			Staff staff = Staff.builder().build();
-			staffService.addStaff(staff);
+			user.setStaff(staff);
+			user.setManager(null);
+			user.setResident(null);
+			
+			userService.addUser(user);
 			break;
 		case "manager":
+			
+			Manager manager = new Manager();
+			manager.setUser(user);
+			
 			user.setUserType(UserType.MANAGER);
-			Manager manager = Manager.builder().build();
-			managerService.addManager(manager);
+			user.setResident(null);
+			user.setStaff(null);
+			user.setManager(manager);
+			
+			userService.addUser(user);
+			break;
 		}
 
-		userService.addUser(user);
+
 
 		return simpleResponse1;
 

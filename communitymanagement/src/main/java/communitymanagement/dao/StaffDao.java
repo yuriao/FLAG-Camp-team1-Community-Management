@@ -27,6 +27,7 @@ public class StaffDao {
         Authorities authorities = new Authorities();
         authorities.setAuthorities("ROLE_STAFF");
         authorities.setUserId(staff.getUser().getId());
+        authorities.setUserName(staff.getUser().getUserName());
 
         Session session = null;
 
