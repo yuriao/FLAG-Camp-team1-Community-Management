@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import communitymanagement.dao.IssueCategoryDao;
-import communitymanagement.model.IssueCategory;
 import communitymanagement.model.Issue;
+import communitymanagement.model.IssueCategory;
 import communitymanagement.model.Location;
-
 
 @Service
 public class IssueCategoryService {
@@ -36,4 +35,5 @@ public class IssueCategoryService {
 	public void removeIssueCategory(int issueCategoryId) {
 		issueCategoryDao.removeIssueCategory(issueCategoryId);
 	}
+	
 }
