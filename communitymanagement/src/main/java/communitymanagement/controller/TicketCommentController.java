@@ -91,7 +91,7 @@ public class TicketCommentController {
 			if (fixDate != null) {
 				Timestamp ts = Timestamp.valueOf(fixDate);
 				ticketService.updateTicketFixDate(ticketId, ts);
-				if (msg == "") {
+				if (msg.length() == 0) {
 					msg = "Fix date updated.";
 				} else {
 					msg = msg + " Fix date updated.";
