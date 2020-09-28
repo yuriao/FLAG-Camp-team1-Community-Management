@@ -15,7 +15,7 @@ class DropDown extends Component {
 
     sendData = (event) => {
         console.log(event.target.value);
-        this.props.parentCallback(event.target.value);
+        this.props.parentCallback(event.target.value,this.props);
     }
 
     render() {

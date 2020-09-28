@@ -11,46 +11,12 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Ajax from '../components/AJAX'
 
-const columns=[{
-    title: 'Ticket ID',
-    dataIndex: 'ticket_id',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Unit',
-    dataIndex: 'unit',
-  },
-  {
-    title: 'Subject',
-    dataIndex: 'subject',
-  },
-  {
-    title: 'Submitted time',
-    dataIndex: 'created',
-    sorter: (a, b) => Date.parse(a.created) - Date.parse(b.created),
-    sortDirections: ['descend', 'ascend'],
-  },
-  {
-    title: 'Category',
-    dataIndex: 'category',
-  },
-  {
-    title: 'Priority',
-    dataIndex: 'priority',
-    sorter: (a, b) => a.priortyidx - b.priortyidx,
-    sortDirections: ['descend', 'ascend'],
-  },    
-  {
-    title: 'Assign Staff',
-    dataIndex: 'assignee',
-  },  
-];
 
 class TicketingManager extends Component {
     constructor(){
         super();
         this.state = {
-            allTicketsTag: ['tk1','tk2','tk3'],    // set initial state with one div
+            allTicketsTag: ['tk1','tk2'],    // set initial state with one div
             allTicketsContent: [{
                 "ticket_id":"0001233",
                 "unit": '711',
@@ -67,15 +33,8 @@ class TicketingManager extends Component {
                 "category": "misc",
                 "priority": "medium"                
             },
-            {
-                "ticket_id":"0123435",
-                "unit": '711',
-                "subject": "sink clog",
-                "created": "2020-09-11T14:48:00",
-                "category": "sink",
-                "priority": "medium"                
-            }
             ],
+           ticketSubmitMessage:"",
            unit:'',
            lastName:'',
            firstName:'',
@@ -86,9 +45,21 @@ class TicketingManager extends Component {
            subject:'',
            description:'',
            assignment:[],
-           datasource=[],
-           possible_assignees=["engineer1","engineer2"],
-           possible_categories=[],
+           datasource:[],
+           possible_assignees:["engineer1","engineer2"],
+           possible_issue_categories:{
+             "kitchen": ["sink", "dishwasher"], 
+             "bathroom": ["sink", "furniture","floor"],
+             "toilet":["sink","bathtub","clog"],
+             "yard maintaince": ['pool','yard'],
+             "water":["pipe explode","pipe clog","pipe freeze"],
+             "pest control":["kitchen","bedroom","toliet","living room","patio","storage","basement"],
+             "locksmith":[],
+             "trash":[],
+             "misc":[]
+            },
+            possible_locs:[]
+          // possible_loc:['kitchen','water','flooring','painting','windows/doors','yard','pest control','locksmith','trash','yard/pool','misc'],
          }
     }
     
@@ -102,17 +73,26 @@ class TicketingManager extends Component {
       let all_assignees=this.state.possible_assignees;
       let dsource=[];
 
-      let assigneeTag_1=<div><Space><DropDown iid={i} parentCallback = {this.HomeBlankCallBack} elements={all_assignees}/><Button iid={i} onClick={this.assignTickets} primary>Confirm</Button></Space></div>
-      let assigneeTag_2=<div><Button iid={i} onClick={this.cancelAssignment} danger>Cancel Assignment</Button></div>
-      
       this.state.allTicketsTag.map((cdiv, i) => {
         
+        let assigneeTag_1=
+        <div>
+          <Space direction="vertical">
+            <DropDown iid={i} parentCallback = {this.AssignmentCallBack} elements={all_assignees}/>
+            <Button iid={i} onClick={(event)=>this.assignTickets(event,i)} shape="round">Confirm</Button> 
+          </Space>
+        </div>;  //(event)=>this.assignTickets(event,i): add a parameter i to callback
+  
+        //let assigneeTag_2=<div><Button iid={i} onClick={(event)=>this.cancelAssignment(event,i)} danger>Cancel Assignment</Button></div>;
+
         //1. trim assignees by category (unfinished)
         let cCategory=this.state.allTicketsContent[i].category;
 
-        //1.check if assignee exists for current ticket
+        //2.check if assignee exists for current ticket
         let assigneeTag=[];
-        if (this.state.allTicketsContent.assignee){
+        if (this.state.allTicketsContent[i].assignee){
+          console.log(this.state.allTicketsContent[i].assignee);
+          let assigneeTag_2=<div>Assigned: {this.state.allTicketsContent[i].assignee} </div>;
           assigneeTag=assigneeTag_2;
         }else{
           assigneeTag=assigneeTag_1;
@@ -130,6 +110,7 @@ class TicketingManager extends Component {
         })
       });
       this.setState({datasource:dsource}); // it is suggested that try not to directly change state var as next setState may discard the change, use setsTATE instead
+      
     }
 
     loadAssignee=()=>{
@@ -137,7 +118,7 @@ class TicketingManager extends Component {
     }
 
     // if need props, use this.props to access
-    HomeBlankCallBack = (childData) => {
+    HomeBlankCallBack = (childData,childProps) => {
       this.setState({
         unit: childData,
       });
@@ -145,7 +126,7 @@ class TicketingManager extends Component {
       
     }
     
-    FnameBlankCallBack = (childData) => {
+    FnameBlankCallBack = (childData,childProps) => {
       this.setState({
         firstName: childData,
       })
@@ -153,37 +134,39 @@ class TicketingManager extends Component {
       //console.log(this.state.unit);
     }
 
-    LnameBlankCallBack = (childData) => {
+    LnameBlankCallBack = (childData,childProps) => {
       this.setState({
         lastName: childData,
       })
     }
 
-    contactDropDownCallBack = (childData) => {
+    contactDropDownCallBack = (childData,childProps) => {
       this.setState({
         contact_method: childData,
       })
     }
 
-    locationDropDownCallBack = (childData) => {
+    locationDropDownCallBack = (childData,childProps) => {
       this.setState({
         location: childData,
       })
     }
 
-    categoryDropDownCallBack = (childData) => {
+    categoryDropDownCallBack = (childData,childProps) => {
+      let pos_locs=this.state.possible_issue_categories[childData];
       this.setState({
         category: childData,
+        possible_locs: pos_locs
       })
     }
 
-    priortyDropDownCallBack = (childData) => {
+    priortyDropDownCallBack = (childData,childProps) => {
       this.setState({
         priorty: childData,
       })
     }
 
-    subjectBlankCallBack = (childData) => {
+    subjectBlankCallBack = (childData,childProps) => {
       this.setState({
         subject: childData,
       })
@@ -234,7 +217,8 @@ class TicketingManager extends Component {
             console.log('fail');
           }
         );
-
+        
+        this.setState({ticketSubmitMessage:"ticket "+ticketData.ticket_id.toString()+" has been submitted"})
         
       }
 
@@ -277,24 +261,41 @@ class TicketingManager extends Component {
         
       }
       
-    AssignmentCallBack = (childData) => {
+    AssignmentCallBack = (childData,childProps) => {
       let existingAssignments=this.state.assignment;
-      let tiid=childData.iid;
-      let asm=childData.assignment;
+      
+      let tiid=childProps.iid;
+      let asm=childData;
       let obj={};
       obj[tiid]=asm;
-      existingAssignments.push(obj);
+      
+      if(existingAssignments.find(o=>Object.keys(o)==tiid)){
+        existingAssignments[existingAssignments.findIndex(o=>Object.keys(o)==tiid)]=obj; // change assignment
+      }else{
+        existingAssignments.push(obj);
+      }
       this.setState(
         {assignment:existingAssignments}
       )
     }
 
-    assignTickets=(event)=>{
-      console.log(event.target.iid);
-      let obj=this.state.assignment.find(o=>o.tiid==event.target);
+    assignTickets=(event,i)=>{
+      console.log(this.state.assignment);
+      let obj=this.state.assignment.find(o=>Object.keys(o)==i);
+      let tid=this.state.allTicketsContent[i].ticket_id;
+
+      //if directly click confirm, set the first assignee
+      if(!obj){ 
+        obj={i:this.state.possible_assignees[0]};
+      }
+
+      // test without backend communication
+      // let items=this.state.allTicketsContent;
+      // items[i].assignee=obj[i];
+      // this.setState({allTicketsContent:items})
+      // this.ReloadTickets();
       
-      this.state.allTicketsContent[event.target.iid].assignee=obj.tiid;
-      Ajax('POST', "/tickets", this.state.allTicketsContent[event.target.iid],
+      Ajax('PUT', "/tickets/"+tid.toString()+"/assignees", obj[i],
           // successful callback
           function(res) {
             console.log("good");
@@ -304,83 +305,113 @@ class TicketingManager extends Component {
             console.log('fail');
           }
         );
-      let i=event.target.iid;
-      let assigneeTagContent=<Button iid={i} onClick={this.cancelTicket}>Cancel</Button>;;
-      this.state.datasource[event.target.iid].assignee=assigneeTagContent;
-      this.setState();
+      this.refershTickets();
     }
 
-    cancelTickets=(event)=>{
-      this.state.allTicketsContent[event.target.iid].assignee="";
-      this.state.allTicketsContent[event.target.iid].status="open";
-      Ajax('POST', "/tickets", this.state.allTicketsContent[event.target.iid],
-          // successful callback
-          function(res) {
-            console.log("good");
-          },
-          // failed callback
-          function() {
-            console.log('fail');
-          }
-        );
-      let assigneeTagContent=<div><DropDown iid={event.target.iid} parentCallback = {this.AssignmentCallBack} elements={['Engineer1','Engineer2']}/><Button iid={event.target.iid} onClick={this.assignTickets}>Confirm</Button></div>;
-      this.state.datasource[event.target.iid].assignee=assigneeTagContent;
-      this.setState();
-    }
+    // cancelAssignemnt=(event,i)=>{
+    //   this.state.allTicketsContent[event.target.iid].assignee="";
+    //   this.state.allTicketsContent[event.target.iid].status="open";
+    //   Ajax('POST', "/tickets", this.state.allTicketsContent[event.target.iid],
+    //       // successful callback
+    //       function(res) {
+    //         console.log("good");
+    //       },
+    //       // failed callback
+    //       function() {
+    //         console.log('fail');
+    //       }
+    //     );
+    //     this.refershTickets();
+    // }
 
     render() {
-      console.log(this.state.datasource);
-        return(
-            <div>
-                <Navigation/>
+      const columns=[{
+        title: 'Ticket ID',
+        dataIndex: 'ticket_id',
+        render: (text) => <a>{text}</a>,
+      },
+      {
+        title: 'Unit',
+        dataIndex: 'unit',
+      },
+      {
+        title: 'Subject',
+        dataIndex: 'subject',
+      },
+      {
+        title: 'Submitted time',
+        dataIndex: 'created',
+        sorter: (a, b) => Date.parse(a.created) - Date.parse(b.created),
+        sortDirections: ['descend', 'ascend'],
+      },
+      {
+        title: 'Category',
+        dataIndex: 'category',
+      },
+      {
+        title: 'Priority',
+        dataIndex: 'priority',
+        sorter: (a, b) => a.priortyidx - b.priortyidx,
+        sortDirections: ['descend', 'ascend'],
+      },    
+      {
+        title: 'Assign Staff',
+        dataIndex: 'assignee',
+      },  
+    ];
+      return(
+        <div>
+            <Navigation/>
 
-                <div class="managerWelcome">
-                    Welcome Manager
-                </div>
-                <Container fluid>
-                  <Row>
-                    <Col xs={4}>
-                      <h3> Submit a Work Order </h3>
-                      <div>
-                        <Space direction="vertical">
-                          <Row class='TicketSubmitManager'>  
-                            <Col>
-                                <Blank text="Home" parentCallback = {this.HomeBlankCallBack}/>
-                                <Blank text="First Name" parentCallback = {this.FnameBlankCallBack}/>
-                                <Blank text="Last Name" parentCallback = {this.LnameBlankCallBack}/>
-                                <p>Description</p>
-                                <input text="Description" className = "description-box" onChange={this.DescriptionCallBack}></input>
-                                
-                            </Col>                  
-                            <Col>
-                                <Blank text="Ticket Title" parentCallback = {this.subjectBlankCallBack}/>
-                                <DropDown elements={['phone','email']} description="Contact Method" parentCallback = {this.contactDropDownCallBack}/>
-                                <DropDown elements={['pos1','pos2']} description="Location" parentCallback = {this.locationDropDownCallBack} />
-                                <DropDown elements={['electricity','water','flooring','painting','windows/doors','yard','pest control','locksmith','trash','yard/pool','misc']} description="Category" parentCallback = {this.categoryDropDownCallBack} />
-                                <DropDown elements={["high",'medium','low']} description="Priority" parentCallback = {this.priortyDropDownCallBack} />
-                            
-                            </Col>    
-                          </Row>
-                          
-                          <Button onClick={this.SubmitTickets}>Submit</Button>
-                        </Space>
-                      </div> 
-                    </Col>
-                    
-                    <Col>
-                      <h3> Existing Work Orders </h3>
-                      <Space direction="vertical">
-                        <Button>Refersh Ticket</Button>
-                        <Table scroll={{y:400}} dataSource={this.state.datasource} columns={columns} />
-                      </Space>
-                    </Col>
-                  </Row>
-                </Container>
-                
-                <Footer/>
+            <div class="managerWelcome">
+                Welcome Manager
             </div>
-        );
-    }
+            <Container fluid>
+              <Row>
+                <Col xs={4}>
+                  <h3> Submit a Work Order </h3>
+                  <div>
+                    <Space direction="vertical">
+                      <Row class='TicketSubmitManager'>  
+                        <Col>
+                            <Blank text="Home" parentCallback = {this.HomeBlankCallBack}/>
+                            <Blank text="First Name" parentCallback = {this.FnameBlankCallBack}/>
+                            <Blank text="Last Name" parentCallback = {this.LnameBlankCallBack}/>
+                            <p>Description</p>
+                            <input text="Description" className = "description-box" onChange={this.DescriptionCallBack}></input>
+                            
+                        </Col>                  
+                        <Col>
+                            <Blank text="Ticket Title" parentCallback = {this.subjectBlankCallBack}/>
+                            <DropDown elements={['phone','email']} description="Contact Method" parentCallback = {this.contactDropDownCallBack}/>
+                            
+                            <DropDown elements={Object.keys(this.state.possible_issue_categories)} description="Category" parentCallback = {this.categoryDropDownCallBack} />
+                            <DropDown elements={this.state.possible_locs} description="Location" parentCallback = {this.locationDropDownCallBack} />
+                            <DropDown elements={["high",'medium','low']} description="Priority" parentCallback = {this.priortyDropDownCallBack} />
+                        
+                        </Col>    
+                      </Row>
+                      
+                      <Button onClick={this.SubmitTickets} type="primary">Submit</Button>
+                      <div>{this.state.ticketSubmitMessage}</div>
+                    </Space>
+                  </div> 
+                </Col>
+                
+                <Col>
+                  <h3> Existing Work Orders </h3>
+                  <Space direction="vertical">
+                    <Button>Refersh Ticket</Button>
+                    <Table scroll={{y:400}} dataSource={this.state.datasource} columns={columns} />
+                  </Space>
+                </Col>
+              </Row>
+            </Container>
+            
+            <Footer/>
+        </div>
+      );
+  }
 }
 
 export default TicketingManager;
