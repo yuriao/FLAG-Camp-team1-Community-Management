@@ -21,6 +21,7 @@ import communitymanagement.model.IssueEnum;
 import communitymanagement.service.TicketAssignedService;
 import communitymanagement.service.TicketService;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -33,18 +34,19 @@ public class TicketIssueController {
 	@Autowired
 	private LocationEnum locationEnum;
 	
+	@Autowired
+	private IssueEnum issueEnum;
+	
 	@GetMapping("/tickets/staff")
 	public List<TicketAssigned> getTickets(@RequestParam(value = "user_id", defaultValue = "") int userId) {
 		return ticketAssignedService.getTicketAssignedByUserId(userId);
 	}
 
 	@GetMapping("/ticket-issue-categories")
-	public void allIssueLocationCategory() {
-//		EnumSet allLocation = EnumSet.allOf(LocationEnum.class);
-		EnumSet<IssueEnum> allIssue = EnumSet.allOf(IssueEnum.class);
-		for (Enum<?> location : locationEnum.getClass().getEnumConstants()) {
-			System.out.print(location + ": ");
-			System.out.print(allIssue);
-		}
+	public List<Enum> allIssueLocationCategory() {
+		List<Enum> allIssueLocationCategory = new ArrayList<Enum>();
+		allIssueLocationCategory.add(locationEnum);
+		allIssueLocationCategory.add(issueEnum);
+		return allIssueLocationCategory;
 	}
 }
