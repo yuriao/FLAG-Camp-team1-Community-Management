@@ -10,7 +10,6 @@ import communitymanagement.model.Issue;
 import communitymanagement.model.IssueCategory;
 import communitymanagement.model.Location;
 
-
 @Service
 public class IssueCategoryService {
 
