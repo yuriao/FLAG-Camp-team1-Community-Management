@@ -46,7 +46,7 @@ class TicketingManager extends Component {
            description:'',
            assignment:[],
            datasource:[],
-           possible_assignees:["engineer1","engineer2"],
+           recommend_staff:["engineer1","engineer2"],
            possible_issue_categories:{
              "kitchen": ["sink", "dishwasher"], 
              "bathroom": ["sink", "furniture","floor"],
@@ -65,7 +65,6 @@ class TicketingManager extends Component {
     
     componentDidMount(){
         this.ReloadTickets();
-        this.loadAssignee();
         this.loadIssueCategory();
     }
 
@@ -84,25 +83,10 @@ class TicketingManager extends Component {
         );
     }
 
-    loadAssignee=()=>{
-      Ajax('GET', "/tickets/ticket-assignees", [],
-          // successful callback
-          function(res) {
-            let items = JSON.parse(res);
-            this.setState({possible_assignees:items})
-            console.log("good");
-          },
-          // failed callback
-          function() {
-            console.log('fail');
-          }
-        );
-      }
-
     // refersh page function 
     ReloadTickets = ()=>{
       
-      let all_assignees=this.state.possible_assignees;
+      let all_assignees=this.state.recommend_staff;
       let dsource=[];
 
       this.state.allTicketsTag.map((cdiv, i) => {
@@ -265,13 +249,13 @@ class TicketingManager extends Component {
             
                 //convert priorty for sorting
               items.map((cdiv,i)=>{
-              if(items[i].priorty.equals("high")){
+              if(items[i].priorty==="high"){
                 items[i].priortyidx=3;
               }
-              if(items[i].priorty.equals("medium")){
+              if(items[i].priorty==="medium"){
                 items[i].priortyidx=2;
               }
-              if(items[i].priorty.equals("low")){
+              if(items[i].priorty==="low"){
                 items[i].priortyidx=1;
               }
   
@@ -316,7 +300,7 @@ class TicketingManager extends Component {
 
       //if directly click confirm, set the first assignee
       if(!obj){ 
-        obj={i:this.state.possible_assignees[0]};
+        obj={i:this.state.recommend_staff[0]};
       }
 
       Ajax('PUT', "/tickets/"+tid.toString()+"/assignees", obj[i],
