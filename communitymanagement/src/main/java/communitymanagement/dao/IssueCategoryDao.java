@@ -16,12 +16,11 @@ import communitymanagement.model.Issue;
 import communitymanagement.model.IssueCategory;
 import communitymanagement.model.Location;
 
-
 @Repository
 public class IssueCategoryDao {
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	public void addIssueCategory(IssueCategory issueCategory) {
 		Session session = null;
 		try {
@@ -36,9 +35,9 @@ public class IssueCategoryDao {
 			if (session != null) {
 				session.close();
 			}
-		} 
+		}
 	}
-	
+
 	public Issue getIssueByName(String name) {
 		Issue issue = null;
 		try (Session session = sessionFactory.openSession()) {
@@ -56,7 +55,7 @@ public class IssueCategoryDao {
 			return issue;
 		return null;
 	}
-	
+
 	public Location getLocationByName(String name) {
 		Location location = null;
 		try (Session session = sessionFactory.openSession()) {
@@ -74,14 +73,18 @@ public class IssueCategoryDao {
 			return location;
 		return null;
 	}
-	
+
 	public void addIssue(Issue issue) {
 		Session session = null;
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
-			session.saveOrUpdate(issue);
-			session.getTransaction().commit();
+			// de-duplicate
+			Issue existingIssue = getIssueByName(issue.getIssueType());
+			if (existingIssue == null) {
+				session.saveOrUpdate(issue);
+				session.getTransaction().commit();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
@@ -89,16 +92,20 @@ public class IssueCategoryDao {
 			if (session != null) {
 				session.close();
 			}
-		} 
+		}
 	}
-	
+
 	public void addLocation(Location location) {
 		Session session = null;
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
-			session.saveOrUpdate(location);
-			session.getTransaction().commit();
+			// de-duplicate
+			Location existingLocation = getLocationByName(location.getLocationType());
+			if (existingLocation == null) {
+				session.saveOrUpdate(location);
+				session.getTransaction().commit();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
@@ -106,9 +113,9 @@ public class IssueCategoryDao {
 			if (session != null) {
 				session.close();
 			}
-		} 
+		}
 	}
-	
+
 	public void addIssueCategoryByName(String issueName, String locationName) {
 		// issue
 		Issue issue = getIssueByName(issueName);
@@ -117,7 +124,7 @@ public class IssueCategoryDao {
 			issue.setIssueType(issueName);
 			addIssue(issue);
 		}
-		
+
 		// category
 		Location location = getLocationByName(locationName);
 		if (location == null) {
@@ -125,14 +132,13 @@ public class IssueCategoryDao {
 			location.setLocationType(locationName);
 			addLocation(location);
 		}
-		
+
 		// issue category
 		addIssueCategory(issue, location);
 	}
-	
-	
+
 	public void addIssueCategory(Issue issue, Location location) {
-		IssueCategory issueCategory =  new IssueCategory();
+		IssueCategory issueCategory = new IssueCategory();
 		issueCategory.setIssue(issue);
 		issueCategory.setLocation(location);
 		addIssueCategory(issueCategory);
@@ -147,9 +153,9 @@ public class IssueCategoryDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return allIssueCategories;	
+		return allIssueCategories;
 	}
-	
+
 	public IssueCategory getIssueCategoryById(int issueCategoryId) {
 		IssueCategory issueCategory = null;
 		try (Session session = sessionFactory.openSession()) {
@@ -161,7 +167,7 @@ public class IssueCategoryDao {
 		}
 		return issueCategory;
 	}
-	
+
 	public void removeIssueCategory(int issueCategoryId) {
 		Session session = null;
 		try {
@@ -179,5 +185,5 @@ public class IssueCategoryDao {
 			}
 		}
 	}
-	
+
 }
