@@ -12,7 +12,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import communitymanagement.model.Authorities;
 import communitymanagement.model.User;
+import communitymanagement.model.UserType;
 
 @Repository
 public class UserDao {
@@ -22,12 +24,26 @@ public class UserDao {
 
 	public void addUser(User user) {
 		user.setEnabled(true);
+		Authorities authorities = new Authorities();
+		authorities.setUserId(user.getId());
+		authorities.setUserName(user.getUserName());
+
+		UserType user_type = user.getUserType();
+		if (user_type.equals(UserType.RESIDENT)) {
+			authorities.setAuthorities("ROLE_RESIDENT");
+		} else if (user_type.equals(UserType.MANAGER)) {
+			authorities.setAuthorities("ROLE_MANAGER");
+		} else if (user_type.equals(UserType.STAFF)) {
+			authorities.setAuthorities("ROLE_STAFF");
+		}
+		
 		Session session = null;
 
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
 			session.save(user);
+			session.save(authorities);
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,10 +87,7 @@ public class UserDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (users.size() > 0) {
-			return true;
-		}
-		return false;
+		return users.size() > 0;
 	}
 
 }

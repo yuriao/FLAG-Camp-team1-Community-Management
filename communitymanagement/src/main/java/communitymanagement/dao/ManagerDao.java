@@ -1,9 +1,7 @@
 package communitymanagement.dao;
 
-import communitymanagement.model.Authorities;
 import communitymanagement.model.Manager;
 import communitymanagement.model.User;
-import communitymanagement.model.UserType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +18,12 @@ public class ManagerDao {
     private SessionFactory sessionFactory;
 
     public void addManager(Manager manager) {
-        manager.getUser().setUserType(UserType.MANAGER);
-
-        Authorities authorities = new Authorities();
-        authorities.setAuthorities("ROLE_MANAGER");
-        authorities.setUserId(manager.getUser().getId());
-
-        Session session = null;
+        
+    	Session session = null;
 
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
-            session.save(authorities);
             session.save(manager);
             session.getTransaction().commit();
         } catch (Exception e) {

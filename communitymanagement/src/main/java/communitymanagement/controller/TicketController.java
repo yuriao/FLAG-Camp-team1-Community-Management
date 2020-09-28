@@ -9,6 +9,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -149,13 +151,16 @@ public class TicketController {
       
 	@GetMapping("/tickets/manager")
 	public ManagerTicketSystemResponse getManagerTicketSystem() {
+		
 		// get user
-		// Authentication loggedInUser =
-		// SecurityContextHolder.getContext().getAuthentication();
-		// User user = (User)loggedInUser.getPrincipal();
-		// int userId = user.getId();
+//		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+//		String username = loggedInUser.getName();
+//		User logInUser = (User)loggedInUser.getPrincipal();
+//		int userId = logInUser.getId();
+		
+		int userId = 46;
+		
 
-		int userId = 68;
 		User user = userService.getUserByUserId(userId);
 
 		List<Ticket> tickets = ticketService.getAllTickets();
@@ -216,7 +221,7 @@ public class TicketController {
 			// SecurityContextHolder.getContext().getAuthentication();
 			// User user = (User)loggedInUser.getPrincipal();
 			// int userId = user.getId();
-			int userId = 68;
+			int userId = 46;
 
 			// only manager can do assignment
 			User user = userService.getUserByUserId(userId);

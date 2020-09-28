@@ -15,12 +15,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", uniqueConstraints = {@UniqueConstraint(columnNames = "username")})
 @Setter
 @Getter
 public class User implements Serializable {
