@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import communitymanagement.entity.SimpleComment;
-import communitymanagement.entity.SimpleResponse;
 import communitymanagement.entity.TicketCommentForm;
 import communitymanagement.entity.TicketForm;
 import communitymanagement.model.Ticket;
@@ -111,19 +110,23 @@ public class TicketCommentController {
 	}
 	
 	@GetMapping("/tickets/{ticket_id}/{user_id}")
-	public TicketForm getTicketDetail(@PathVariable("ticket_id") int ticketId, @PathVariable("user_id") int userId ) {
+	public ResponseEntity<TicketForm> getTicketDetail(@PathVariable("ticket_id") int ticketId, @PathVariable("user_id") int userId) {
 		//awaiting authentication
 		TicketForm ticketForm = new TicketForm();
 		Ticket ticket = ticketService.getTicketById(ticketId);
 		List<TicketComment> ticketComment = ticketCommentService.getAllTicketComments(ticketId);
 		ticketForm.setTicket(ticket);
 		ticketForm.setTicketComment(ticketComment);
-		return ticketForm;
+		return ResponseEntity.status(HttpStatus.OK).body(ticketForm);
 	}
 	
 	@PutMapping("/tickets/{ticket_id}/update/{user_id}")
-	public SimpleResponse update(@RequestBody SimpleComment comment, @PathVariable("ticket_id") int ticketId, @PathVariable("user_id") int userId) {
+	public ResponseEntity<String> update(@RequestBody SimpleComment comment, @PathVariable("ticket_id") int ticketId, @PathVariable("user_id") int userId, BindingResult result) {
 		//awaiting authentication
+		if (result.hasErrors()) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Fail to build the ticket comment form");
+		}
 		TicketComment ticketComment = new TicketComment();
 		ticketComment.setBody(comment.getComment());
 		ticketComment.setTicket(ticketService.getTicketById(ticketId));
@@ -134,10 +137,7 @@ public class TicketCommentController {
 		ticketComment.setCreated(curTime);;
 		ticketCommentService.addTicketComment(ticketComment);
 		
-		String msg = "Comment success";
-		SimpleResponse simpleResponse = SimpleResponse.builder().status("200").message(msg).build();
-		return simpleResponse;
+		String msg = "Comment Added.";
+		return ResponseEntity.status(HttpStatus.OK).body(msg);
 	}
-	
-
 }
