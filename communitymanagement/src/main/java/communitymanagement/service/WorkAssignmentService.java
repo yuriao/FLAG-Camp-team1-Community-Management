@@ -24,4 +24,8 @@ public class WorkAssignmentService {
     public void deleteWorkAssignment(int workAssignmentId) {
         workAssignmentDao.deleteWorkAssignment((workAssignmentId));
     }
+    
+    public List<WorkAssignment> getWorkAssignmentByIssueCategoryId(int issueCategoryId) {
+    	return workAssignmentDao.getWorkAssignmentByIssueCategoryId(issueCategoryId);
+    }
 }

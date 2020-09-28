@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,6 +29,6 @@ public class StaffCategory implements Serializable {
     @Column(name = "category")
     private String category;
 
-    @OneToMany(mappedBy = "staffCategory")
+    @OneToMany(mappedBy = "staffCategory", fetch=FetchType.EAGER)
     private List<Staff> staff;
 }
