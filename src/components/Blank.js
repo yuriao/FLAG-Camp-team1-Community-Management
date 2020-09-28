@@ -12,7 +12,7 @@ class Blank extends Component {
     }
 
     sendData = (event) => {
-        this.props.parentCallback(event.target.value);
+        this.props.parentCallback(event.target.value,this.props);
     }
 
     render() {
