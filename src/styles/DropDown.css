@@ -1,3 +1,9 @@
 .DropDown{
+    width:120px;
     margin-bottom: 15px;
+}
+
+.DropDownSelect{
+    width:120px;
+    height:28px;
 }
