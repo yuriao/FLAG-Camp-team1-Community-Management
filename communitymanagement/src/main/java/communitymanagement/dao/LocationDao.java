@@ -17,8 +17,12 @@ public class LocationDao {
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
-			session.save(location);
-			session.getTransaction().commit();
+			// de-duplicate
+			Location existingLocation = getLocationByName(location.getLocationType());
+			if (existingLocation == null) {
+				session.saveOrUpdate(location);
+				session.getTransaction().commit();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
