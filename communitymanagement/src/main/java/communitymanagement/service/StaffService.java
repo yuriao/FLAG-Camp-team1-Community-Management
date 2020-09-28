@@ -2,6 +2,9 @@ package communitymanagement.service;
 
 import communitymanagement.dao.StaffDao;
 import communitymanagement.model.Staff;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +18,8 @@ public class StaffService {
         staffDao.addStaff(staff);
     }
 
-    public void getStaffByUserName(String userName) {
-        staffDao.getStaffByUserName(userName);
+    public Staff getStaffByUserName(String userName) {
+        return staffDao.getStaffByUserName(userName);
     }
 
     public void deleteStaff(int staffId) {
@@ -25,5 +28,9 @@ public class StaffService {
 
     public void updateStaff(Staff staff) {
         staffDao.updateStaff(staff);
+    }
+    
+    public List<Staff> getStaffsByCategoryId(int staffCategoryId) {
+    	return staffDao.getStaffsByCategoryId(staffCategoryId);
     }
 }

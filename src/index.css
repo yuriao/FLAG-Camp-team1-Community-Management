@@ -10,7 +10,8 @@
 @import "./styles/DropDown.css";
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import '~antd/dist/antd.css';
-
+@import './styles/DashBoardResident.css';
+@import './styles/News.css';
 
 body {
   margin: 0;

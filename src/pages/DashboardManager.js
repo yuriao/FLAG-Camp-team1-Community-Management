@@ -7,7 +7,7 @@ import { Table } from 'antd';
 import News from "../components/News";
 import ChatDashboard from '../components/ChatDashboard';
 
-class Dashboard extends Component {
+class DashboardManager extends Component {
     constructor() {
         super();
         this.state = {
@@ -20,7 +20,7 @@ class Dashboard extends Component {
                 "category": "water",
                 "priority": "high",
                 "status": "open",
-                "review": <Button className="review-btn" content="review" />
+                "review": <Button className="review-btn" content="view" />
             },
             {
                 "ticket_id": "0032134",
@@ -30,7 +30,7 @@ class Dashboard extends Component {
                 "category": "misc",
                 "priority": "medium",
                 "status": "assigned",
-                "review": <Button className="review-btn" content="review" />
+                "review": <Button className="review-btn" content="view" />
             },
             {
                 "ticket_id": "0123435",
@@ -40,7 +40,7 @@ class Dashboard extends Component {
                 "category": "sink",
                 "priority": "medium",
                 "status": "in progress",
-                "review": <Button className="review-btn" content="review" />
+                "review": <Button className="review-btn" content="view" />
             }
             ],
             news: [{
@@ -65,23 +65,23 @@ class Dashboard extends Component {
             },
             ],
             messages: [{
-                "sender": "manager",
-                "message": "your work order completed",
+                "sender": "unit 101",
+                "message": "noise complaint",
                 "date": "mm/dd/yy"
             },
             {
-                "sender": "manager",
-                "message": "your work order completed",
+                "sender": "unit 202",
+                "message": "review submitted",
                 "date": "mm/dd/yy"
             },
             {
-                "sender": "manager",
-                "message": "your work order completed",
+                "sender": "unit 303",
+                "message": "package missing",
                 "date": "mm/dd/yy"
             },
             {
-                "sender": "manager",
-                "message": "your work order completed",
+                "sender": "staff Ben",
+                "message": "order completed",
                 "date": "mm/dd/yy"
             },]
         }
@@ -185,10 +185,8 @@ class Dashboard extends Component {
                 <Navigation />
                 <div className="dashboard-main">
                     <div className="balance">
-                        <div>Balance Due:</div>
-                        <h1>$0.00</h1>
-                        <Button className="center" content="Make a Payment" />
-                        <Button className="center" content="Submit a Work Order" />
+                        <Button className="center" content="Manage All Payments" />
+                        <Button className="center" content="Manage All Work Orders" />
                     </div>
                     <div className="chat-dashboard dashboard-item">
                         <h5 className="chat-title">Messages</h5>
@@ -198,6 +196,7 @@ class Dashboard extends Component {
                     <div className="news dashboard-item">
                         <h5 className="news-title">Community News</h5>
                         {newsDivs}
+                        <Button className="chat-button" content="Write a Notice"></Button>
                     </div>
                 </div>
 
@@ -205,7 +204,12 @@ class Dashboard extends Component {
                     <div className="work-order">
                         <h5>Existing Work Orders</h5>
                         <Table scroll={{ y: 500 }} dataSource={datasource} columns={columns} />
-                        <Button content="View Calendar"></Button>
+                        <div>
+                            <Button content="Assign a Work Order"></Button>
+                        </div>
+                        <div>
+                            <Button content="View Calendar"></Button>
+                        </div>
                     </div>
 
                     <div className="work-order">
@@ -220,4 +224,4 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+export default DashboardManager;
