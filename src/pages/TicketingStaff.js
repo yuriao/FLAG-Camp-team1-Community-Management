@@ -118,13 +118,13 @@ class TicketingStaff extends Component {
           
             //convert priorty for sorting
           items.map((cdiv,i)=>{
-            if(items[i].priorty.equals("high")){
+            if(items[i].priorty==="high"){
               items[i].priortyidx=3;
             }
-            if(items[i].priorty.equals("medium")){
+            if(items[i].priorty==="medium"){
               items[i].priortyidx=2;
             }
-            if(items[i].priorty.equals("low")){
+            if(items[i].priorty==="low"){
               items[i].priortyidx=1;
             }
 
