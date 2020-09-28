@@ -36,4 +36,7 @@ public class IssueCategoryService {
 		issueCategoryDao.removeIssueCategory(issueCategoryId);
 	}
 	
+	public void addIssueCategoryByName(String issueName, String locationName) {
+		issueCategoryDao.addIssueCategoryByName(issueName, locationName);
+	}
 }

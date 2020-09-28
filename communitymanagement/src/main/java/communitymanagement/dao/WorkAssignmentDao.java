@@ -1,16 +1,19 @@
 package communitymanagement.dao;
 
-import communitymanagement.model.Issue;
-import communitymanagement.model.WorkAssignment;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.util.List;
+import communitymanagement.model.Issue;
+import communitymanagement.model.IssueCategory;
+import communitymanagement.model.WorkAssignment;
 
 @Repository
 public class WorkAssignmentDao {
@@ -54,6 +57,30 @@ public class WorkAssignmentDao {
             return issue.getWorkAssignments();
         }
 
+        return null;
+    }
+    
+    
+    
+    public List<WorkAssignment> getWorkAssignmentByIssueCategoryId(int issueCategoryId) {
+        IssueCategory issueCategory = null;
+        List<WorkAssignment> workAssignments = null;
+
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<IssueCategory> criteriaQuery = criteriaBuilder.createQuery(IssueCategory.class);
+            Root<IssueCategory> root = criteriaQuery.from(IssueCategory.class);
+            criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("id"), issueCategoryId));
+            issueCategory = session.createQuery(criteriaQuery).getSingleResult();
+            workAssignments = issueCategory.getIssue().getWorkAssignments();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        if (workAssignments != null) {
+            return workAssignments;
+        }
         return null;
     }
 

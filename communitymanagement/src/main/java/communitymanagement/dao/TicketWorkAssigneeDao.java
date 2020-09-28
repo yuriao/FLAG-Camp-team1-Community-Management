@@ -70,7 +70,7 @@ public class TicketWorkAssigneeDao {
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 			CriteriaQuery<TicketWorkAssignee> criteriaQuery = criteriaBuilder.createQuery(TicketWorkAssignee.class);
 			Root<TicketWorkAssignee> root = criteriaQuery.from(TicketWorkAssignee.class);
-			criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("ticket_id"), ticketId));
+			criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("ticket"), ticketId));
 			ticketWorkAssignees = session.createQuery(criteriaQuery).getResultList();
 			session.getTransaction().commit();
 		} catch (Exception e) {

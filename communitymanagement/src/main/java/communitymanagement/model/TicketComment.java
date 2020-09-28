@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,7 +39,8 @@ public class TicketComment implements Serializable {
 
 	@Column(name = "body")
 	private String body;
-
+	
+	@CreationTimestamp
 	@Column(name = "created")
 	private Timestamp created;
 

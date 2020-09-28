@@ -1,5 +1,8 @@
 package communitymanagement.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -53,7 +56,25 @@ public class UserDao {
 		if (user != null)
 			return user;
 		return null;
+	}
 
+	public boolean isUserNameExisted(String name) {
+		List<User> users = new ArrayList<>();
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+			Root<User> root = criteriaQuery.from(User.class);
+			criteriaQuery.select(root).where(builder.equal(root.get("userName"), name));
+			users = session.createQuery(criteriaQuery).getResultList();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (users.size() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 }
