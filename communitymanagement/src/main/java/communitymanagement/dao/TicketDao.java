@@ -8,7 +8,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import communitymanagement.model.Staff;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,21 +117,5 @@ public class TicketDao {
 			}
 		}
 	}
-	
-	public List<Ticket> getAllTickets() {
-		List<Ticket> tickets = new ArrayList<Ticket>();
-		try (Session session = sessionFactory.openSession()) {
-			session.beginTransaction();
-			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-			CriteriaQuery<Ticket> criteriaQuery = criteriaBuilder.createQuery(Ticket.class);
-			Root<Ticket> root = criteriaQuery.from(Ticket.class);
-			criteriaQuery.select(root);
-			tickets = session.createQuery(criteriaQuery).getResultList();
-			session.getTransaction().commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		return tickets;
-	}
 }

@@ -1,28 +1,40 @@
 package communitymanagement.controller;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import communitymanagement.entity.AssigneeEntity;
+import communitymanagement.entity.AssigneeForm;
+import communitymanagement.entity.ManagerTicketOverview;
+import communitymanagement.entity.ManagerTicketSystemResponse;
+import communitymanagement.entity.SimpleResponse;
 import communitymanagement.entity.TicketOverview;
 import communitymanagement.entity.TicketSubmitForm;
 import communitymanagement.entity.TicketsResident;
 import communitymanagement.model.Ticket;
 import communitymanagement.model.TicketStatus;
+import communitymanagement.model.TicketWorkAssignee;
 import communitymanagement.model.User;
+import communitymanagement.model.UserType;
 import communitymanagement.service.IssueCategoryService;
 import communitymanagement.service.TicketService;
+import communitymanagement.service.TicketWorkAssigneeService;
 import communitymanagement.service.UserService;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import communitymanagement.servicefacade.AssigneeRecommendationFacadeImpl;
 
 
 @RestController
@@ -36,6 +48,12 @@ public class TicketController {
 	
 	@Autowired
 	private IssueCategoryService issueCategoryService;
+	
+	@Autowired
+	private TicketWorkAssigneeService ticketWorkAssigneeService;
+	
+	@Autowired
+	private AssigneeRecommendationFacadeImpl assigneeRecommendationFacadeImpl;
 	
 	@PostMapping("/tickets/submit")
 	public ResponseEntity<String> saveIssueCategory(@RequestBody TicketSubmitForm ticketForm) {
@@ -98,6 +116,105 @@ public class TicketController {
 		ticketsResident.setUnitNumber(unitNumber);
 		ticketsResident.setEmail(user.getUserName());
 		return ticketsResident;
+	}
+	
+	@GetMapping("/tickets/manager")
+	public ManagerTicketSystemResponse getManagerTicketSystem() {
+		// get user
+		// Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		// User user = (User)loggedInUser.getPrincipal();
+		// int userId = user.getId();
+		
+		int userId = 66;
+		User user = userService.getUserByUserId(userId);
+				
+		List<Ticket> tickets = ticketService.getAllTickets();
+		
+		// build response
+		List<ManagerTicketOverview> managerTicketOverviews = new ArrayList<>();
+		for (Ticket ticket: tickets) {
+			
+			List<AssigneeEntity> existAssignees = new ArrayList<>();
+			List<AssigneeEntity> recommendAssignees = new ArrayList<>();
+			
+			// find existing assignees
+			List<TicketWorkAssignee> ticketWorkAssignees = ticketWorkAssigneeService.getAllTicketWorkAssineeByTicketId(ticket.getId());
+			
+			
+			if (ticketWorkAssignees.size() == 0) {
+				existAssignees = null;
+			} else {
+				for (TicketWorkAssignee twa: ticketWorkAssignees) {
+					User existAssigneeUser = twa.getUser();
+					AssigneeEntity existAssignee = AssigneeEntity.builder()
+							.name(existAssigneeUser.getFirstName() + " " + existAssigneeUser.getLastName())
+							.userId(existAssigneeUser.getId())
+							.build();
+					existAssignees.add(existAssignee);
+				}
+			}
+			
+			// recommend assignees if existing assignees do not exist
+			if (existAssignees != null) {
+				recommendAssignees = null;
+			} else {
+				recommendAssignees = assigneeRecommendationFacadeImpl.getTicketAssineeRecommendation(ticket.getIssueCategory().getId());
+			}
+			
+			ManagerTicketOverview managerTicketOverview = ManagerTicketOverview.builder()
+					.ticketId(ticket.getId())
+					.submittedDate(ticket.getCreated())
+					.issue(ticket.getIssueCategory().getIssue().getIssueType())
+					.assignees(existAssignees)
+					.recommendStaff(recommendAssignees)
+					.build();
+			managerTicketOverviews.add(managerTicketOverview);
+		}
+		
+		ManagerTicketSystemResponse response = ManagerTicketSystemResponse.builder()
+				.tickets(managerTicketOverviews)
+				.phone(user.getPhoneNumber())
+				.email(user.getUserName())
+				.user_name(user.getFirstName() + " " + user.getLastName())
+				.build();		
+		return response;
+	}
+	
+	@PutMapping("/tickets/{ticket_id}/assignees")
+	public SimpleResponse assignAssignee(@RequestBody AssigneeForm form, @PathVariable("ticket_id") int ticketId, BindingResult result) {
+		if (result.hasErrors()) {
+			SimpleResponse simpleResponse = SimpleResponse.builder().status("500").message("Cannot resolve input request").build();
+			return simpleResponse;
+		}
+		
+		// get user
+		// Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		// User user = (User)loggedInUser.getPrincipal();
+		// int userId = user.getId();
+		int userId = 66;
+		
+		// only manager can do assignment
+		User user = userService.getUserByUserId(userId);
+		if (user.getUserType() != UserType.MANAGER) {
+			SimpleResponse simpleResponse = SimpleResponse.builder().status("400").message("Only MANAGER can assign job").build();
+			return simpleResponse;
+		}
+		
+		Ticket ticket = ticketService.getTicketById(ticketId);
+		
+		for (int theId : form.getAssignees()) {
+			User assignee = userService.getUserByUserId(theId);
+			TicketWorkAssignee ticketWorkAssignee = new TicketWorkAssignee();
+			ticketWorkAssignee.setTicket(ticket);
+			ticketWorkAssignee.setUser(assignee);
+			ticketWorkAssigneeService.addTickeWorkAssignee(ticketWorkAssignee);
+		}
+		// update ticket status
+		ticket.setStatus(TicketStatus.ASSINGED);
+		ticketService.addTicket(ticket);
+		
+		SimpleResponse simpleResponse = SimpleResponse.builder().status("200").message("Ticket Assigned").build();
+		return simpleResponse;
 	}
 	
 }

@@ -60,8 +60,11 @@ public class WorkAssignmentDao {
         return null;
     }
     
+    
+    
     public List<WorkAssignment> getWorkAssignmentByIssueCategoryId(int issueCategoryId) {
         IssueCategory issueCategory = null;
+        List<WorkAssignment> workAssignments = null;
 
         try (Session session = sessionFactory.openSession()) {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -69,15 +72,15 @@ public class WorkAssignmentDao {
             Root<IssueCategory> root = criteriaQuery.from(IssueCategory.class);
             criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("id"), issueCategoryId));
             issueCategory = session.createQuery(criteriaQuery).getSingleResult();
+            workAssignments = issueCategory.getIssue().getWorkAssignments();
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if (issueCategory != null) {
-            return issueCategory.getIssue().getWorkAssignments();
+        
+        if (workAssignments != null) {
+            return workAssignments;
         }
-
         return null;
     }
 

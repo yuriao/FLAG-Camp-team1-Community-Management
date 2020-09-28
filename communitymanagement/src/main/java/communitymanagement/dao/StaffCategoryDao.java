@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import communitymanagement.model.StaffCategory;
+import communitymanagement.model.WorkAssignment;
 
 @Repository
 public class StaffCategoryDao {
@@ -71,6 +72,26 @@ public class StaffCategoryDao {
 		if (staffCategory != null)
 			return staffCategory;
 		return null;
+    }
+    
+    public StaffCategory getStaffCategoryByWorkAssignmentId(int workAssignmentId) {
+    	WorkAssignment workAssignment = null;
+    	
+    	try (Session session = sessionFactory.openSession()) {
+    		session.beginTransaction();
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<WorkAssignment> criteriaQuery = builder.createQuery(WorkAssignment.class);
+			Root<WorkAssignment> root = criteriaQuery.from(WorkAssignment.class);
+			criteriaQuery.select(root).where(builder.equal(root.get("id"), workAssignmentId));
+			workAssignment = session.createQuery(criteriaQuery).getSingleResult();
+			session.getTransaction().commit();
+    	} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	if (workAssignment != null) {
+    		return workAssignment.getStaffCategory();
+    	}
+    	return null;
     }
     
     public void addStaffCategory(StaffCategory staffCategory) {

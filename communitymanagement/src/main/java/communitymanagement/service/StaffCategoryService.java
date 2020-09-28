@@ -28,4 +28,8 @@ public class StaffCategoryService {
     public StaffCategory getStaffCategoryByName(String name) {
     	return staffCategoryDao.getStaffCategoryByName(name);
     }
+    
+    public StaffCategory getStaffCategoryByWorkAssignmentId(int workAssignmentId) {
+    	return staffCategoryDao.getStaffCategoryByWorkAssignmentId(workAssignmentId);
+    }
 }
