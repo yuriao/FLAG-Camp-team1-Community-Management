@@ -17,8 +17,12 @@ public class IssueDao {
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
-			session.save(issue);
-			session.getTransaction().commit();
+			// de-duplicate
+			Issue existingIssue = getIssueByName(issue.getIssueType());
+			if (existingIssue == null) {
+				session.saveOrUpdate(issue);
+				session.getTransaction().commit();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
@@ -34,12 +38,6 @@ public class IssueDao {
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
-			// de-duplicate
-			Issue existingIssue = getIssueByName(issue.getIssueType());
-			if (existingIssue == null) {
-				session.saveOrUpdate(issue);
-				session.getTransaction().commit();
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
