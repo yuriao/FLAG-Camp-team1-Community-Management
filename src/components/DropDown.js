@@ -31,6 +31,7 @@ class DropDown extends Component {
             <div className="DropDown">
                 <p>{this.props.description}</p>
                 <select className="DropDownSelect" onChange={this.sendData}>
+                    <option value="" selected disabled hidden>Choose one</option>
                     {items}
                 </select>
             </div>

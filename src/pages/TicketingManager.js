@@ -65,7 +65,39 @@ class TicketingManager extends Component {
     
     componentDidMount(){
         this.ReloadTickets();
+        this.loadAssignee();
+        this.loadIssueCategory();
     }
+
+    loadIssueCategory=()=>{
+      Ajax('GET', "/tickets/ticket-issue-categories", [],
+          // successful callback
+          function(res) {
+            let items = JSON.parse(res);
+            this.setState({possible_issue_categories:items})
+            console.log("good");
+          },
+          // failed callback
+          function() {
+            console.log('fail');
+          }
+        );
+    }
+
+    loadAssignee=()=>{
+      Ajax('GET', "/tickets/ticket-assignees", [],
+          // successful callback
+          function(res) {
+            let items = JSON.parse(res);
+            this.setState({possible_assignees:items})
+            console.log("good");
+          },
+          // failed callback
+          function() {
+            console.log('fail');
+          }
+        );
+      }
 
     // refersh page function 
     ReloadTickets = ()=>{
@@ -92,7 +124,9 @@ class TicketingManager extends Component {
         let assigneeTag=[];
         if (this.state.allTicketsContent[i].assignee){
           console.log(this.state.allTicketsContent[i].assignee);
+          
           let assigneeTag_2=<div>Assigned: {this.state.allTicketsContent[i].assignee} </div>;
+          
           assigneeTag=assigneeTag_2;
         }else{
           assigneeTag=assigneeTag_1;
@@ -111,10 +145,6 @@ class TicketingManager extends Component {
       });
       this.setState({datasource:dsource}); // it is suggested that try not to directly change state var as next setState may discard the change, use setsTATE instead
       
-    }
-
-    loadAssignee=()=>{
-
     }
 
     // if need props, use this.props to access
@@ -207,7 +237,7 @@ class TicketingManager extends Component {
         };
         console.log(ticketData);
         //fetchAPI to create ticket
-        Ajax('POST', "/tickets", ticketData,
+        Ajax('POST', "/tickets/submit", ticketData,
           // successful callback
           function(res) {
             console.log("good");
@@ -289,12 +319,6 @@ class TicketingManager extends Component {
         obj={i:this.state.possible_assignees[0]};
       }
 
-      // test without backend communication
-      // let items=this.state.allTicketsContent;
-      // items[i].assignee=obj[i];
-      // this.setState({allTicketsContent:items})
-      // this.ReloadTickets();
-      
       Ajax('PUT', "/tickets/"+tid.toString()+"/assignees", obj[i],
           // successful callback
           function(res) {
@@ -306,6 +330,12 @@ class TicketingManager extends Component {
           }
         );
       this.refershTickets();
+
+        // test without backend communication
+      let items=this.state.allTicketsContent;
+      items[i].assignee=obj[i];
+      this.setState({allTicketsContent:items})
+      this.ReloadTickets();
     }
 
     // cancelAssignemnt=(event,i)=>{
