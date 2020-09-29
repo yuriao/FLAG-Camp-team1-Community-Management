@@ -110,10 +110,10 @@ public class TicketController {
 
 		TicketsResident ticketsResident = new TicketsResident();
 		ticketsResident.setTickets(ticketsOverview);
-		ticketsResident.setUserName(user.getUserName());
+		ticketsResident.setUserName(user.getFirstName() + " " + user.getLastName());
 		ticketsResident.setPhone(user.getPhoneNumber());
 		ticketsResident.setUnitNumber(unitNumber);
-		ticketsResident.setEmail(user.getUserName());
+		ticketsResident.setEmail(user.getUsername());
 		return ticketsResident;
 	}
 	
@@ -208,7 +208,7 @@ public class TicketController {
 		}
 
 		ManagerTicketSystemResponse response = ManagerTicketSystemResponse.builder().tickets(managerTicketOverviews)
-				.phone(user.getPhoneNumber()).email(user.getUserName())
+				.phone(user.getPhoneNumber()).email(user.getUsername())
 				.user_name(user.getFirstName() + " " + user.getLastName()).build();
 		return response;
 	}

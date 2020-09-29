@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class WorkAssignmentForm {
 	private String staffCategoryName;
-	private int issueCategoryId;
+	private int issueId;
 }

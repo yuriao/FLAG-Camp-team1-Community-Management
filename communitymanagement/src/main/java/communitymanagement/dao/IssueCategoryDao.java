@@ -3,10 +3,6 @@ package communitymanagement.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +16,7 @@ import communitymanagement.model.Location;
 public class IssueCategoryDao {
 	@Autowired
 	private SessionFactory sessionFactory;
+	
 
 	public void addIssueCategory(IssueCategory issueCategory) {
 		Session session = null;
@@ -36,105 +33,6 @@ public class IssueCategoryDao {
 				session.close();
 			}
 		}
-	}
-
-	public Issue getIssueByName(String name) {
-		Issue issue = null;
-		try (Session session = sessionFactory.openSession()) {
-			session.beginTransaction();
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-			CriteriaQuery<Issue> criteriaQuery = builder.createQuery(Issue.class);
-			Root<Issue> root = criteriaQuery.from(Issue.class);
-			criteriaQuery.select(root).where(builder.equal(root.get("issueType"), name));
-			issue = session.createQuery(criteriaQuery).getSingleResult();
-			session.getTransaction().commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (issue != null)
-			return issue;
-		return null;
-	}
-
-	public Location getLocationByName(String name) {
-		Location location = null;
-		try (Session session = sessionFactory.openSession()) {
-			session.beginTransaction();
-			CriteriaBuilder builder = session.getCriteriaBuilder();
-			CriteriaQuery<Location> criteriaQuery = builder.createQuery(Location.class);
-			Root<Location> root = criteriaQuery.from(Location.class);
-			criteriaQuery.select(root).where(builder.equal(root.get("locationType"), name));
-			location = session.createQuery(criteriaQuery).getSingleResult();
-			session.getTransaction().commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (location != null)
-			return location;
-		return null;
-	}
-
-	public void addIssue(Issue issue) {
-		Session session = null;
-		try {
-			session = sessionFactory.openSession();
-			session.beginTransaction();
-			// de-duplicate
-			Issue existingIssue = getIssueByName(issue.getIssueType());
-			if (existingIssue == null) {
-				session.saveOrUpdate(issue);
-				session.getTransaction().commit();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			session.getTransaction().rollback();
-		} finally {
-			if (session != null) {
-				session.close();
-			}
-		}
-	}
-
-	public void addLocation(Location location) {
-		Session session = null;
-		try {
-			session = sessionFactory.openSession();
-			session.beginTransaction();
-			// de-duplicate
-			Location existingLocation = getLocationByName(location.getLocationType());
-			if (existingLocation == null) {
-				session.saveOrUpdate(location);
-				session.getTransaction().commit();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			session.getTransaction().rollback();
-		} finally {
-			if (session != null) {
-				session.close();
-			}
-		}
-	}
-
-	public void addIssueCategoryByName(String issueName, String locationName) {
-		// issue
-		Issue issue = getIssueByName(issueName);
-		if (issue == null) {
-			issue = new Issue();
-			issue.setIssueType(issueName);
-			addIssue(issue);
-		}
-
-		// category
-		Location location = getLocationByName(locationName);
-		if (location == null) {
-			location = new Location();
-			location.setLocationType(locationName);
-			addLocation(location);
-		}
-
-		// issue category
-		addIssueCategory(issue, location);
 	}
 
 	public void addIssueCategory(Issue issue, Location location) {

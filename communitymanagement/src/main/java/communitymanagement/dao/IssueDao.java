@@ -1,5 +1,9 @@
 package communitymanagement.dao;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,24 @@ public class IssueDao {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	public Issue getIssueByName(String name) {
+		Issue issue = null;
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<Issue> criteriaQuery = builder.createQuery(Issue.class);
+			Root<Issue> root = criteriaQuery.from(Issue.class);
+			criteriaQuery.select(root).where(builder.equal(root.get("issueType"), name));
+			issue = session.createQuery(criteriaQuery).getSingleResult();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (issue != null)
+			return issue;
+		return null;
+	}
 	
 	public void addIssue(Issue issue) {
 		Session session = null;

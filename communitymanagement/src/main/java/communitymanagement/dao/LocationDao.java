@@ -1,5 +1,9 @@
 package communitymanagement.dao;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,24 @@ public class LocationDao {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	public Location getLocationByName(String name) {
+		Location location = null;
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<Location> criteriaQuery = builder.createQuery(Location.class);
+			Root<Location> root = criteriaQuery.from(Location.class);
+			criteriaQuery.select(root).where(builder.equal(root.get("locationType"), name));
+			location = session.createQuery(criteriaQuery).getSingleResult();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (location != null)
+			return location;
+		return null;
+	}
 	
 	public void addLocation(Location location) {
 		Session session = null;
