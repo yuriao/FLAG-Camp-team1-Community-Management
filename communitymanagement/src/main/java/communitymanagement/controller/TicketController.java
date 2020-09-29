@@ -134,6 +134,13 @@ public class TicketController {
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body("Staff accepted: ticket is in progress now");
 			} else if (action.equals("decline")) {
 				ticketService.updateTicketStatus(ticketId, TicketStatus.OPEN);
+
+				// Remove all (MVP should only have one) related assignee if staff declined
+				List<TicketWorkAssignee> allAssignee = ticketWorkAssigneeService.getAllTicketWorkAssineeByTicketId(ticketId);
+				for (TicketWorkAssignee assignee : allAssignee) {
+					ticketWorkAssigneeService.deleteTickeWorkAssigneeById(assignee.getId());
+				}
+
 				return ResponseEntity.status(HttpStatus.ACCEPTED).body("Staff declined: reopen ticket");
 			} else if (action.equals("complete")) {
 				ticketService.updateTicketStatus(ticketId, TicketStatus.COMPLETE);
