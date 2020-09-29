@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import communitymanagement.entity.TicketAssigned;
 import communitymanagement.model.Issue;
+import communitymanagement.model.IssueCategory;
 import communitymanagement.model.Location;
+import communitymanagement.service.IssueCategoryService;
 import communitymanagement.service.IssueService;
 import communitymanagement.service.LocationService;
 import communitymanagement.service.TicketAssignedService;
@@ -27,6 +29,9 @@ public class TicketIssueController {
 	@Autowired
 	private LocationService locationService;
 	
+	@Autowired
+	private IssueCategoryService issueCategoryService;
+	
 	@GetMapping("/tickets/staff")
 	public List<TicketAssigned> getTickets(@RequestParam(value = "user_id", defaultValue = "") int userId) {
 		return ticketAssignedService.getTicketAssignedByUserId(userId);
@@ -40,7 +45,8 @@ public class TicketIssueController {
 		for (Location location : locations) {
 			HashMap<String, Integer> issueList = new HashMap<String, Integer>();
 			for (Issue issue : issues) {
-				issueList.put(issue.getIssueType(), issue.getId());
+				IssueCategory issueCategory = issueCategoryService.getIssueCategoryByLocationIssue(location, issue);
+				issueList.put(issue.getIssueType(), issueCategory.getId());
 			}
 			allIssueLocationCategory.put(location.getLocationType(),issueList);
 		}

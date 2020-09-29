@@ -39,4 +39,8 @@ public class IssueCategoryService {
 	public void addIssueCategoryByName(String issueName, String locationName) {
 		issueCategoryDao.addIssueCategoryByName(issueName, locationName);
 	}
+	
+	public IssueCategory getIssueCategoryByLocationIssue(Location location, Issue issue) {
+		return issueCategoryDao.getIssueCategoryByLocationIssue(location, issue);
+	}
 }

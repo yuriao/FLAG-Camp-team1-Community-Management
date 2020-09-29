@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import communitymanagement.model.Issue;
 import communitymanagement.model.IssueCategory;
 import communitymanagement.model.Location;
+import communitymanagement.model.User;
 
 @Repository
 public class IssueCategoryDao {
@@ -186,4 +187,22 @@ public class IssueCategoryDao {
 		}
 	}
 
+	public IssueCategory getIssueCategoryByLocationIssue(Location location, Issue issue) {
+		IssueCategory issueCategory = null;
+		
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<IssueCategory> criteriaQuery = builder.createQuery(IssueCategory.class);
+            Root<IssueCategory> root = criteriaQuery.from(IssueCategory.class);
+            criteriaQuery.select(root).where(builder.equal(root.get("location_id"), location.getId())); 
+            criteriaQuery.select(root).where(builder.equal(root.get("issue_id"), issue.getId()));
+            issueCategory = session.createQuery(criteriaQuery).getSingleResult();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
+		return null;
+	}
 }
