@@ -2,27 +2,17 @@ package communitymanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import communitymanagement.dao.LocationDao;
 import communitymanagement.entity.TicketAssigned;
 import communitymanagement.model.Issue;
-import communitymanagement.model.IssueCategory;
 import communitymanagement.model.Location;
-import communitymanagement.model.Staff;
-import communitymanagement.model.Ticket;
-import communitymanagement.model.User;
-import communitymanagement.model.LocationEnum;
-import communitymanagement.model.IssueEnum;
+import communitymanagement.service.IssueService;
+import communitymanagement.service.LocationService;
 import communitymanagement.service.TicketAssignedService;
-import communitymanagement.service.TicketService;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -32,10 +22,10 @@ public class TicketIssueController {
 	private TicketAssignedService ticketAssignedService;
 	
 	@Autowired
-	private LocationEnum locationEnum;
+	private IssueService issueService;
 	
 	@Autowired
-	private IssueEnum issueEnum;
+	private LocationService locationService;
 	
 	@GetMapping("/tickets/staff")
 	public List<TicketAssigned> getTickets(@RequestParam(value = "user_id", defaultValue = "") int userId) {
@@ -43,10 +33,17 @@ public class TicketIssueController {
 	}
 
 	@GetMapping("/ticket-issue-categories")
-	public List<Enum> allIssueLocationCategory() {
-		List<Enum> allIssueLocationCategory = new ArrayList<Enum>();
-		allIssueLocationCategory.add(locationEnum);
-		allIssueLocationCategory.add(issueEnum);
+	public HashMap<String, HashMap<String, Integer>> allIssueLocationCategory() {
+		HashMap<String, HashMap<String, Integer>> allIssueLocationCategory = new HashMap<String, HashMap<String, Integer>>();
+		List<Location> locations = locationService.getAllLocations();
+		List<Issue> issues = issueService.getAllIssues();
+		for (Location location : locations) {
+			HashMap<String, Integer> issueList = new HashMap<String, Integer>();
+			for (Issue issue : issues) {
+				issueList.put(issue.getIssueType(), issue.getId());
+			}
+			allIssueLocationCategory.put(location.getLocationType(),issueList);
+		}
 		return allIssueLocationCategory;
 	}
 }

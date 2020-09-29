@@ -1,5 +1,7 @@
 package communitymanagement.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import communitymanagement.dao.IssueDao;
@@ -27,4 +29,7 @@ public class IssueService {
 		return issueDao.getIssueById(issueId);
 	}
 
+	public List<Issue> getAllIssues() {
+		return issueDao.getAllIssues();
+	}
 }

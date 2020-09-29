@@ -1,5 +1,12 @@
 package communitymanagement.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +24,12 @@ public class IssueDao {
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
-			// de-duplicate
-			Issue existingIssue = getIssueByName(issue.getIssueType());
-			if (existingIssue == null) {
+//			// de-duplicate
+//			Issue existingIssue = getIssueByName(issue.getIssueType());
+//			if (existingIssue == null) {
 				session.saveOrUpdate(issue);
 				session.getTransaction().commit();
-			}
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.getTransaction().rollback();
@@ -77,4 +84,19 @@ public class IssueDao {
 		return null;
 	}
 	
+	public List<Issue> getAllIssues() {
+		List<Issue> issues = new ArrayList<>();
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+			CriteriaQuery<Issue> criteriaQuery = criteriaBuilder.createQuery(Issue.class);
+			Root<Issue> root = criteriaQuery.from(Issue.class);
+			criteriaQuery.select(root);
+			issues = session.createQuery(criteriaQuery).getResultList();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return issues;
+	}
 }
