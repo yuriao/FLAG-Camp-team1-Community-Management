@@ -1,5 +1,8 @@
 package communitymanagement.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -8,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import communitymanagement.model.Issue;
 
 @Repository
@@ -97,6 +101,22 @@ public class IssueDao {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public List<Issue> getAllIssues() {
+		List<Issue> issues = new ArrayList<>();
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+			CriteriaQuery<Issue> criteriaQuery = criteriaBuilder.createQuery(Issue.class);
+			Root<Issue> root = criteriaQuery.from(Issue.class);
+			criteriaQuery.select(root);
+			issues = session.createQuery(criteriaQuery).getResultList();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return issues;
 	}
 	
 }

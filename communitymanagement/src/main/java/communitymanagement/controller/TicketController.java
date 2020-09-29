@@ -163,7 +163,7 @@ public class TicketController {
 //		User logInUser = (User)loggedInUser.getPrincipal();
 //		int userId = logInUser.getId();
 		
-		int userId = 46;
+		int userId = 158;
 		
 
 		User user = userService.getUserByUserId(userId);
@@ -226,7 +226,7 @@ public class TicketController {
 			// SecurityContextHolder.getContext().getAuthentication();
 			// User user = (User)loggedInUser.getPrincipal();
 			// int userId = user.getId();
-			int userId = 46;
+			int userId = 158;
 
 			// only manager can do assignment
 			User user = userService.getUserByUserId(userId);

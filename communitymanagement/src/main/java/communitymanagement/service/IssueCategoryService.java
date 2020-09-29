@@ -64,4 +64,8 @@ public class IssueCategoryService {
 		// issue category
 		addIssueCategory(issue, location);
 	}
+	
+	public IssueCategory getIssueCategoryByLocationIssue(Location location, Issue issue) {
+		return issueCategoryDao.getIssueCategoryByLocationIssue(location, issue);
+	}
 }

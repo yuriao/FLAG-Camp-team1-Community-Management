@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import communitymanagement.entity.SimpleComment;
@@ -79,7 +80,7 @@ public class TicketCommentController {
 			// User user = (User)loggedInUser.getPrincipal();
 			// int userId = user.getId();
 
-			int userId = 68;
+			int userId = 164;
 			User currentUser = userService.getUserByUserId(userId);
 
 			// get Ticket
@@ -109,8 +110,8 @@ public class TicketCommentController {
 		return ResponseEntity.status(HttpStatus.OK).body(msg);
 	}
 	
-	@GetMapping("/tickets/{ticket_id}/{user_id}")
-	public ResponseEntity<TicketForm> getTicketDetail(@PathVariable("ticket_id") int ticketId, @PathVariable("user_id") int userId) {
+	@GetMapping("/tickets/{ticket_id}")
+	public ResponseEntity<TicketForm> getTicketDetail(@PathVariable("ticket_id") int ticketId, @RequestParam("userId") int userId) {
 		//awaiting authentication
 		TicketForm ticketForm = new TicketForm();
 		Ticket ticket = ticketService.getTicketById(ticketId);
@@ -120,8 +121,8 @@ public class TicketCommentController {
 		return ResponseEntity.status(HttpStatus.OK).body(ticketForm);
 	}
 	
-	@PutMapping("/tickets/{ticket_id}/update/{user_id}")
-	public ResponseEntity<String> update(@RequestBody SimpleComment comment, @PathVariable("ticket_id") int ticketId, @PathVariable("user_id") int userId, BindingResult result) {
+	@PutMapping("/tickets/{ticket_id}/update")
+	public ResponseEntity<String> update(@RequestBody SimpleComment comment, @PathVariable("ticket_id") int ticketId, @RequestParam("userId") int userId, BindingResult result) {
 		//awaiting authentication
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
