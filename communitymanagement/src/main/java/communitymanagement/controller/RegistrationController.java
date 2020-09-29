@@ -48,7 +48,7 @@ public class RegistrationController {
 			User user = new User();
 			user.setFirstName(form.getFirst_name());
 			user.setLastName(form.getLast_name());
-			user.setUserName(form.getUsername());
+			user.setUsername(form.getUsername());
 			user.setPassword(form.getPassword());
 			user.setPhoneNumber(form.getPhone_number());
 

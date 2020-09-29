@@ -22,4 +22,8 @@ public class UserService {
 	public boolean isUserNameExisted(String name) {
 		return userDao.isUserNameExisted(name);
 	}
+	
+	public User getUserByUsername(String username) {
+		return userDao.getUserByUsername(username);
+	}
 }

@@ -17,7 +17,7 @@ public class AuthoritiesDao {
 	public void addAuthorities(User user) {
 		Authorities authorities = new Authorities();
 		authorities.setUserId(user.getId());
-		authorities.setUserName(user.getUserName());
+		authorities.setUsername(user.getUsername());
 		
 		UserType user_type = user.getUserType();
 		if (user_type.equals(UserType.RESIDENT)) {

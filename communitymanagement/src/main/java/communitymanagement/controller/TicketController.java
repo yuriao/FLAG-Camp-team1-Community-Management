@@ -9,13 +9,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import communitymanagement.entity.AssigneeEntity;
@@ -57,9 +58,15 @@ public class TicketController {
 	@PostMapping("/tickets/submit")
 	public ResponseEntity<String> saveIssueCategory(@RequestBody TicketSubmitForm ticketForm) {
 		try {
+			// get user from authentication
+	    	Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+			String username = loggedInUser.getName();
+			User user = userService.getUserByUsername(username);
+			int userId = user.getId();
+			
 			// Create a new ticket
 			Ticket ticket = new Ticket();
-			ticket.setUser(userService.getUserByUserId(ticketForm.getUserId()));
+			ticket.setUser(userService.getUserByUserId(userId));
 			ticket.setUnitNumber(ticketForm.getUnitNumber());
 			ticket.setIssueCategory(issueCategoryService.getIssueCategoryById(ticketForm.getIssueCategoryId()));
 			ticket.setSubject(ticketForm.getSubject());
@@ -86,8 +93,13 @@ public class TicketController {
 	}
 
 	@GetMapping("/tickets/resident")
-	public TicketsResident getResidentTickets(@RequestParam(value = "user") int userId) {
-		User user = userService.getUserByUserId(userId);
+	public TicketsResident getResidentTickets() {
+		// get user from authentication
+		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = loggedInUser.getName();
+		User user = userService.getUserByUsername(username);
+		int userId = user.getId();
+		
 		List<Ticket> tickets = ticketService.getTicketsByUser(userId);
 		String unitNumber = null;
 
@@ -110,10 +122,10 @@ public class TicketController {
 
 		TicketsResident ticketsResident = new TicketsResident();
 		ticketsResident.setTickets(ticketsOverview);
-		ticketsResident.setUserName(user.getUserName());
+		ticketsResident.setUserName(user.getFirstName() + " " + user.getLastName());
 		ticketsResident.setPhone(user.getPhoneNumber());
 		ticketsResident.setUnitNumber(unitNumber);
-		ticketsResident.setEmail(user.getUserName());
+		ticketsResident.setEmail(user.getUsername());
 		return ticketsResident;
 	}
 	
@@ -157,16 +169,10 @@ public class TicketController {
 	@GetMapping("/tickets/manager")
 	public ManagerTicketSystemResponse getManagerTicketSystem() {
 		
-		// get user
-//		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-//		String username = loggedInUser.getName();
-//		User logInUser = (User)loggedInUser.getPrincipal();
-//		int userId = logInUser.getId();
-		
-		int userId = 46;
-		
-
-		User user = userService.getUserByUserId(userId);
+		// get user from authentication
+		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = loggedInUser.getName();
+		User user = userService.getUserByUsername(username);
 
 		List<Ticket> tickets = ticketService.getAllTickets();
 
@@ -208,7 +214,7 @@ public class TicketController {
 		}
 
 		ManagerTicketSystemResponse response = ManagerTicketSystemResponse.builder().tickets(managerTicketOverviews)
-				.phone(user.getPhoneNumber()).email(user.getUserName())
+				.phone(user.getPhoneNumber()).email(user.getUsername())
 				.user_name(user.getFirstName() + " " + user.getLastName()).build();
 		return response;
 	}
@@ -221,15 +227,12 @@ public class TicketController {
 		}
 
 		try {
-			// get user
-			// Authentication loggedInUser =
-			// SecurityContextHolder.getContext().getAuthentication();
-			// User user = (User)loggedInUser.getPrincipal();
-			// int userId = user.getId();
-			int userId = 46;
+			// get user from authentication
+			Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+			String username = loggedInUser.getName();
+			User user = userService.getUserByUsername(username);
 
 			// only manager can do assignment
-			User user = userService.getUserByUserId(userId);
 			if (user.getUserType() != UserType.MANAGER) {
 				return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only MANAGER can assign job");
 			}

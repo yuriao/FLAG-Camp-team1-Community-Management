@@ -56,6 +56,24 @@ public class UserDao {
 			return user;
 		return null;
 	}
+	
+	public User getUserByUsername(String username) {
+		User user = null;
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder builder = session.getCriteriaBuilder();
+			CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+			Root<User> root = criteriaQuery.from(User.class);
+			criteriaQuery.select(root).where(builder.equal(root.get("username"), username));
+			user = session.createQuery(criteriaQuery).getSingleResult();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (user != null)
+			return user;
+		return null;
+	}
 
 	public boolean isUserNameExisted(String name) {
 		List<User> users = new ArrayList<>();
@@ -64,7 +82,7 @@ public class UserDao {
 			CriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
 			Root<User> root = criteriaQuery.from(User.class);
-			criteriaQuery.select(root).where(builder.equal(root.get("userName"), name));
+			criteriaQuery.select(root).where(builder.equal(root.get("username"), name));
 			users = session.createQuery(criteriaQuery).getResultList();
 			session.getTransaction().commit();
 		} catch (Exception e) {
