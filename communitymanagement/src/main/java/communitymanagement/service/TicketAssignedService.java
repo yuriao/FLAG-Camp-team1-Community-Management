@@ -41,7 +41,7 @@ public class TicketAssignedService {
 		for (Ticket ticket : ticketList) {
 			TicketAssigned ticketAssigned = new TicketAssigned();
 			ticketAssigned.setTicketId(ticket.getId());
-			ticketAssigned.setUnitNumber(ticket.getUnitNum());
+			ticketAssigned.setUnitNumber(ticket.getUnitNumber());
 			ticketAssigned.setSubmittedDate(ticket.getCreated());
 			ticketAssigned.setIssue(ticket.getIssueCategory().getIssue());
 			ticketAssignedList.add(ticketAssigned);
