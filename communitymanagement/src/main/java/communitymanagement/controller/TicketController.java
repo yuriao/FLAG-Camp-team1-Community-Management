@@ -149,13 +149,16 @@ public class TicketController {
       
 	@GetMapping("/tickets/manager")
 	public ManagerTicketSystemResponse getManagerTicketSystem() {
+		
 		// get user
-		// Authentication loggedInUser =
-		// SecurityContextHolder.getContext().getAuthentication();
-		// User user = (User)loggedInUser.getPrincipal();
-		// int userId = user.getId();
+//		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+//		String username = loggedInUser.getName();
+//		User logInUser = (User)loggedInUser.getPrincipal();
+//		int userId = logInUser.getId();
+		
+		int userId = 46;
+		
 
-		int userId = 68;
 		User user = userService.getUserByUserId(userId);
 
 		List<Ticket> tickets = ticketService.getAllTickets();
@@ -216,7 +219,7 @@ public class TicketController {
 			// SecurityContextHolder.getContext().getAuthentication();
 			// User user = (User)loggedInUser.getPrincipal();
 			// int userId = user.getId();
-			int userId = 68;
+			int userId = 46;
 
 			// only manager can do assignment
 			User user = userService.getUserByUserId(userId);

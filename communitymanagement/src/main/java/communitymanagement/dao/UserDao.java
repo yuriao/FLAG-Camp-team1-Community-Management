@@ -22,8 +22,8 @@ public class UserDao {
 
 	public void addUser(User user) {
 		user.setEnabled(true);
+		
 		Session session = null;
-
 		try {
 			session = sessionFactory.openSession();
 			session.beginTransaction();
@@ -37,7 +37,6 @@ public class UserDao {
 				session.close();
 			}
 		}
-
 	}
 
 	public User getUserByUserId(int id) {
@@ -71,10 +70,7 @@ public class UserDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (users.size() > 0) {
-			return true;
-		}
-		return false;
+		return users.size() > 0;
 	}
 
 }

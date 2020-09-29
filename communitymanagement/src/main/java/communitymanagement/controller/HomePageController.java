@@ -1,0 +1,23 @@
+package communitymanagement.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class HomePageController {
+
+	@RequestMapping("/login")
+	public ResponseEntity<String> login(@RequestParam(value = "error", required = false) String error,
+			@RequestParam(value = "logout", required = false) String logout) {
+		if (error != null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid username and Password");
+		}
+		if (logout != null) {
+			return ResponseEntity.status(HttpStatus.OK).body("You have logged out successfully");
+		}
+		return ResponseEntity.status(HttpStatus.OK).body("You have logged in successfully");
+	}
+}
