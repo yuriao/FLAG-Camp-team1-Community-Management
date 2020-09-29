@@ -44,8 +44,6 @@ public class TicketIssueController {
 		List<Location> locations = locationService.getAllLocations();
 		List<Issue> issues = issueService.getAllIssues();
 		
-		System.out.println(issues.size());
-		System.out.println(locations.size());
 		for (Location location : locations) {
 			Map<String, Integer> issueList = new HashMap<>();
 			for (Issue issue : issues) {

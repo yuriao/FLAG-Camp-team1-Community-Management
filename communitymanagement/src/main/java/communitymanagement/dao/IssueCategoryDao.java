@@ -22,7 +22,6 @@ public class IssueCategoryDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-
 	public void addIssueCategory(IssueCategory issueCategory) {
 		Session session = null;
 		try {
