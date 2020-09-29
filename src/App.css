@@ -7,8 +7,11 @@
 @import "./styles/Calender.css";
 @import "./styles/Payment.css";
 
-@import "./styles/RegistrationLogin.css";
 @import "./styles/ChatDashBoard.css";
+
+@import "./styles/Login.css";
+@import "./styles/Registration.css";
+
 
 .App {
   text-align: center;
