@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import RegistrationForm from "../components/RegistrationForm";
-import LoginForm  from "../components/LoginForm";
 
-class LoginPage extends Component {
+
+class RegisterPage extends Component {
     
     constructor(){
         super();
         this.state ={
-            formType: "Maintanence"
+            user_type: "resident"
         };
     }
    
@@ -21,12 +21,12 @@ class LoginPage extends Component {
             <div className="registerLogin">
                 <Navigation />
                 <div className="main">
-                  
-                  <div className = "centerPart">
-                  
-                  <LoginForm/>
-                  </div>
+                
+                  <div className = "registerPart">
 
+                  <RegistrationForm user_type = {this.state.user_type}/>
+                    
+                  </div>
                 </div>
             
                <Footer/>
@@ -37,4 +37,4 @@ class LoginPage extends Component {
     }
 }
 
-export default LoginPage;
+export default RegisterPage;

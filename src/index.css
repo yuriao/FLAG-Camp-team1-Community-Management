@@ -3,15 +3,19 @@
 @import "./styles/TicketingResident.css";
 @import "./styles/Blank.css";
 @import "./styles/Footer.css";
-@import "./styles/RegistrationLogin.css";
+@import "./styles/Login.css";
 @import "./styles/Calender.css";
 @import "./styles/WorkOrder.css";
 @import "./styles/Payment.css";
 @import "./styles/DropDown.css";
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import '~antd/dist/antd.css';
+
 @import './styles/DashBoardResident.css';
 @import './styles/News.css';
+
+@import './styles/Registration.css';
+
 
 body {
   margin: 0;

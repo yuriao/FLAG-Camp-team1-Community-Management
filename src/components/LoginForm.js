@@ -1,18 +1,24 @@
 import React,{Component,Fragment} from "react";
  import {Radio, Row, Col,Form, Input, Button, Checkbox } from 'antd';
  import { UserOutlined, LockOutlined } from '@ant-design/icons';
- 
+ import {LoginRequest} from './AccountAxios';
  
  class Login extends Component{
      constructor(){
          super();
          this.state  = {
-             value:0
+            //  value:0
          };
  
      }
        onFinish = (values) => {
-         console.log('Received values of form: ', values);
+        LoginRequest(values).then(response =>{
+               
+               console.log(response);
+           }).catch(error =>{
+                console.log(error);
+           })
+     
        };
  
        onChange = e => {
@@ -23,10 +29,6 @@ import React,{Component,Fragment} from "react";
        };
  
  
-       toggleForm = ()=>{
-           alert("login: sign up button clicked")
-          this.props.switchForm("register")
-       }
  
      render(){
          return(
