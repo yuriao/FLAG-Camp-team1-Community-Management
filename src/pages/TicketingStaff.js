@@ -48,6 +48,10 @@ class TicketingStaff extends Component {
        }
     }
 
+    componentDidMount(){
+      this.reloadTickets();
+    }
+
     reloadTickets=()=>{
             
       let dsource=[];
@@ -89,7 +93,7 @@ class TicketingStaff extends Component {
 
         dsource.push({
             key: i,
-            ticket_id: <a href=''>{this.state.allTicketsContent[i].ticket_id}</a>, 
+            ticket_id: <Button href="/TicketingDetail" onClick={this.TicketIdStore(this.state.allTicketsContent[i].ticket_id)} type="link">{this.state.allTicketsContent[i].ticket_id}</Button>, 
             unit: this.state.allTicketsContent[i].unit, 
             subject: this.state.allTicketsContent[i].subject, 
             created: this.state.allTicketsContent[i].created, 
@@ -100,10 +104,9 @@ class TicketingStaff extends Component {
     });
     this.setState({datasource:dsource});
   }
-    // the point is, we only display 7 days on page, so only need 7 arrays. for exact days info, will pass from db and will add checking codes later
-    // if need props, use this.props to access
-    componentDidMount(){
-      this.reloadTickets();
+    
+  TicketIdStore = (tid) =>{
+      sessionStorage.setItem('inquiredTicketID', 'tid');
     }
 
     refershTickets=()=>{

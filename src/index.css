@@ -15,7 +15,7 @@
 @import './styles/News.css';
 
 @import './styles/Registration.css';
-
+@import './styles/TicketingDetail.css';
 
 body {
   margin: 0;
