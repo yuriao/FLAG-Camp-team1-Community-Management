@@ -53,7 +53,7 @@ public class TicketDao {
 	}
 
 	public List<Ticket> getTicketsByUserIdWithTimeRange(int userId, Timestamp start, Timestamp end) {
-		List<Ticket> tickets = new ArrayList<>();
+		List<Ticket> tickets = null;
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -71,7 +71,7 @@ public class TicketDao {
 	}
 	
 	public List<Ticket> getAllTicketsByUserId(int userId) {
-		List<Ticket> tickets = new ArrayList<>();
+		List<Ticket> tickets = null;
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -87,7 +87,7 @@ public class TicketDao {
 	}
 
 	public List<Ticket> getAllTickets() {
-		List<Ticket> tickets = new ArrayList<>();
+		List<Ticket> tickets = null;
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
