@@ -23,6 +23,8 @@ public class Authorities implements Serializable {
 	private int id;
 
 	private int userId;
+	
+	private String username;
 
 	private String authorities;
 }

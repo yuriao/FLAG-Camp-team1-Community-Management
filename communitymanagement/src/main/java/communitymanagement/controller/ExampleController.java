@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import communitymanagement.entity.IssueCategoryForm;
 import communitymanagement.entity.WorkAssignmentForm;
-import communitymanagement.model.IssueCategory;
+import communitymanagement.model.Issue;
 import communitymanagement.model.StaffCategory;
 import communitymanagement.model.User;
 import communitymanagement.model.WorkAssignment;
 import communitymanagement.service.IssueCategoryService;
+import communitymanagement.service.IssueService;
 import communitymanagement.service.StaffCategoryService;
 import communitymanagement.service.UserService;
 import communitymanagement.service.WorkAssignmentService;
@@ -37,6 +38,9 @@ public class ExampleController {
 
 	@Autowired
 	WorkAssignmentService workAssignmentService;
+	
+	@Autowired
+	IssueService issueService;
 
 	@Autowired
 	UserService userService;
@@ -110,15 +114,17 @@ public class ExampleController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Cannot resolve input request");
 		}
 		try {
+			Issue issue = issueService.getIssueById(form.getIssueId());
+			
 			StaffCategory staffCategory = staffCategoryService.getStaffCategoryByName(form.getStaffCategoryName());
 			if (staffCategory == null) {
 				staffCategory = new StaffCategory();
 				staffCategory.setCategory(form.getStaffCategoryName());
 				staffCategoryService.addStaffCategory(staffCategory);
 			}
-			IssueCategory issueCategory = issueCategoryService.getIssueCategoryById(form.getIssueCategoryId());
+			
 			WorkAssignment workAssignment = new WorkAssignment();
-			workAssignment.setIssue(issueCategory.getIssue());
+			workAssignment.setIssue(issue);
 			workAssignment.setStaffCategory(staffCategory);
 			workAssignmentService.addWorkAssignment(workAssignment);
 		} catch (Exception e) {

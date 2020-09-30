@@ -4,7 +4,6 @@ import communitymanagement.model.Ticket;
 import communitymanagement.model.TicketWorkAssignee;
 import communitymanagement.service.TicketService;
 import communitymanagement.service.TicketWorkAssigneeService;
-import communitymanagement.service.WorkAssignmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

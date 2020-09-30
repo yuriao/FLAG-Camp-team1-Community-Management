@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import TicketingManager from './pages/TicketingManager'
 import TicketingStaff from './pages/TicketingStaff'
 import TicketingResident from './pages/TicketingResident'
-
+import Registeration from './pages/Registration';
 import DashboardResident from './pages/DashboardResident';
 import Calender from './pages/Calender';
 import Login from './pages/Login';
@@ -46,15 +46,14 @@ function App() {
       <Route exact path='/login' render={() =>
         <Login/>
       }/>
+       <Route exact path='/register' render={() =>
+        <Registeration/>
+      }/>
+
 
       <Route exact path='/Calender' render={() =>
         <Calender/>
       }/>
-
-
-      {/* <Route exact path='/register' render={() =>
-        <RegistrationForm />
-      } /> */}
 
       <Route exact path='/DashboardResident' render={() =>
         <DashboardResident />

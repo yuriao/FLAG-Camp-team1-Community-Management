@@ -3,9 +3,12 @@ package communitymanagement.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +42,11 @@ public class TicketCommentDao {
 		List<TicketComment> ticketComment = new ArrayList<>();
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
-			ticketComment = session.createCriteria(TicketComment.class).add(Restrictions.eq("ticket_id" ,ticketId)).list();
+			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+			CriteriaQuery<TicketComment> criteriaQuery = criteriaBuilder.createQuery(TicketComment.class);
+			Root<TicketComment> root = criteriaQuery.from(TicketComment.class);
+			criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("ticket"), ticketId));
+			ticketComment = session.createQuery(criteriaQuery).getResultList();
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			e.printStackTrace();

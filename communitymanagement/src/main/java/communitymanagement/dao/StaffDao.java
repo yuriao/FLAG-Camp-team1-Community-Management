@@ -12,11 +12,9 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import communitymanagement.model.Authorities;
 import communitymanagement.model.Staff;
 import communitymanagement.model.StaffCategory;
 import communitymanagement.model.User;
-import communitymanagement.model.UserType;
 
 @Repository
 public class StaffDao {
@@ -25,18 +23,12 @@ public class StaffDao {
     private SessionFactory sessionFactory;
 
     public void addStaff(Staff staff) {
-        staff.getUser().setUserType(UserType.STAFF);
-
-        Authorities authorities = new Authorities();
-        authorities.setAuthorities("ROLE_STAFF");
-        authorities.setUserId(staff.getUser().getId());
 
         Session session = null;
 
         try {
             session = sessionFactory.openSession();
             session.beginTransaction();
-            session.save(authorities);
             session.save(staff);
             session.getTransaction().commit();
         } catch (Exception e) {
