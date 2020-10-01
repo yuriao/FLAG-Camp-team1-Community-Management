@@ -7,25 +7,20 @@ import {InfoCircleOutlined,FieldNumberOutlined,UserOutlined} from '@ant-design/i
 class StaffSignUp extends Component {
     
     handleChange = (param)=>{
-        alert(param.value);
+       return param.key;
     }
 
     render() {
         const { Option } = Select;
-
-        // function handleChange(value) { 
-        // console.log(value); 
-        // }
-
-        
+       
 
         return (
             <div className="additionalInfo">
-                    {/* <h1>This is STAFF additional components</h1> */}
+                  
                    <Form.Item
                          label ="Category " 
-                         name="UnitNumber"
-                         rules={[{ required: true, message: 'Please input your Unit Number!' }]}
+                         name="category"
+                         rules={[{ required: true, message: 'Please select your category!' }]}
                     >
                     
                     <Select
@@ -34,10 +29,13 @@ class StaffSignUp extends Component {
                         style={{ width: '100%' }}
                         onChange={this.handleChange}
                     >
-                        <Option value="appliances">Appliances</Option>
-                        <Option value="cable">Cable</Option>
-                        <Option value="water">Water</Option>
-                        <Option value="electricity">Electricity</Option>
+                        <Option value="001">Appliances</Option>
+                        <Option value="002">Cable</Option>
+                        <Option value="003">Water</Option>
+                        <Option value="004">Electricity</Option>
+                        <Option value="005">Floor</Option>
+                        <Option value="006">Door</Option>
+                        
                     </Select>
                     </Form.Item>
 

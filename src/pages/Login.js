@@ -19,19 +19,14 @@ class LoginPage extends Component {
         return (
             
             <div className="registerLogin">
-                <Navigation />
                 <div className="main">
-                  <div className = "leftPart">
+                  
+                  <div className = "centerPart">
+                  
                   <LoginForm/>
                   </div>
-                  <div className = "rightPart">
 
-                  <RegistrationForm formType = {this.state.formType}/>
-                    
-                  </div>
                 </div>
-            
-               <Footer/>
                
             </div>
             

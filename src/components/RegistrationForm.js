@@ -2,51 +2,67 @@ import React,{Component,Fragment} from "react";
 
 import {Radio, Row, Col,Form, Input, Button, Checkbox } from 'antd';
 
-import {MailOutlined,UserOutlined, LockOutlined } from '@ant-design/icons';
+import {MailOutlined,UserOutlined, LockOutlined,PhoneOutlined} from '@ant-design/icons';
 import ResidentSignUp from './ResidentSignUp';
 import ManagerSignUp from './ManagerSignUp';
 import StaffSignUp from './StaffSignUp';
+import {RegisterRequest} from './AccountAxios';
 
 class RegisterForm extends Component{
     constructor(){
         super();
         this.state  = {
-           
+        //    type: "",
         };
-
+      
     }
-      onFinish = values => {
-
-        console.log('Received values of form: ', values);
+   
+      onFinish = (values) => {
+        const personType = this.props.user_type;
+        // this.dataFromChild(this.props.formType);
+       RegisterRequest(values,personType).then(response =>{          
+            console.log(response);
+        }).catch(error =>{
+            console.log(error);
+        })
+        // console.log('Received values of form: ', values);
       };
 
-
-   
-      toggleForm = ()=>{
-          alert("Sign Up: login button clicked")
-        this.props.switchForm("login");
-    }
+    //    dataFromChild = (data)=>{
+    //     this.setState({
+    //         type: data,
+    //     })
+    //     console.log(this.state);
+    //    }
+     
 
     render(){
-
+        
+        const {user_type} = this.props;
+       
+        
         const result = () =>{
-            if(this.props.formType === "Resident"){
+            if(user_type === "resident"){
+               
                 return <ResidentSignUp/>;
             }
-            else if(this.props.formType === "Manager"){
+            else if(user_type === "manager"){
               
                 return <ManagerSignUp/>;
             }
-            else {
-              
+            else if (user_type === "maintanence") {
+               
                 return <StaffSignUp/>;
             }
+        
         }
         return(
                  <Fragment>
-                     <h4>Welcome to {this.props.formType} Portal!</h4>
+                     <h4>Welcome to {this.props.user_type} portal!</h4>
+                     <br/>
+                     <br/>
                     <div className = "registerform-header">
-                        <p className = "column">Create a new account</p>
+                        {/* <p className = "column">Create a new account</p> */}
                         
                     </div>
                      
@@ -56,12 +72,12 @@ class RegisterForm extends Component{
                                 name="normal_login"
                                 className="login-form"
                                 initialValues={{ remember: true }}
-                                onFinish={()=>this.onFinish}
-                                >
+                                onFinish={this.onFinish}
+                            >
                  
                                 <Form.Item
                                     label ="First Name: " 
-                                     name="FirstName"
+                                     name="first_name"
                                     rules={[{ required: true, message: 'Please input your First Name!' }]}
                                 >
                                    
@@ -70,7 +86,7 @@ class RegisterForm extends Component{
 
                                 <Form.Item
                                     label ="Last Name: "
-                                     name="LastName"
+                                     name="last_name"
                                     rules={[{ required: true, message: 'Please input your Last Name!' }]}
                                 >
                                    
@@ -79,7 +95,7 @@ class RegisterForm extends Component{
 
                                 <Form.Item
                                    label ="Email:"
-                                      name="Email"
+                                      name="username"
                                     rules={[{ required: true, message: 'Please input your Email address!' }]}
                                 >
                                     
@@ -123,10 +139,17 @@ class RegisterForm extends Component{
                                     <Input type = "password" prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Confirm your paasowrd" />
                                 </Form.Item>
 
-                               
+                                <Form.Item
+                                    name="phone_number"
+                                    label="Phone Number"
+                                    rules={[{ required: true, message: 'Please input your phone number!' }]}
+                                >
+                                    <Input prefix={<PhoneOutlined className="site-form-item-icon" />}  style={{ width: '100%' }} 
+                                    placeholder = "Input your phone number"/>
+                                </Form.Item>
 
                                 <Form.Item>     
-                               
+                                
                                 {result()}
                                
                                 </Form.Item>

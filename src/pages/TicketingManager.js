@@ -47,6 +47,7 @@ class TicketingManager extends Component {
            assignment:[],
            datasource:[],
            recommend_staff:["engineer1","engineer2"],
+           assignee:["engineer1"],
            possible_issue_categories:{
              "kitchen": ["sink", "dishwasher"], 
              "bathroom": ["sink", "furniture","floor"],
@@ -118,7 +119,7 @@ class TicketingManager extends Component {
 
         dsource.push({
             key: i,
-            ticket_id: <a href=''>{this.state.allTicketsContent[i].ticket_id}</a>, 
+            ticket_id: <Button href="/TicketingDetail" onClick={this.TicketIdStore(this.state.allTicketsContent[i].ticket_id)} type="link">{this.state.allTicketsContent[i].ticket_id}</Button>, 
             unit: this.state.allTicketsContent[i].unit, 
             subject: this.state.allTicketsContent[i].subject, 
             created: this.state.allTicketsContent[i].created, 
@@ -129,6 +130,10 @@ class TicketingManager extends Component {
       });
       this.setState({datasource:dsource}); // it is suggested that try not to directly change state var as next setState may discard the change, use setsTATE instead
       
+    }
+
+    TicketIdStore = (tid) =>{
+      sessionStorage.setItem('inquiredTicketID', 'tid');
     }
 
     // if need props, use this.props to access

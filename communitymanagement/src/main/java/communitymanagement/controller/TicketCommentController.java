@@ -58,7 +58,6 @@ public class TicketCommentController {
 	@PutMapping("/tickets/{ticket_id}/staff-update")
 	public ResponseEntity<String> staffUpdate(@RequestBody TicketCommentForm form,
 			@PathVariable("ticket_id") int ticketId, BindingResult result) {
-
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Fail to build the ticket comment form");
@@ -127,7 +126,6 @@ public class TicketCommentController {
 		// TODO: check if user can see the ticket -- manager, assigned staff, resident
 		// that created the ticket
 		// add code here
-
 		TicketForm ticketForm = new TicketForm();
 		Ticket ticket = ticketService.getTicketById(ticketId);
 		List<TicketComment> ticketComment = ticketCommentService.getAllTicketComments(ticketId);
@@ -143,7 +141,6 @@ public class TicketCommentController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Fail to build the ticket comment form");
 		}
-
 		// get user from authentication
 		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = loggedInUser.getName();

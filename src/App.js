@@ -6,33 +6,20 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import TicketingManager from './pages/TicketingManager'
 import TicketingStaff from './pages/TicketingStaff'
 import TicketingResident from './pages/TicketingResident'
-
+import Registeration from './pages/Registration';
 import DashboardResident from './pages/DashboardResident';
 import Calender from './pages/Calender';
 import Login from './pages/Login';
 import DashboardManager from './pages/DashboardManager';
 import DashboardStaff from './pages/DashboardStaff';
+import TicketingDetail from './pages/TicketingDetail';
+import Home from './pages/Home';
 
 function App() {
   return (
     <Router basename={'/'}>
       <Route exact path='/' render={() =>
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              Edit <code>src/App.js</code> and save to reload.
-          </p>
-            <a
-              className="App-link"
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn React
-          </a>
-          </header>
-        </div>
+        <Home />
       } />
       <Route exact path='/TicketingResident' render={() =>
         <TicketingResident />
@@ -44,17 +31,16 @@ function App() {
         <TicketingStaff />
       } />
       <Route exact path='/login' render={() =>
-        <Login/>
-      }/>
+        <Login />
+      } />
+      <Route exact path='/register' render={() =>
+        <Registeration />
+      } />
+
 
       <Route exact path='/Calender' render={() =>
-        <Calender/>
-      }/>
-
-
-      {/* <Route exact path='/register' render={() =>
-        <RegistrationForm />
-      } /> */}
+        <Calender />
+      } />
 
       <Route exact path='/DashboardResident' render={() =>
         <DashboardResident />
@@ -66,6 +52,10 @@ function App() {
 
       <Route exact path='/DashboardStaff' render={() =>
         <DashboardStaff />
+      } />
+
+      <Route exact path='/TicketingDetail' render={() =>
+        <TicketingDetail />
       } />
     </Router>
   );

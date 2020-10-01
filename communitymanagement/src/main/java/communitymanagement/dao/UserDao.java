@@ -56,7 +56,7 @@ public class UserDao {
 			return user;
 		return null;
 	}
-
+	
 	public User getUserByUsername(String username) {
 		User user = null;
 		try (Session session = sessionFactory.openSession()) {
