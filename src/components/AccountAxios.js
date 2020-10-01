@@ -2,7 +2,7 @@ import service from './RequestInterceptor';
 
 export function LoginRequest(data){
     return service.request({  //返回给调用此方法的caller
-        url:"/login/",
+        url:"/communitymanagement/login/",
         method: "post",
         data: data,
        
@@ -20,7 +20,7 @@ export function LoginRequest(data){
 
 export function RegisterRequest(data,type){
     return service.request({  //返回给调用此方法的caller
-        url:"/registration/" + type,
+        url:"/communitymanagement/registration/" + type,
         method: "post",
         data: data,
         

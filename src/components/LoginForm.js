@@ -18,7 +18,7 @@ import React,{Component,Fragment} from "react";
            }).catch(error =>{
                 console.log(error);
            })
-     
+           console.log(values);
        };
  
        onChange = e => {

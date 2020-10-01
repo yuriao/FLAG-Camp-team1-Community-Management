@@ -20,12 +20,14 @@ class RegisterForm extends Component{
       onFinish = (values) => {
         const personType = this.props.user_type;
         // this.dataFromChild(this.props.formType);
-       RegisterRequest(values,personType).then(response =>{          
+       RegisterRequest(values,personType).then(
+           response =>{          
             console.log(response);
-        }).catch(error =>{
+        }
+        ).catch(error =>{
             console.log(error);
         })
-        // console.log('Received values of form: ', values);
+        console.log('Received values of form: ', values);
       };
 
     //    dataFromChild = (data)=>{

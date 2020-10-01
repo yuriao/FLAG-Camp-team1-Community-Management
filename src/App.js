@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import TicketingManager from './pages/TicketingManager'
 import TicketingStaff from './pages/TicketingStaff'
 import TicketingResident from './pages/TicketingResident'
-import Registeration from './pages/Registration';
+import Registration from './pages/Registration';
 import DashboardResident from './pages/DashboardResident';
 import Calender from './pages/Calender';
 import Login from './pages/Login';
@@ -17,7 +17,7 @@ import Home from './pages/Home';
 
 function App() {
   return (
-    <Router basename={'/communitymanagement'}>
+    <Router basename={'/Home'}>
       <Route exact path='/' render={() =>
         <Home />
       } />
@@ -31,6 +31,7 @@ function App() {
         <TicketingStaff />
       } />
       <Route exact path='/login' render={() =>
+
         <Login />
       } />
       <Route exact path='/register' render={() =>
@@ -38,9 +39,11 @@ function App() {
       } />
 
 
-      <Route exact path='/Calender' render={() =>
+
+     <Route exact path='/Calender' render={() =>
         <Calender />
       } />
+
 
       <Route exact path='/DashboardResident' render={() =>
         <DashboardResident />
