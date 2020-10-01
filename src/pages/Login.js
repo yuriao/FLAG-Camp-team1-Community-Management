@@ -19,7 +19,6 @@ class LoginPage extends Component {
         return (
             
             <div className="registerLogin">
-                <Navigation />
                 <div className="main">
                   
                   <div className = "centerPart">
@@ -28,8 +27,6 @@ class LoginPage extends Component {
                   </div>
 
                 </div>
-            
-               <Footer/>
                
             </div>
             
