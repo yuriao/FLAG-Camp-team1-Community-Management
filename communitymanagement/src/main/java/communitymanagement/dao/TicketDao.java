@@ -15,13 +15,12 @@ import org.springframework.stereotype.Repository;
 
 import communitymanagement.model.Ticket;
 
-
 @Repository
 public class TicketDao {
-	
+
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	public void addTicket(Ticket ticket) {
 		Session session = null;
 		try {
@@ -36,9 +35,9 @@ public class TicketDao {
 			if (session != null) {
 				session.close();
 			}
-		} 
+		}
 	}
-	
+
 	public Ticket getTicketById(int ticketId) {
 		Ticket ticket = null;
 		try (Session session = sessionFactory.openSession()) {
@@ -59,8 +58,8 @@ public class TicketDao {
 			CriteriaQuery<Ticket> criteriaQuery = criteriaBuilder.createQuery(Ticket.class);
 			Root<Ticket> root = criteriaQuery.from(Ticket.class);
 			criteriaQuery.select(root).where(criteriaBuilder.greaterThanOrEqualTo(root.get("created"), start))
-										.where(criteriaBuilder.lessThanOrEqualTo(root.get("created"), end))
-										.where(criteriaBuilder.equal(root.get("user"), userId));
+					.where(criteriaBuilder.lessThanOrEqualTo(root.get("created"), end))
+					.where(criteriaBuilder.equal(root.get("user"), userId));
 			tickets = session.createQuery(criteriaQuery).getResultList();
 			session.getTransaction().commit();
 		} catch (Exception e) {
@@ -68,7 +67,7 @@ public class TicketDao {
 		}
 		return tickets;
 	}
-	
+
 	public List<Ticket> getAllTicketsByUserId(int userId) {
 		List<Ticket> tickets = new ArrayList<>();
 		try (Session session = sessionFactory.openSession()) {
@@ -100,7 +99,7 @@ public class TicketDao {
 		}
 		return tickets;
 	}
-	
+
 	public void removeTicket(int ticketId) {
 		Session session = null;
 		try {
@@ -117,5 +116,4 @@ public class TicketDao {
 			}
 		}
 	}
-
 }

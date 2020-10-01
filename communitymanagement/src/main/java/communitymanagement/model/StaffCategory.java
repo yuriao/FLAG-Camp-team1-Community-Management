@@ -31,4 +31,5 @@ public class StaffCategory implements Serializable {
 
     @OneToMany(mappedBy = "staffCategory", fetch=FetchType.EAGER)
     private List<Staff> staff;
+    
 }

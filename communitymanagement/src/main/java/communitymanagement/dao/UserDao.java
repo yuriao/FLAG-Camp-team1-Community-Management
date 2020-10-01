@@ -22,7 +22,7 @@ public class UserDao {
 
 	public void addUser(User user) {
 		user.setEnabled(true);
-		
+
 		Session session = null;
 		try {
 			session = sessionFactory.openSession();
@@ -56,7 +56,7 @@ public class UserDao {
 			return user;
 		return null;
 	}
-	
+
 	public User getUserByUsername(String username) {
 		User user = null;
 		try (Session session = sessionFactory.openSession()) {
@@ -90,5 +90,4 @@ public class UserDao {
 		}
 		return users.size() > 0;
 	}
-
 }

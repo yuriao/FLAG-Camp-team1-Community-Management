@@ -3,6 +3,8 @@ package communitymanagement.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -12,6 +14,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import communitymanagement.entity.AssigneeRawData;
 import communitymanagement.model.TicketWorkAssignee;
 
 @Repository
@@ -106,6 +109,44 @@ public class TicketWorkAssigneeDao {
 			}
 		}
 		return ticketWorkAssignees;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AssigneeRawData> getAllExistingAssignment() {
+		List<AssigneeRawData> result = new ArrayList<>();
+		try (Session session = sessionFactory.openSession()) {
+			String sql = "SELECT ticket.id AS ticketId, ticket.created, issue.issue_type AS issueType, user.id AS userId, user.first_name AS userFirstName, user.last_name AS userLastName "
+					+ "FROM ticket INNER JOIN issue_category ic ON ticket.issue_category_id = ic.id "
+					+ "INNER JOIN issue ON issue.id = ic.issue_id "
+					+ "INNER JOIN ticket_work_assignee twa ON ticket.id = twa.ticket_id "
+					+ "INNER JOIN user ON twa.user_id = user.id";
+			EntityManager em = session.getEntityManagerFactory().createEntityManager();
+			Query query = em.createNativeQuery(sql, "AssigneeRawDataEntity");
+			result = query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AssigneeRawData> getAllPossibleStaffRecommendation() {
+		List<AssigneeRawData> result = new ArrayList<>();
+		try (Session session = sessionFactory.openSession()) {
+			String sql = "SELECT ticket.id AS ticketId, ticket.created, issue.issue_type AS issueType, user.id AS userId, user.first_name AS userFirstName, user.last_name AS userLastName "
+					+ "FROM ticket INNER JOIN issue_category ic ON ticket.issue_category_id = ic.id "
+					+ "INNER JOIN issue ON issue.id = ic.issue_id "
+					+ "INNER JOIN work_assignment wa ON ic.issue_id = wa.issue_id "
+					+ "INNER JOIN staff ON staff.staffCategory_id = wa.staffCategory_id "
+					+ "INNER JOIN user ON user.id = staff.user_id "
+					+ "WHERE NOT EXISTS (SELECT 1 FROM ticket_work_assignee WHERE ticket.id = ticket_work_assignee.ticket_id)";
+			EntityManager em = session.getEntityManagerFactory().createEntityManager();
+			Query query = em.createNativeQuery(sql, "AssigneeRawDataEntity");
+			result = query.getResultList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }
