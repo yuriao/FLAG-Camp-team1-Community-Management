@@ -1,4 +1,5 @@
 {
+  "homepage": "http://localhost:8080/t",
   "name": "community-management",
   "version": "0.1.0",
   "private": true,

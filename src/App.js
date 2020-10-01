@@ -16,8 +16,9 @@ import TicketingDetail from './pages/TicketingDetail';
 import Home from './pages/Home';
 
 function App() {
+  let basenameContent='/';
   return (
-    <Router basename={'/'}>
+    <Router basename={basenameContent}>
       <Route exact path='/' render={() =>
         <Home />
       } />

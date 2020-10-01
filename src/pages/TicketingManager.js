@@ -86,7 +86,6 @@ class TicketingManager extends Component {
 
     // refersh page function 
     ReloadTickets = ()=>{
-      
       let all_assignees=this.state.recommend_staff;
       let dsource=[];
 
@@ -119,7 +118,7 @@ class TicketingManager extends Component {
 
         dsource.push({
             key: i,
-            ticket_id: <Button href="/TicketingDetail" onClick={this.TicketIdStore(this.state.allTicketsContent[i].ticket_id)} type="link">{this.state.allTicketsContent[i].ticket_id}</Button>, 
+            ticket_id: <Button href='/communitymanagement/TicketingDetail' onClick={this.TicketIdStore(this.state.allTicketsContent[i].ticket_id)} type="link">{this.state.allTicketsContent[i].ticket_id}</Button>, 
             unit: this.state.allTicketsContent[i].unit, 
             subject: this.state.allTicketsContent[i].subject, 
             created: this.state.allTicketsContent[i].created, 
