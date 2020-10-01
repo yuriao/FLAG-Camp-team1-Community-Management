@@ -9,7 +9,7 @@ class RegisterPage extends Component {
     constructor(){
         super();
         this.state ={
-            user_type: "resident"
+            user_type: "maintanence"
         };
     }
    
