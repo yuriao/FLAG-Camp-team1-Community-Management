@@ -87,7 +87,7 @@ public class TicketWorkAssigneeDao {
 		return ticketWorkAssignees;
 	}
 
-	public List<TicketWorkAssignee> getAllTicketWorkAssineeByUserId(int userId) {
+	public List<TicketWorkAssignee> getAllTicketWorkAssigneeByUserId(int userId) {
 
 		List<TicketWorkAssignee> ticketWorkAssignees = new ArrayList<>();
 		Session session = null;
@@ -98,7 +98,7 @@ public class TicketWorkAssigneeDao {
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 			CriteriaQuery<TicketWorkAssignee> criteriaQuery = criteriaBuilder.createQuery(TicketWorkAssignee.class);
 			Root<TicketWorkAssignee> root = criteriaQuery.from(TicketWorkAssignee.class);
-			criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("user_id"), userId));
+			criteriaQuery.select(root).where(criteriaBuilder.equal(root.get("user"), userId));
 			ticketWorkAssignees = session.createQuery(criteriaQuery).getResultList();
 			session.getTransaction().commit();
 		} catch (Exception e) {

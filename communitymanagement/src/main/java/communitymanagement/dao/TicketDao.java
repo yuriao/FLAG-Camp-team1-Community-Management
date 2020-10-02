@@ -8,6 +8,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import communitymanagement.model.Staff;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class TicketDao {
 	}
 
 	public List<Ticket> getTicketsByUserIdWithTimeRange(int userId, Timestamp start, Timestamp end) {
-		List<Ticket> tickets = new ArrayList<>();
+		List<Ticket> tickets = null;
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -69,7 +70,7 @@ public class TicketDao {
 	}
 
 	public List<Ticket> getAllTicketsByUserId(int userId) {
-		List<Ticket> tickets = new ArrayList<>();
+		List<Ticket> tickets = null;
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -85,7 +86,7 @@ public class TicketDao {
 	}
 
 	public List<Ticket> getAllTickets() {
-		List<Ticket> tickets = new ArrayList<>();
+		List<Ticket> tickets = null;
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
