@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/communitymanagement/static/css/main.719c92f5.chunk.css",
+    "main.js": "/communitymanagement/static/js/main.8cee26b7.chunk.js",
+    "main.js.map": "/communitymanagement/static/js/main.8cee26b7.chunk.js.map",
+    "runtime-main.js": "/communitymanagement/static/js/runtime-main.1e8960ab.js",
+    "runtime-main.js.map": "/communitymanagement/static/js/runtime-main.1e8960ab.js.map",
+    "static/css/2.d8bee8f2.chunk.css": "/communitymanagement/static/css/2.d8bee8f2.chunk.css",
+    "static/js/2.56e0cf29.chunk.js": "/communitymanagement/static/js/2.56e0cf29.chunk.js",
+    "static/js/2.56e0cf29.chunk.js.map": "/communitymanagement/static/js/2.56e0cf29.chunk.js.map",
+    "index.html": "/communitymanagement/index.html",
+    "precache-manifest.e0c12b0966274ae350a56c546c046ec7.js": "/communitymanagement/precache-manifest.e0c12b0966274ae350a56c546c046ec7.js",
+    "service-worker.js": "/communitymanagement/service-worker.js",
+    "static/css/2.d8bee8f2.chunk.css.map": "/communitymanagement/static/css/2.d8bee8f2.chunk.css.map",
+    "static/css/main.719c92f5.chunk.css.map": "/communitymanagement/static/css/main.719c92f5.chunk.css.map",
+    "static/js/2.56e0cf29.chunk.js.LICENSE.txt": "/communitymanagement/static/js/2.56e0cf29.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/communitymanagement/static/media/logo.ee7cd8ed.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.1e8960ab.js",
+    "static/css/2.d8bee8f2.chunk.css",
+    "static/js/2.56e0cf29.chunk.js",
+    "static/css/main.719c92f5.chunk.css",
+    "static/js/main.8cee26b7.chunk.js"
+  ]
+}
