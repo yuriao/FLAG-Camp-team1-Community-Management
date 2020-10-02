@@ -20,5 +20,13 @@
 
 <!-- 	<mvc:resources mapping="/resource/**" location="/WEB-INF/resource/" />
  -->
- 
+ 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="" />
+		<property name="suffix" value=".html" />
+	</bean>
+
+	<!-- mvc:resources is to find the resource file like bootstrap,css,JQuery 
+		and Images in resource folder -->
+
+	<mvc:resources mapping="static/**" location="static/"/>
  </beans>

@@ -17,7 +17,7 @@ import Home from './pages/Home';
 
 function App() {
   return (
-    <Router basename={'/'}>
+    <Router basename={'/communitymanagement'}>
       <Route exact path='/' render={() =>
         <Home />
       } />
