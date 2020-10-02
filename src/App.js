@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import {BrowserRouter as Router, Route } from "react-router-dom";
 import TicketingManager from './pages/TicketingManager'
 import TicketingStaff from './pages/TicketingStaff'
 import TicketingResident from './pages/TicketingResident'
@@ -35,7 +35,7 @@ function App() {
         <Login />
       } />
       <Route exact path='/register' render={() =>
-        <Registeration />
+        <Registration />
       } />
 
 

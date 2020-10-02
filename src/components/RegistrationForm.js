@@ -19,13 +19,14 @@ class RegisterForm extends Component{
    
       onFinish = (values) => {
         const personType = this.props.user_type;
+        console.log("person type is: " ,personType);
         // this.dataFromChild(this.props.formType);
        RegisterRequest(values,personType).then(
            response =>{          
             console.log(response);
         }
         ).catch(error =>{
-            console.log(error);
+            console.log("error info: ",error);
         })
         console.log('Received values of form: ', values);
       };
@@ -44,15 +45,15 @@ class RegisterForm extends Component{
        
         
         const result = () =>{
-            if(user_type === "resident"){
+            if(user_type == "resident"){
                
                 return <ResidentSignUp/>;
             }
-            else if(user_type === "manager"){
+            else if(user_type == "manager"){
               
                 return <ManagerSignUp/>;
             }
-            else if (user_type === "maintanence") {
+            else if (user_type == "maintanence") {
                
                 return <StaffSignUp/>;
             }

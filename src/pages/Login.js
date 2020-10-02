@@ -9,7 +9,7 @@ class LoginPage extends Component {
     constructor(){
         super();
         this.state ={
-            formType: "Maintanence"
+            // formType: "Maintanence"
         };
     }
    
