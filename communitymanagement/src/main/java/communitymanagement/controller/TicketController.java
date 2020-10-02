@@ -58,7 +58,7 @@ public class TicketController {
 	public ResponseEntity<String> saveIssueCategory(@RequestBody TicketSubmitForm ticketForm) {
 		try {
 			// get user from authentication
-			Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+            Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 			String username = loggedInUser.getName();
 			User user = userService.getUserByUsername(username);
 			int userId = user.getId();

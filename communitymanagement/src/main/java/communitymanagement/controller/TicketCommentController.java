@@ -73,7 +73,7 @@ public class TicketCommentController {
 		String msg = "";
 		try {
 			// get user from authentication
-			Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+            Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 			String username = loggedInUser.getName();
 			User currentUser = userService.getUserByUsername(username);
 			int userId = currentUser.getId();
@@ -119,7 +119,7 @@ public class TicketCommentController {
 	@GetMapping("/tickets/{ticket_id}")
 	public ResponseEntity<TicketForm> getTicketDetail(@PathVariable("ticket_id") int ticketId) {
 		// get user from authentication
-		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = loggedInUser.getName();
 		User user = userService.getUserByUsername(username);
 
@@ -142,7 +142,7 @@ public class TicketCommentController {
 					.body("Fail to build the ticket comment form");
 		}
 		// get user from authentication
-		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = loggedInUser.getName();
 		User user = userService.getUserByUsername(username);
 		int userId = user.getId();

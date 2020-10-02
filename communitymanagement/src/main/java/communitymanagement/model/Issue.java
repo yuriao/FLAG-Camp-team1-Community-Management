@@ -33,5 +33,4 @@ public class Issue implements Serializable {
 
 	@OneToMany(mappedBy = "issue", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<WorkAssignment> workAssignments;
-	
 }

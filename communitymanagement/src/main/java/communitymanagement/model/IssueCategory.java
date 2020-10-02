@@ -32,5 +32,4 @@ public class IssueCategory implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "issue_id")
 	private Issue issue;
-
 }
