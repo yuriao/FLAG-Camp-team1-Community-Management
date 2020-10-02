@@ -26,7 +26,7 @@ public class TicketWorkAssigneeService {
 		return ticketWorkAssigneeDao.getAllTicketWorkAssineeByTicketId(ticketId);
 	}
 
-	public List<TicketWorkAssignee> getAllTicketWorkAssineeByUserId(int userId) {
-		return ticketWorkAssigneeDao.getAllTicketWorkAssineeByUserId(userId);
+	public List<TicketWorkAssignee> getAllTicketWorkAssigneeByUserId(int userId) {
+		return ticketWorkAssigneeDao.getAllTicketWorkAssigneeByUserId(userId);
 	}
 }

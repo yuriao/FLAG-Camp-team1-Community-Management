@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,14 +33,16 @@ public class Ticket implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	
+
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "user_id")
 	private User user;
 	
 	@Column(name = "unit_number")
 	private String unitNumber;
-	
+
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "issue_category_id")
 	private IssueCategory issueCategory;
@@ -52,14 +56,17 @@ public class Ticket implements Serializable {
 	@Column(name = "availability")
 	private String availability;
 
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
 	@CreationTimestamp
 	@Column(name = "created")
 	private Timestamp created;
 
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
 	@UpdateTimestamp
 	@Column(name = "updated")
 	private Timestamp updated;
 
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
 	@Column(name = "fix_date")
 	private Timestamp fixDate;
 	
