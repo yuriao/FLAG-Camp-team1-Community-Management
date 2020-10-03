@@ -36,6 +36,7 @@ public class HomePageController {
 			result.put("firstName", attemptUser.getFirstName());
 			result.put("lastName", attemptUser.getLastName());
 			result.put("userType", attemptUser.getUserType().toString());
+			result.put("userId", Integer.toString(attemptUser.getId()));
 			result.put("message", "Logged in successfully");
 			HttpSession session = req.getSession(true);
 			session.setAttribute("userType", attemptUser.getUserType().toString());
