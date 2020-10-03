@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import communitymanagement.dao.TicketWorkAssigneeDao;
+import communitymanagement.entity.AssigneeRawData;
 import communitymanagement.model.TicketWorkAssignee;
 
 @Service
@@ -28,5 +29,13 @@ public class TicketWorkAssigneeService {
 
 	public List<TicketWorkAssignee> getAllTicketWorkAssigneeByUserId(int userId) {
 		return ticketWorkAssigneeDao.getAllTicketWorkAssigneeByUserId(userId);
+	}
+	
+	public List<AssigneeRawData> getAllPossibleStaffRecommendation() {
+		return ticketWorkAssigneeDao.getAllPossibleStaffRecommendation();
+	}
+	
+	public List<AssigneeRawData> getAllExistingAssignment() {
+		return ticketWorkAssigneeDao.getAllExistingAssignment();
 	}
 }

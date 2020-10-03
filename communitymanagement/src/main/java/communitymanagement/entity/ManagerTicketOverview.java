@@ -1,6 +1,5 @@
 package communitymanagement.entity;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import lombok.Builder;
@@ -11,9 +10,9 @@ import lombok.Setter;
 @Getter
 @Builder
 public class ManagerTicketOverview {
-	private final int ticketId;
-	private final Timestamp submittedDate;
-	private final String issue;
-	private final List<AssigneeEntity> assignees;
-	private final List<AssigneeEntity> recommendStaff;
+	private int ticketId;
+	private String submittedDate;
+	private String issue;
+	private List<AssigneeEntity> assignees;
+	private List<AssigneeEntity> recommendStaff;
 }

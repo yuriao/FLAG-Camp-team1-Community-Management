@@ -18,11 +18,11 @@ public class UserService {
 	public User getUserByUserId(int id) {
 		return userDao.getUserByUserId(id);
 	}
-	
+
 	public boolean isUserNameExisted(String name) {
 		return userDao.isUserNameExisted(name);
 	}
-	
+
 	public User getUserByUsername(String username) {
 		return userDao.getUserByUsername(username);
 	}

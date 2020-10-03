@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import communitymanagement.entity.AssigneeEntity;
 import communitymanagement.entity.AssigneeForm;
 import communitymanagement.entity.ManagerTicketOverview;
 import communitymanagement.entity.ManagerTicketSystemResponse;
@@ -35,7 +34,7 @@ import communitymanagement.service.IssueCategoryService;
 import communitymanagement.service.TicketService;
 import communitymanagement.service.TicketWorkAssigneeService;
 import communitymanagement.service.UserService;
-import communitymanagement.servicefacade.AssigneeRecommendationFacadeImpl;
+import communitymanagement.servicefacade.ManagerTicketOverviewFacadeImpl;
 
 @RestController
 public class TicketController {
@@ -53,17 +52,17 @@ public class TicketController {
 	private TicketWorkAssigneeService ticketWorkAssigneeService;
 
 	@Autowired
-	private AssigneeRecommendationFacadeImpl assigneeRecommendationFacadeImpl;
+	private ManagerTicketOverviewFacadeImpl managerTicketOverviewFacadeImpl;
 
 	@PostMapping("/tickets/submit")
 	public ResponseEntity<String> saveIssueCategory(@RequestBody TicketSubmitForm ticketForm) {
 		try {
 			// get user from authentication
-	    	Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+            Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 			String username = loggedInUser.getName();
 			User user = userService.getUserByUsername(username);
 			int userId = user.getId();
-			
+
 			// Create a new ticket
 			Ticket ticket = new Ticket();
 			ticket.setUser(userService.getUserByUserId(userId));
@@ -99,7 +98,7 @@ public class TicketController {
 		String username = loggedInUser.getName();
 		User user = userService.getUserByUsername(username);
 		int userId = user.getId();
-		
+
 		List<Ticket> tickets = ticketService.getTicketsByUser(userId);
 		String unitNumber = null;
 
@@ -128,10 +127,10 @@ public class TicketController {
 		ticketsResident.setEmail(user.getUsername());
 		return ticketsResident;
 	}
-	
+
 	@PostMapping("/tickets/{ticket_id}/staff-action")
-	public ResponseEntity<String> ticketStatusChangedByStaffAction(
-			@PathVariable(value = "ticket_id") int ticketId, @RequestBody Map<String, String> reqBody) {
+	public ResponseEntity<String> ticketStatusChangedByStaffAction(@PathVariable(value = "ticket_id") int ticketId,
+			@RequestBody Map<String, String> reqBody) {
 		// Get ticket
 		Ticket ticket = ticketService.getTicketById(ticketId);
 		if (ticket == null) {
@@ -148,7 +147,8 @@ public class TicketController {
 				ticketService.updateTicketStatus(ticketId, TicketStatus.OPEN);
 
 				// Remove all (MVP should only have one) related assignee if staff declined
-				List<TicketWorkAssignee> allAssignee = ticketWorkAssigneeService.getAllTicketWorkAssineeByTicketId(ticketId);
+				List<TicketWorkAssignee> allAssignee = ticketWorkAssigneeService
+						.getAllTicketWorkAssineeByTicketId(ticketId);
 				for (TicketWorkAssignee assignee : allAssignee) {
 					ticketWorkAssigneeService.deleteTickeWorkAssigneeById(assignee.getId());
 				}
@@ -165,58 +165,26 @@ public class TicketController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
 		}
 	}
-      
+
 	@GetMapping("/tickets/manager")
-	public ManagerTicketSystemResponse getManagerTicketSystem() {
-		
-		// get user from authentication
-		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-		String username = loggedInUser.getName();
-		User user = userService.getUserByUsername(username);
+	public ResponseEntity<ManagerTicketSystemResponse> getManagerTicketSystem() {
+		ManagerTicketSystemResponse response = null;
+		try {
+			// get user from authentication
+			Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+			String username = loggedInUser.getName();
+			User user = userService.getUserByUsername(username);
 
-		List<Ticket> tickets = ticketService.getAllTickets();
+			List<ManagerTicketOverview> tickets = managerTicketOverviewFacadeImpl.getAllManagerTicketOverview();
 
-		// build response
-		List<ManagerTicketOverview> managerTicketOverviews = new ArrayList<>();
-		for (Ticket ticket : tickets) {
-
-			List<AssigneeEntity> existAssignees = new ArrayList<>();
-			List<AssigneeEntity> recommendAssignees = new ArrayList<>();
-
-			// find existing assignees
-			List<TicketWorkAssignee> ticketWorkAssignees = ticketWorkAssigneeService
-					.getAllTicketWorkAssineeByTicketId(ticket.getId());
-
-			if (ticketWorkAssignees.size() == 0) {
-				existAssignees = null;
-			} else {
-				for (TicketWorkAssignee twa : ticketWorkAssignees) {
-					User existAssigneeUser = twa.getUser();
-					AssigneeEntity existAssignee = AssigneeEntity.builder()
-							.name(existAssigneeUser.getFirstName() + " " + existAssigneeUser.getLastName())
-							.userId(existAssigneeUser.getId()).build();
-					existAssignees.add(existAssignee);
-				}
-			}
-
-			// recommend assignees if existing assignees do not exist
-			if (existAssignees != null) {
-				recommendAssignees = null;
-			} else {
-				recommendAssignees = assigneeRecommendationFacadeImpl
-						.getTicketAssineeRecommendation(ticket.getIssueCategory().getId());
-			}
-
-			ManagerTicketOverview managerTicketOverview = ManagerTicketOverview.builder().ticketId(ticket.getId())
-					.submittedDate(ticket.getCreated()).issue(ticket.getIssueCategory().getIssue().getIssueType())
-					.assignees(existAssignees).recommendStaff(recommendAssignees).build();
-			managerTicketOverviews.add(managerTicketOverview);
+			// build response
+			response = ManagerTicketSystemResponse.builder().tickets(tickets).phone(user.getPhoneNumber())
+					.email(user.getUsername()).user_name(user.getFirstName() + " " + user.getLastName()).build();
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
-
-		ManagerTicketSystemResponse response = ManagerTicketSystemResponse.builder().tickets(managerTicketOverviews)
-				.phone(user.getPhoneNumber()).email(user.getUsername())
-				.user_name(user.getFirstName() + " " + user.getLastName()).build();
-		return response;
 	}
 
 	@PutMapping("/tickets/{ticket_id}/assignees")
@@ -255,5 +223,4 @@ public class TicketController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body("Ticket Assigned");
 	}
-
 }
