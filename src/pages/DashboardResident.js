@@ -7,7 +7,8 @@ import { Table } from 'antd';
 import News from "../components/News";
 import ChatDashboard from '../components/ChatDashboard';
 import ajax from '../components/AJAX';
-import StatusTag from "../components/Tag";
+import StatusTag from "../components/StatusTag";
+import PriorityTag from "../components/PriorityTag";
 
 class Dashboard extends Component {
     constructor() {
@@ -60,7 +61,7 @@ class Dashboard extends Component {
 
 
     componentDidMount() {
-        fetch("http://localhost:8080/communitymanagement/dashboard/resident")
+        fetch("/communitymanagement/dashboard/resident")
             .then(res => res.json())
             .then(
                 (res) => {
@@ -137,8 +138,8 @@ class Dashboard extends Component {
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
-                    priority: content.priority,
-                    status: <StatusTag status = {content.status}/>,
+                    priority: <PriorityTag priority={content.priority} />,
+                    status: <StatusTag status={content.status} />,
                     description: content.description,
                     fixDate: content.fixDate,
                 })
@@ -149,8 +150,8 @@ class Dashboard extends Component {
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
-                    priority: content.priority,
-                    status: <StatusTag status = {content.status}/>,
+                    priority: <PriorityTag priority={content.priority} />,
+                    status: <StatusTag status={content.status} />,
                     description: content.description,
                     fixDate: content.fixDate,
                 })
