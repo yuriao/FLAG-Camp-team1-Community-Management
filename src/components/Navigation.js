@@ -1,6 +1,26 @@
 import React, { Component } from 'react';
+import {LogoutRequest} from './AccountAxios';
+import {withRouter} from 'react-router-dom';
 
 class Navigation extends Component {
+
+    logoutFunc= () => {
+
+  LogoutRequest().then(
+                response =>{          
+                    const status = response.status;
+                    if(status == 200){
+                      this.props.history.push('/');
+                    }
+                    console.log(response);
+                }
+                ).catch(error =>{
+                    console.log("error info: ",error);
+                })
+
+     
+};
+
     render() {
         return (
             <div className = "nav">
@@ -13,4 +33,4 @@ class Navigation extends Component {
     }
 }
 
-export default Navigation;
+export default withRouter(Navigation);

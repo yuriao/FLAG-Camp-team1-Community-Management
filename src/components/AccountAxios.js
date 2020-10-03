@@ -26,3 +26,10 @@ export function RegisterRequest(data,type){
         
     })
 }
+
+export function LogoutRequest(){
+    return service.request({
+        url:"/communitymanagement/user-logout/",
+        method: "get",
+    })
+}
