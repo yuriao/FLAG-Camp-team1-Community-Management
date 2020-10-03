@@ -232,7 +232,7 @@ public class TicketController {
 				ticketWorkAssigneeService.addTickeWorkAssignee(ticketWorkAssignee);
 			}
 			// update ticket status
-			ticket.setStatus(TicketStatus.ASSINGED);
+			ticket.setStatus(TicketStatus.ASSIGNED);
 			ticketService.addTicket(ticket);
 		} catch (Exception e) {
 			e.printStackTrace();

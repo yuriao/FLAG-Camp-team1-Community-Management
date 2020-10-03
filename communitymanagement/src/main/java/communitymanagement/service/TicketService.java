@@ -3,7 +3,7 @@ package communitymanagement.service;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import communitymanagement.dao.TicketDao;
@@ -57,7 +57,15 @@ public class TicketService {
 		return ticketDao.getAllTickets();
 	}
 
+	public Ticket getTicketByIdWithTimeRange(int id, Timestamp start, Timestamp end) {
+		return ticketDao.getTicketByIdWithTimeRange(id, start, end);
+	}
+
 	public List<Ticket> getTicketsByUserIdWithTimeRange(int userId, Timestamp start, Timestamp end) {
 		return ticketDao.getTicketsByUserIdWithTimeRange(userId, start, end);
+	}
+
+	public List<Ticket> getAllTicketsWithTimeRange(Timestamp start, Timestamp end) {
+		return ticketDao.getAllTicketsWithTimeRange(start, end);
 	}
 }
