@@ -78,8 +78,8 @@ class TicketingManager extends Component {
             console.log("good");
           },
           // failed callback
-          function() {
-            console.log('fail');
+          function(err) {
+            console.log(err);
           }
         );
     }
@@ -95,7 +95,7 @@ class TicketingManager extends Component {
         let assigneeTag_1=
         <div>
           <Space direction="vertical">
-            <DropDown iid={i} parentCallback = {this.AssignmentCallBack} elements={all_assignees}/>
+            <DropDown iid={i} parentCallback = {this.AssignmentCallBack} elements={{entries:all_assignees}}/>
             <Button iid={i} onClick={(event)=>this.assignTickets(event,i)} shape="round">Confirm</Button> 
           </Space>
         </div>;  //(event)=>this.assignTickets(event,i): add a parameter i to callback

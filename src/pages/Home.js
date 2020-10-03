@@ -20,12 +20,12 @@ class Home extends Component {
                     <p className="text-center">I am a:</p>
                     <div className="avatar-registration-page" >
                         <a href="/communitymanagement/register?usertype=resident">
-                            <Avatar size={100}>
+                            <Avatar size={80}>
                                 Resident
                         </Avatar>
                         </a>
                         <a href="/communitymanagement/register?usertype=manager">
-                            <Avatar size={100}>
+                            <Avatar size={80}>
                                 Manager
                         </Avatar>
                         </a>

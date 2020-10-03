@@ -109,8 +109,8 @@ class TicketingStaff extends Component {
       sessionStorage.setItem('inquiredTicketID', 'tid');
     }
 
-    refershTickets=()=>{
-      Ajax('GET', '/tickets/staff?'+sessionStorage.username, [],
+    refreshTickets=()=>{
+      Ajax('GET', '/communitymanagement/tickets/staff?'+sessionStorage.username, [],
         // successful callback
         function(res) {
           let items = JSON.parse(res);
@@ -174,7 +174,7 @@ class TicketingStaff extends Component {
     confirmTickets=(event,i)=>{
       let obj=this.state.fix_date.find(o=>Object.keys(o)==i);
       
-      Ajax("POST","/tickets/"+sessionStorage.username+"/staff-action", {"action":"accept"},
+      Ajax("POST","/communitymanagement/tickets/"+sessionStorage.username+"/staff-action", {"action":"accept"},
           // successful callback
           function(res) {
             console.log("good");
@@ -184,7 +184,7 @@ class TicketingStaff extends Component {
             console.log('fail');
           }
         );
-      Ajax('PUT', "/tickets/"+sessionStorage.username+"/staff-update", {"fix_date":obj[i]},
+      Ajax('PUT', "/communitymanagement/tickets/"+sessionStorage.username+"/staff-update", {"fix_date":obj[i]},
           // successful callback
           function(res) {
             console.log("good");
@@ -203,7 +203,16 @@ class TicketingStaff extends Component {
     }
 
     declineTicket=()=>{
-      
+      Ajax("POST","/communitymanagement/tickets/"+sessionStorage.username+"/staff-action", {"action":"decline"},
+      // successful callback
+      function(res) {
+        console.log("good");
+      },
+      // failed callback
+      function() {
+        console.log('fail');
+      }
+    );
     }
     
     render() {
@@ -251,7 +260,7 @@ class TicketingStaff extends Component {
                 </div>
                 <h3> Your Orders </h3>
                 <Space direction="vertical">
-                  <Button>Refersh Ticket</Button>
+                  <Button onClick={this.refreshTickets()}>Refresh Ticket</Button>
                   <Table scroll={{y:500}} dataSource={this.state.datasource} columns={columns} />
                 </Space>
                 

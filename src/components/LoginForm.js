@@ -36,17 +36,8 @@ import {Route, Redirect} from "react-router-dom";
 
      }
        onFinish = (values) => {
-
-        const requestData = {
-            username: this.state.username,
-            password: this.state.password,
-
-        }
-        this.setState({
-            loading:true,
-        })
-
-        LoginRequest(requestData).then(response =>{
+        sessionStorage.username=values.email;
+        LoginRequest(values).then(response =>{
                
                     this.setState({
                         loading:false,

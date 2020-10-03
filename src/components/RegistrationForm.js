@@ -6,127 +6,71 @@ import {MailOutlined,UserOutlined, LockOutlined,PhoneOutlined} from '@ant-design
 import ResidentSignUp from './ResidentSignUp';
 import ManagerSignUp from './ManagerSignUp';
 import StaffSignUp from './StaffSignUp';
+import {Redirect} from "react-router-dom";
 import {RegisterRequest} from './AccountAxios';
- import {withRouter} from 'react-router-dom';
+// import {withRouter} from 'react-router-dom';
 
 class RegisterForm extends Component{
     constructor(){
         super();
         this.state  = {
-          
-            first_name: "",
-            last_name: "",
-            email: "",
-            password: "",
-            phone_number: "",
-            unit_number: "",
-            birthday: "",
-            staffCategoryId: "",
+        //    type: "",
+        registerFin:0
         };
        
     }
     
    
+    onFinish = (values) => {
+        const personType = this.props.user_type;
+        // this.dataFromChild(this.props.formType);
+       RegisterRequest(values,personType).then(response =>{          
+            console.log(response);
+            this.setState({registerFin:1})
+        }).catch(error =>{
+            console.log(error);
+            this.setState({registerFin:1})
+        })
+        // console.log('Received values of form: ', values);
+    };
 
     inputChangePassword=(e)=>{
-         
-        // let value = e.target.value;
-        // this.setState({
-        //    password: value,
-        // })
-
-     }
-     
-     inputChangeFirstName=(e)=>{
-         
-        // let value = e.target.value;
-        // this.setState({
-        //    first_name: value,
-        // })
-
-     }
-
-     inputChangeLastName=(e)=>{
-         
-        // let value = e.target.value;
-        // this.setState({
-        //    last_name: value,
-        // })
-
-     }
-
-     inputChangeEmail=(e)=>{
-         
-        // let value = e.target.value;
-        // this.setState({
-        //    email: value,
-        // })
-
-     }
-
-     inputChangePhoneNumber=(e)=>{
-         
-        // let value = e.target.value;
-        // this.setState({
-        //    phone_number: value,
-        // })
-
-     }
-
-    // residentData = ()=>{
-
-    // }
-
-    // staffData = ()=>{
-
-    // }
-
-
-    getDataFromChild = (param)=>{
-               this.setState({
-                    staffCategoryId: param,
-               })
     }
-      onFinish = (values) => {
-                
-                const personType = this.props.user_type;
-                const{staffCategoryId} = this.state;
-                const value1 ={
-                    
-                    first_name: values.first_name,
-                    last_name: values.last_name,
-                    username: values.username,
-                    password: values.password,
-                    phone_number: values.phone_number,
-                    unit_number: values.unit_number,
-                    birthday: values.birthday,
-                    staffCategoryId: this.state.staffCategoryId,
-                    
-                }
-                console.log(value1);
-                
-                console.log("registration form user type is: ", personType);
-            RegisterRequest(value1,personType).then(
-                        response =>{          
-                            const status = response.status;
-                            if(status == 200){
-                              this.props.history.push('/');
-                            }
-                            console.log(response);
-                        }
-                        ).catch(error =>{
-                            console.log("error info: ",error);
-                        })
+     
+    inputChangeFirstName=(e)=>{
+    }
 
-                console.log('Received values of form: ', values);
-      };
+    inputChangeLastName=(e)=>{
+    }
+
+    inputChangeEmail=(e)=>{
+    }
+
+    inputChangePhoneNumber=(e)=>{
+    }
+
+    onFinish = (values) => {
+        const personType = this.props.user_type;       
+        RegisterRequest(values,personType).then(
+            response =>{          
+                const status = response.status;
+                if(status == 200){
+                    alert("You have successfully registered your profile!")
+                    this.props.history.push('/');
+                }
+                console.log(response);
+            }
+        ).catch(error =>{
+            console.log("error info: ",error);
+        })
+
+        console.log('Received values of form: ', values);
+    };
 
    
     render(){
         
         const {user_type} = this.props;
-       
-        
         const result = () =>{
             if(user_type == "resident"){
                
@@ -136,13 +80,16 @@ class RegisterForm extends Component{
               
                 return <ManagerSignUp/>;
             }
-            else if (user_type == "staff") {
+            else if (user_type == "maintanence") {
                
-                return <StaffSignUp category = {this.getDataFromChild}/>;
+                return <StaffSignUp/>;
             }
         
         }
 
+        if(this.state.registerFin==1) {
+            return <Redirect to="/" />
+        }
         return(
                  <Fragment>
                      <h4>Welcome to {this.props.user_type} portal!</h4>
@@ -267,4 +214,4 @@ class RegisterForm extends Component{
         )
     }
 }
-export default withRouter(RegisterForm);
+export default RegisterForm;
