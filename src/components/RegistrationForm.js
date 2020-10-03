@@ -7,7 +7,7 @@ import ResidentSignUp from './ResidentSignUp';
 import ManagerSignUp from './ManagerSignUp';
 import StaffSignUp from './StaffSignUp';
 import {RegisterRequest} from './AccountAxios';
-// import {withRouter} from 'react-router-dom';
+ import {withRouter} from 'react-router-dom';
 
 class RegisterForm extends Component{
     constructor(){
@@ -101,7 +101,7 @@ class RegisterForm extends Component{
                         response =>{          
                             const status = response.status;
                             if(status == 200){
-                            //   this.props.history.push('/');
+                              this.props.history.push('/');
                             }
                             console.log(response);
                         }
@@ -258,4 +258,4 @@ class RegisterForm extends Component{
         )
     }
 }
-export default RegisterForm;
+export default withRouter(RegisterForm);
