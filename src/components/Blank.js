@@ -17,7 +17,7 @@ class Blank extends Component {
 
     render() {
         return (
-            <div className="blank">
+            <div className="blank" onChange={this.sendData}>
                 <p>{this.props.text}</p>
                 <Input placeholder={this.props.text} />
             </div>
