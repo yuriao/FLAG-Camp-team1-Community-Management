@@ -21,9 +21,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.csrf().disable()
-			.formLogin()
-		    .loginProcessingUrl("/login")
-		    .and()
 		    .httpBasic()
 		    .and()
 		    .authorizeRequests()
@@ -42,7 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        .antMatchers(HttpMethod.POST, "/addStaffCategory").hasAuthority("ROLE_ADMIN")
 	        .antMatchers(HttpMethod.POST, "/addIssueCategory").hasAuthority("ROLE_ADMIN")
 	        .antMatchers(HttpMethod.POST, "/addWorkAssignment").hasAuthority("ROLE_ADMIN")
-	        .anyRequest().permitAll();
+	        .anyRequest().permitAll()
+	        .and()
+	        .formLogin().disable();
 	}
 
 	// authentication
