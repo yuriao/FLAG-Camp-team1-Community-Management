@@ -14,13 +14,15 @@ import DashboardManager from './pages/DashboardManager';
 import DashboardStaff from './pages/DashboardStaff';
 import TicketingDetail from './pages/TicketingDetail';
 import Home from './pages/Home';
+import PrivateRouter from './components/PrivateRouter';
 
 function App() {
   return (
-    <Router basename={'/Home'}>
+    <Router basename={'/communitymanagement'}>
       <Route exact path='/' render={() =>
         <Home />
       } />
+
       <Route exact path='/TicketingResident' render={() =>
         <TicketingResident />
       } />
@@ -38,6 +40,12 @@ function App() {
         <Registration />
       } />
 
+      <PrivateRouter component = {DashboardResident} path = '/DashboardResident'/>
+      
+      <PrivateRouter component = {DashboardManager} path = '/DashboardManager'/>
+      
+      <PrivateRouter component = {DashboardStaff} path = '/DashboardStaff'/>
+
 
 
      <Route exact path='/Calender' render={() =>
@@ -45,7 +53,7 @@ function App() {
       } />
 
 
-      <Route exact path='/DashboardResident' render={() =>
+      {/* <Route exact path='/DashboardResident' render={() =>
         <DashboardResident />
       } />
 
@@ -55,7 +63,7 @@ function App() {
 
       <Route exact path='/DashboardStaff' render={() =>
         <DashboardStaff />
-      } />
+      } /> */}
 
       <Route exact path='/TicketingDetail' render={() =>
         <TicketingDetail />

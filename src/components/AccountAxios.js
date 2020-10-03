@@ -20,11 +20,7 @@ export function LoginRequest(data){
 
 export function RegisterRequest(data,type){
     return service.request({  //返回给调用此方法的caller
-<<<<<<< HEAD
         url:"/communitymanagement/registration/" + type,
-=======
-        url:"communitymanagement/registration/" + type,
->>>>>>> 92e987e0... 20:47
         method: "post",
         data: data,
         

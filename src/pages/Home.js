@@ -19,17 +19,17 @@ class Home extends Component {
                     <p className="text-center">New user? Register here:</p>
                     <p className="text-center">I am a:</p>
                     <div className="avatar-registration-page" >
-                        <a href="/register?usertype=resident">
+                        <a href="/communitymanagement/register?usertype=resident">
                             <Avatar size={100}>
                                 Resident
                         </Avatar>
                         </a>
-                        <a href="/register?usertype=manager">
+                        <a href="/communitymanagement/register?usertype=manager">
                             <Avatar size={100}>
                                 Manager
                         </Avatar>
                         </a>
-                        <a href="/register?usertype=maintanence">
+                        <a href="/communitymanagement/register?usertype=maintanence">
                             <Avatar size={100}>
                             Maintanence
                         </Avatar>

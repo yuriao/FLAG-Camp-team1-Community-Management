@@ -2,14 +2,40 @@
 import React, { Component } from 'react';
 import { Input, DatePicker,Tooltip,Form } from 'antd';
 import {InfoCircleOutlined,FieldNumberOutlined,UserOutlined} from '@ant-design/icons';
-import moment from 'moment';
+
 
 class ResidentSignUp extends Component {
+
+    constructor(){
+        super();
+        this.state = {
+            // birthday: "",
+            // unit_number: "",
+        }
+       
+    }
+
+    // inputChangeUnitNumber=(e)=>{
+         
+    //     let value = e.target.value;
+    //     this.setState({
+    //        unit_number: value,
+    //     })
+    
+    //  }
+
     onChange = (param)=>{
+
+        return param;
+        
         // console.log(moment(param).format("YYYY/MM/DD"));
         // alert(moment(param).format("YYYY-MM-DD"));
-       moment(param).format("YYYY-MM-DD");
-     
+        
+        // this.setState({
+        //    birthday: param,
+        // })
+    
+        // return this.props.add2(this.state.birthday);
     }
     
     render() {

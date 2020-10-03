@@ -2,37 +2,80 @@ import React,{Component,Fragment} from "react";
  import {Radio, Row, Col,Form, Input, Button, Checkbox } from 'antd';
  import { UserOutlined, LockOutlined } from '@ant-design/icons';
  import {LoginRequest} from './AccountAxios';
- 
+import Password from "antd/lib/input/Password";
+ import {setToken} from './UserToken';
+import {withRouter} from 'react-router-dom';
+
  class Login extends Component{
      constructor(){
          super();
          this.state  = {
-            //  value:0
+            username:"",
+            password: "",
+            loading: false,
          };
  
      }
+
+     inputChangeUserName=(e)=>{
+         
+        let value = e.target.value;
+        this.setState({
+            username: value,
+        })
+
+     }
+
+     inputChangePassword=(e)=>{
+         
+        let value = e.target.value;
+        this.setState({
+           password: value,
+        })
+
+     }
        onFinish = (values) => {
-        LoginRequest(values).then(response =>{
+
+        const requestData = {
+            username: this.state.username,
+            password: this.state.password,
+
+        }
+        this.setState({
+            loading:true,
+        })
+
+        LoginRequest(requestData).then(response =>{
                
-               console.log(response);
+                    this.setState({
+                        loading:false,
+                    })
+                    const status = response.status;
+                    console.log("status is: ", status);
+                    setToken(status);
+                    //在此处做判断看是转到哪里去
+                    this.props.history.push('/DashboardResident');
+                    
+                   
+                    console.log(response);
+
            }).catch(error =>{
-                console.log(error);
+                      
+                        this.setState({
+                            loading:false,
+                        })
+                      console.log(error);
            })
-           console.log(values);
+        
        };
  
-       onChange = e => {
-         console.log('radio checked', e.target.value);
-         this.setState({
-           value: e.target.value,
-         });
-       };
- 
+
  
  
      render(){
+        const {loading} = this.state;
          return(
-                  <Fragment>
+             <Fragment>
                      <div className = "form-header">
                          <p className = "column">Login</p>
                      
@@ -48,18 +91,18 @@ import React,{Component,Fragment} from "react";
                                  >
                                
                                  <Form.Item
-                                      name="email"
+                                      name="username"
                                      rules={[{ required: true, message: 'Please input your Email!' }]}
                                  >
                                       
-                                 <Input type = "email" prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+                                 <Input onChange = {this.inputChangeUserName} type = "email" prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
                                  </Form.Item>
  
                                  <Form.Item
                                      name="password"
                                      rules={[{ required: true, message: 'Please input your Password!' }]}
                                  >
-                                 <Input  
+                                 <Input  onChange = {this.inputChangePassword}  
                                  prefix={<LockOutlined className="site-form-item-icon" />}
                                      type="password" 
                                      placeholder="Password"
@@ -76,7 +119,7 @@ import React,{Component,Fragment} from "react";
  
                                  <Form.Item>
                                      
-                                     <Button type="primary" htmlType="submit" className="login-form-button" block>
+                                     <Button loading= {this.loading} type="primary" htmlType="submit" className="login-form-button" block>
                                      Log in
                                      </Button>
                                      
@@ -88,4 +131,4 @@ import React,{Component,Fragment} from "react";
          )
      }
  }
- export default Login;
+ export default withRouter(Login);
