@@ -35,6 +35,7 @@ public class HomePageController {
 		if (attemptUser != null && user.getPassword().equals(attemptUser.getPassword())) {
 			result.put("firstName", attemptUser.getFirstName());
 			result.put("lastName", attemptUser.getLastName());
+			result.put("userType", attemptUser.getUserType().toString());
 			result.put("message", "Logged in successfully");
 			HttpSession session = req.getSession(true);
 			session.setAttribute("userType", attemptUser.getUserType().toString());
