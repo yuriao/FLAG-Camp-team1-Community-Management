@@ -6,6 +6,7 @@ import WorkOrder from '../components/WorkOrder';
 import { Table } from 'antd';
 import News from "../components/News";
 import ChatDashboard from '../components/ChatDashboard';
+import ajax from '../components/AJAX';
 
 class Dashboard extends Component {
     constructor() {
@@ -86,6 +87,45 @@ class Dashboard extends Component {
             },]
         }
     }
+
+    getAllTickets = () => {
+        ajax('GET', '/dashboard/resident', [],
+          // successful callback
+          function(res) {
+            let items = JSON.parse(res);
+            if (!items || items.length === 0) {
+              console.log('No tickets.');
+            } else {
+              
+              let ttags = [];
+            
+                //convert priorty for sorting
+              items.map((cdiv,i)=>{
+              if(items[i].priorty==="high"){
+                items[i].priortyidx=3;
+              }
+              if(items[i].priorty==="medium"){
+                items[i].priortyidx=2;
+              }
+              if(items[i].priorty==="low"){
+                items[i].priortyidx=1;
+              }
+  
+              ttags.push(i);
+            })
+  
+            this.setState({allticketsContent:items});
+            this.setState({allTicketsTag:ttags});
+            this.ReloadTickets();
+            }
+          },
+          // failed callback
+          function() {
+            console.log('Cannot load tickets.');
+          }
+        );
+        
+      }
 
     render() {
         let ticketDivs = [];
