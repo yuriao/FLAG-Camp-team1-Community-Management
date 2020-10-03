@@ -4,11 +4,11 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @SuppressWarnings("deprecation")
@@ -19,29 +19,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	// authorization
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-			.csrf().disable()
-		    .httpBasic()
-		    .and()
-		    .authorizeRequests()
-			.antMatchers("/").permitAll()
-			.antMatchers("/login").permitAll()
-			.antMatchers("/registration/*").permitAll()
-			.antMatchers("/calendar**").permitAll()
-	        .antMatchers(HttpMethod.GET, "/*/resident").hasAuthority("ROLE_RESIDENT")
-	        .antMatchers(HttpMethod.GET, "/*/staff").hasAuthority("ROLE_STAFF")
-	        .antMatchers(HttpMethod.GET, "/*/manager").hasAuthority("ROLE_MANAGER")
-	        .antMatchers(HttpMethod.POST, "/tickets/submit").hasAnyAuthority("ROLE_RESIDENT", "ROLE_MANAGER")
-	        .antMatchers(HttpMethod.PUT, "/tickets/*/update").permitAll()
-	        .antMatchers(HttpMethod.PUT, "/tickets/*/staff-update").hasAuthority("ROLE_STAFF") 
-	        .antMatchers(HttpMethod.POST, "/tickets/*/staff-action").hasAuthority("ROLE_STAFF") 
-	        .antMatchers(HttpMethod.PUT, "/tickets/*/assignees").hasAuthority("ROLE_MANAGER")
-	        .antMatchers(HttpMethod.POST, "/addStaffCategory").hasAuthority("ROLE_ADMIN")
-	        .antMatchers(HttpMethod.POST, "/addIssueCategory").hasAuthority("ROLE_ADMIN")
-	        .antMatchers(HttpMethod.POST, "/addWorkAssignment").hasAuthority("ROLE_ADMIN")
-	        .anyRequest().permitAll()
-	        .and()
-	        .formLogin().disable();
+		http.csrf().disable().sessionManagement().maximumSessions(2).and()
+				.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and().authorizeRequests().antMatchers("/")
+				.permitAll().antMatchers("/login").permitAll().anyRequest().permitAll().and().formLogin().disable();
 	}
 
 	// authentication

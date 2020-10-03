@@ -2,15 +2,17 @@ package communitymanagement.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import communitymanagement.model.Ticket;
-import communitymanagement.model.User;
 import communitymanagement.service.UserService;
 import communitymanagement.servicefacade.CalendarServiceFacadeImpl;
 
@@ -24,14 +26,16 @@ public class CalendarController {
     private CalendarServiceFacadeImpl calendarServiceFacadeImpl;
 
     @GetMapping("/calendar")
-    public List<Ticket> getTicketsByUser(@RequestParam(value = "from", defaultValue = "2000-01-01") String startDate,
-                                         @RequestParam(value = "to", defaultValue = "2021-01-01") String endDate) {
-    	// get user from authentication
-    	Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-		String username = loggedInUser.getName();
-		User user = userService.getUserByUsername(username);
-		int userId = user.getId();
+    public ResponseEntity<List<Ticket>> getTicketsByUser(@RequestParam(value = "from", defaultValue = "2000-01-01") String startDate,
+                                         @RequestParam(value = "to", defaultValue = "2021-01-01") String endDate,
+                                         HttpServletRequest request) {
+		// get user info from session
+		HttpSession session= request.getSession(false);
+		if (session == null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
+		int userId = Integer.parseInt(session.getAttribute("userId").toString());
 		
-        return calendarServiceFacadeImpl.getTicketsByUserIdWithTimeRange(userId, startDate, endDate);
+        return ResponseEntity.status(HttpStatus.OK).body(calendarServiceFacadeImpl.getTicketsByUserIdWithTimeRange(userId, startDate, endDate));
     }
 }

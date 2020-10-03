@@ -6,11 +6,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,13 +56,15 @@ public class TicketController {
 	private ManagerTicketOverviewFacadeImpl managerTicketOverviewFacadeImpl;
 
 	@PostMapping("/tickets/submit")
-	public ResponseEntity<String> saveIssueCategory(@RequestBody TicketSubmitForm ticketForm) {
+	public ResponseEntity<String> saveIssueCategory(@RequestBody TicketSubmitForm ticketForm,
+			HttpServletRequest request) {
 		try {
-			// get user from authentication
-            Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-			String username = loggedInUser.getName();
-			User user = userService.getUserByUsername(username);
-			int userId = user.getId();
+			// get user info from session
+			HttpSession session = request.getSession(false);
+			if (session == null) {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+			}
+			int userId = Integer.parseInt(session.getAttribute("userId").toString());
 
 			// Create a new ticket
 			Ticket ticket = new Ticket();
@@ -92,12 +95,14 @@ public class TicketController {
 	}
 
 	@GetMapping("/tickets/resident")
-	public TicketsResident getResidentTickets() {
-		// get user from authentication
-		Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-		String username = loggedInUser.getName();
-		User user = userService.getUserByUsername(username);
-		int userId = user.getId();
+	public ResponseEntity<TicketsResident> getResidentTickets(HttpServletRequest request) {
+		// get user info from session
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
+		int userId = Integer.parseInt(session.getAttribute("userId").toString());
+		User user = userService.getUserByUserId(userId);
 
 		List<Ticket> tickets = ticketService.getTicketsByUser(userId);
 		String unitNumber = null;
@@ -125,12 +130,18 @@ public class TicketController {
 		ticketsResident.setPhone(user.getPhoneNumber());
 		ticketsResident.setUnitNumber(unitNumber);
 		ticketsResident.setEmail(user.getUsername());
-		return ticketsResident;
+		return ResponseEntity.status(HttpStatus.OK).body(ticketsResident);
 	}
 
 	@PostMapping("/tickets/{ticket_id}/staff-action")
 	public ResponseEntity<String> ticketStatusChangedByStaffAction(@PathVariable(value = "ticket_id") int ticketId,
-			@RequestBody Map<String, String> reqBody) {
+			@RequestBody Map<String, String> reqBody, HttpServletRequest request) {
+		// check session
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
+
 		// Get ticket
 		Ticket ticket = ticketService.getTicketById(ticketId);
 		if (ticket == null) {
@@ -167,13 +178,16 @@ public class TicketController {
 	}
 
 	@GetMapping("/tickets/manager")
-	public ResponseEntity<ManagerTicketSystemResponse> getManagerTicketSystem() {
+	public ResponseEntity<ManagerTicketSystemResponse> getManagerTicketSystem(HttpServletRequest request) {
 		ManagerTicketSystemResponse response = null;
 		try {
-			// get user from authentication
-			Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-			String username = loggedInUser.getName();
-			User user = userService.getUserByUsername(username);
+			// get user info from session
+			HttpSession session = request.getSession(false);
+			if (session == null) {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+			}
+			int userId = Integer.parseInt(session.getAttribute("userId").toString());
+			User user = userService.getUserByUserId(userId);
 
 			List<ManagerTicketOverview> tickets = managerTicketOverviewFacadeImpl.getAllManagerTicketOverview();
 
@@ -189,16 +203,19 @@ public class TicketController {
 
 	@PutMapping("/tickets/{ticket_id}/assignees")
 	public ResponseEntity<String> assignAssignee(@RequestBody AssigneeForm form,
-			@PathVariable("ticket_id") int ticketId, BindingResult result) {
+			@PathVariable("ticket_id") int ticketId, BindingResult result, HttpServletRequest request) {
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Cannot resolve input request");
 		}
 
 		try {
-			// get user from authentication
-			Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-			String username = loggedInUser.getName();
-			User user = userService.getUserByUsername(username);
+			// get user info from session
+			HttpSession session = request.getSession(false);
+			if (session == null) {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+			}
+			int userId = Integer.parseInt(session.getAttribute("userId").toString());
+			User user = userService.getUserByUserId(userId);
 
 			// only manager can do assignment
 			if (user.getUserType() != UserType.MANAGER) {

@@ -4,11 +4,12 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,7 +58,7 @@ public class TicketCommentController {
 
 	@PutMapping("/tickets/{ticket_id}/staff-update")
 	public ResponseEntity<String> staffUpdate(@RequestBody TicketCommentForm form,
-			@PathVariable("ticket_id") int ticketId, BindingResult result) {
+			@PathVariable("ticket_id") int ticketId, BindingResult result, HttpServletRequest request) {
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Fail to build the ticket comment form");
@@ -72,11 +73,13 @@ public class TicketCommentController {
 
 		String msg = "";
 		try {
-			// get user from authentication
-            Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-			String username = loggedInUser.getName();
-			User currentUser = userService.getUserByUsername(username);
-			int userId = currentUser.getId();
+			// get user info from session
+			HttpSession session = request.getSession(false);
+			if (session == null) {
+				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+			}
+			int userId = Integer.parseInt(session.getAttribute("userId").toString());
+			User currentUser = userService.getUserByUserId(userId);
 
 			// get Ticket
 			Ticket ticket = ticketService.getTicketById(ticketId);
@@ -117,11 +120,14 @@ public class TicketCommentController {
 	}
 
 	@GetMapping("/tickets/{ticket_id}")
-	public ResponseEntity<TicketForm> getTicketDetail(@PathVariable("ticket_id") int ticketId) {
-		// get user from authentication
-        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-		String username = loggedInUser.getName();
-		User user = userService.getUserByUsername(username);
+	public ResponseEntity<TicketForm> getTicketDetail(@PathVariable("ticket_id") int ticketId,
+			HttpServletRequest request) {
+		// get user info from session
+		HttpSession session = request.getSession(false);
+		// check session
+		if (session == null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
 
 		// TODO: check if user can see the ticket -- manager, assigned staff, resident
 		// that created the ticket
@@ -136,16 +142,17 @@ public class TicketCommentController {
 
 	@PutMapping("/tickets/{ticket_id}/update")
 	public ResponseEntity<String> update(@RequestBody SimpleComment comment, @PathVariable("ticket_id") int ticketId,
-			BindingResult result) {
+			BindingResult result, HttpServletRequest request) {
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Fail to build the ticket comment form");
 		}
-		// get user from authentication
-        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-		String username = loggedInUser.getName();
-		User user = userService.getUserByUsername(username);
-		int userId = user.getId();
+		// get user info from session
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
+		int userId = Integer.parseInt(session.getAttribute("userId").toString());
 
 		// TODO: check if user can update the ticket -- manager, assigned staff,
 		// resident that created the ticket
