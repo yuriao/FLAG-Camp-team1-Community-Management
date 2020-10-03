@@ -7,43 +7,13 @@ import { Table } from 'antd';
 import News from "../components/News";
 import ChatDashboard from '../components/ChatDashboard';
 import ajax from '../components/AJAX';
+import StatusTag from "../components/Tag";
 
 class Dashboard extends Component {
     constructor() {
         super();
         this.state = {
-            allTicketsTag: ['tk1', 'tk2', 'tk3'],
-            allTicketsContent: [{
-                "ticket_id": "0001233",
-                "unit": '711',
-                "subject": "water leak",
-                "created": "2020-09-18T14:48:00",
-                "category": "water",
-                "priority": "high",
-                "status": "open",
-                "review": <Button className="review-btn" content="review" />
-            },
-            {
-                "ticket_id": "0032134",
-                "unit": '711',
-                "subject": "bear sleeping on sofa",
-                "created": "2020-09-11T14:48:00",
-                "category": "misc",
-                "priority": "medium",
-                "status": "assigned",
-                "review": <Button className="review-btn" content="review" />
-            },
-            {
-                "ticket_id": "0123435",
-                "unit": '711',
-                "subject": "sink clog",
-                "created": "2020-09-11T14:48:00",
-                "category": "sink",
-                "priority": "medium",
-                "status": "in progress",
-                "review": <Button className="review-btn" content="review" />
-            }
-            ],
+            allTicketsContent: [],
             news: [{
                 "subject": "news1",
                 "date": "mm/dd/yy"
@@ -90,61 +60,32 @@ class Dashboard extends Component {
 
 
     componentDidMount() {
-        this.getAllTickets();
-    }
+        fetch("http://localhost:8080/communitymanagement/dashboard/resident")
+            .then(res => res.json())
+            .then(
+                (res) => {
+                    let items = res;
+                    if (!items || items.length === 0) {
+                        alert('No tickets.');
+                    } else {
+                        this.setState({ allTicketsContent: items });
+                        console.log(this.state.allTicketsContent);
+                    }
 
-    getAllTickets() {
-        ajax('GET', '/communitymanagement/dashboard/resident', null,
-            // successful callback
-            function (res) {
-                let items = JSON.parse(res);
-                if (!items || items.length === 0) {
-                    alert('No tickets.');
-                } else {
-                    alert(items);
-                    let ttags = [];
-
-                    //convert priorty for sorting
-                    items.map((cdiv, i) => {
-                        if (items[i].priorty === "high") {
-                            items[i].priortyidx = 3;
-                        }
-                        if (items[i].priorty === "medium") {
-                            items[i].priortyidx = 2;
-                        }
-                        if (items[i].priorty === "low") {
-                            items[i].priortyidx = 1;
-                        }
-
-                        ttags.push(i);
-                    })
-
-                    this.setState({ allticketsContent: items });
-                    this.setState({ allTicketsTag: ttags });
-                    this.ReloadTickets();
+                },
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                    //   this.setState({
+                    //     isLoaded: true,
+                    //     error
+                    //   });
                 }
-            },
-            // failed callback
-            function () {
-                alert('Cannot load tickets.');
-            }
-        );
-
+            )
     }
 
     render() {
-        let ticketDivs = [];
-        this.state.allTicketsTag.map((cdiv, i) => {
-            ticketDivs.push(<WorkOrder
-                id={this.state.allTicketsContent[i].id}
-                unit={this.state.allTicketsContent[i].unit}
-                category={this.state.allTicketsContent[i].category}
-                description={this.state.allTicketsContent[i].description}
-                status={this.state.allTicketsContent[i].status}
-                key={cdiv}
-                id={cdiv}
-            />);
-        })
 
         let newsDivs = [];
         this.state.news.map((subject, i) => {
@@ -163,7 +104,8 @@ class Dashboard extends Component {
             />)
         })
 
-        let datasource = [];
+        let existingOrder = [];
+        let completedOrder = [];
         let columns = [{
             title: 'Ticket ID',
             dataIndex: 'ticket_id',
@@ -174,8 +116,8 @@ class Dashboard extends Component {
             dataIndex: 'subject',
         },
         {
-            title: 'Category',
-            dataIndex: 'category',
+            title: 'Description',
+            dataIndex: 'description',
         },
         {
             title: 'Priority',
@@ -187,51 +129,41 @@ class Dashboard extends Component {
         },
         ];
 
-
-        let completed = [{
-            title: 'Ticket ID',
-            dataIndex: 'ticket_id',
-            render: (text) => <a>{text}</a>,
-        },
-        {
-            title: 'Subject',
-            dataIndex: 'subject',
-        },
-        {
-            title: 'Category',
-            dataIndex: 'category',
-        },
-        {
-            title: 'Priority',
-            dataIndex: 'priority',
-        },
-        {
-            title: 'Review',
-            dataIndex: 'review',
-        },
-        ];
-
-        this.state.allTicketsTag.map((cdiv, i) => {
-            datasource.push({
-                key: i,
-                ticket_id: <a href=''>{this.state.allTicketsContent[i].ticket_id}</a>,
-                unit: this.state.allTicketsContent[i].unit,
-                subject: this.state.allTicketsContent[i].subject,
-                created: this.state.allTicketsContent[i].created,
-                category: this.state.allTicketsContent[i].category,
-                priority: this.state.allTicketsContent[i].priority,
-                status: this.state.allTicketsContent[i].status,
-                review: this.state.allTicketsContent[i].review,
-            })
+        this.state.allTicketsContent.map((content, i) => {
+            if (content.status === "COMPLETED") {
+                completedOrder.push({
+                    key: i,
+                    ticket_id: <a href=''>{content.id}</a>,
+                    unit: content.unitNumber,
+                    subject: content.subject,
+                    created: content.created,
+                    priority: content.priority,
+                    status: <StatusTag status = {content.status}/>,
+                    description: content.description,
+                    fixDate: content.fixDate,
+                })
+            } else {
+                existingOrder.push({
+                    key: i,
+                    ticket_id: <a href=''>{content.id}</a>,
+                    unit: content.unitNumber,
+                    subject: content.subject,
+                    created: content.created,
+                    priority: content.priority,
+                    status: <StatusTag status = {content.status}/>,
+                    description: content.description,
+                    fixDate: content.fixDate,
+                })
+            }
         });
 
         return (
             <div className="dashboard">
                 <Navigation
                     dashboard="/DashboardResident"
-                    ticket = "/TicketingResident"
-                    chat = "/ChatResident"
-                    logout = "/logout"
+                    ticket="/TicketingResident"
+                    chat="/ChatResident"
+                    logout="/logout"
                 />
                 <div className="dashboard-main">
                     <div className="balance">
@@ -254,13 +186,13 @@ class Dashboard extends Component {
                 <div className="dashboard-main">
                     <div className="work-order">
                         <h5>Existing Work Orders</h5>
-                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={columns} />
+                        <Table scroll={{ y: 500 }} dataSource={existingOrder} columns={columns} />
                         <Button content="View Calendar"></Button>
                     </div>
 
                     <div className="work-order">
                         <h5>Completed Work Orders</h5>
-                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={completed} />
+                        <Table scroll={{ y: 500 }} dataSource={completedOrder} columns={columns} />
                     </div>
                 </div>
 
