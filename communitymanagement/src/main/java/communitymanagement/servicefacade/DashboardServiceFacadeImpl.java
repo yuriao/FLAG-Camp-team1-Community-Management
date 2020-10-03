@@ -1,5 +1,6 @@
 package communitymanagement.servicefacade;
 
+import communitymanagement.dao.UserDao;
 import communitymanagement.model.Ticket;
 import communitymanagement.model.TicketWorkAssignee;
 import communitymanagement.model.User;

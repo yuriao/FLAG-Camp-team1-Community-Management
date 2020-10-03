@@ -49,16 +49,55 @@ public class TicketDao {
 		return ticket;
 	}
 
-	public List<Ticket> getTicketsByUserIdWithTimeRange(int userId, Timestamp start, Timestamp end) {
-		List<Ticket> tickets = null;
+	public Ticket getTicketByIdWithTimeRange(int id, Timestamp start, Timestamp end) {
+		Ticket tickets = null;
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
 			CriteriaQuery<Ticket> criteriaQuery = criteriaBuilder.createQuery(Ticket.class);
 			Root<Ticket> root = criteriaQuery.from(Ticket.class);
-			criteriaQuery.select(root).where(criteriaBuilder.greaterThanOrEqualTo(root.get("created"), start))
-					.where(criteriaBuilder.lessThanOrEqualTo(root.get("created"), end))
-					.where(criteriaBuilder.equal(root.get("user"), userId));
+			criteriaQuery.select(root).where(
+					criteriaBuilder.and(
+							criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("created"), start), criteriaBuilder.lessThanOrEqualTo(root.get("created"), end)),
+							criteriaBuilder.equal(root.get("id"), id)));
+			tickets = session.createQuery(criteriaQuery).getSingleResult();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tickets;
+	}
+
+	public List<Ticket> getTicketsByUserIdWithTimeRange(int userId, Timestamp start, Timestamp end) {
+		List<Ticket> tickets = null;
+
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+			CriteriaQuery<Ticket> criteriaQuery = criteriaBuilder.createQuery(Ticket.class);
+			Root<Ticket> root = criteriaQuery.from(Ticket.class);
+			criteriaQuery.select(root).where(
+					criteriaBuilder.and(
+							criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("created"), start), criteriaBuilder.lessThanOrEqualTo(root.get("created"), end)),
+							criteriaBuilder.equal(root.get("user"), userId)));
+			tickets = session.createQuery(criteriaQuery).getResultList();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tickets;
+	}
+
+	public List<Ticket> getAllTicketsWithTimeRange(Timestamp start, Timestamp end) {
+		List<Ticket> tickets = null;
+    
+		try (Session session = sessionFactory.openSession()) {
+			session.beginTransaction();
+			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+			CriteriaQuery<Ticket> criteriaQuery = criteriaBuilder.createQuery(Ticket.class);
+			Root<Ticket> root = criteriaQuery.from(Ticket.class);
+			criteriaQuery.select(root).where(
+							criteriaBuilder.and(criteriaBuilder.greaterThanOrEqualTo(root.get("created"), start), criteriaBuilder.lessThanOrEqualTo(root.get("created"), end)));
 			tickets = session.createQuery(criteriaQuery).getResultList();
 			session.getTransaction().commit();
 		} catch (Exception e) {
