@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +23,12 @@ import communitymanagement.service.UserService;
 
 @RestController
 public class HomePageController {
-	
+
 	@Autowired
 	private UserService userService;
 
 	@PostMapping("/login")
-	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
+	public ResponseEntity<Map<String, String>> login(HttpServletRequest req, @RequestBody User user) {
 		User attemptUser = null;
 		attemptUser = userService.getUserByUsername(user.getUsername());
 		Map<String, String> result = new HashMap<>();
@@ -36,18 +37,25 @@ public class HomePageController {
 			result.put("lastName", attemptUser.getLastName());
 			result.put("userType", attemptUser.getUserType().toString());
 			result.put("message", "Logged in successfully");
+			HttpSession session = req.getSession(true);
+			session.setAttribute("userType", attemptUser.getUserType().toString());
+			session.setAttribute("userId", attemptUser.getId());
 			return ResponseEntity.status(HttpStatus.OK).body(result);
 		}
 		result.put("message", "Wrong username or password");
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(result);
 	}
-	
-	@GetMapping(value="/logout")
-    public ResponseEntity<String>  logoutPage (HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null){    
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body("You have logged out successfully");
-    }
+
+	@GetMapping("/user-logout")
+	public ResponseEntity<String> logoutPage(HttpServletRequest request, HttpServletResponse response) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null) {
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+		return ResponseEntity.status(HttpStatus.OK).body("You have logged out successfully");
+	}
 }

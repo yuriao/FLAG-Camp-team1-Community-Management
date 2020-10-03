@@ -2,7 +2,12 @@ package communitymanagement.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,21 +18,35 @@ import communitymanagement.servicefacade.DashboardServiceFacadeImpl;
 public class DashboardController {
 
 	@Autowired
-    private DashboardServiceFacadeImpl dashboardServiceFacadeImpl;
+	private DashboardServiceFacadeImpl dashboardServiceFacadeImpl;
 
-    @GetMapping("/dashboard/resident")
-    public List<Ticket> getTicketsAsResident() {
-        return dashboardServiceFacadeImpl.getTickets("resident");
-    }
+	@GetMapping("/dashboard/resident")
+	public ResponseEntity<List<Ticket>> getTicketsAsResident(HttpServletRequest request) {
+		// check session
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(dashboardServiceFacadeImpl.getTickets("resident", request));
+	}
 
-    @GetMapping("/dashboard/manager")
-    public List<Ticket> getTicketsAsManager() {
-        return dashboardServiceFacadeImpl.getTickets("manager");
-    }
+	@GetMapping("/dashboard/manager")
+	public ResponseEntity<List<Ticket>> getTicketsAsManager(HttpServletRequest request) {
+		// check session
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(dashboardServiceFacadeImpl.getTickets("manager", request));
+	}
 
-    @GetMapping("/dashboard/staff")
-    public List<Ticket> getTicketsAsStaff() {
-        return dashboardServiceFacadeImpl.getTickets("staff");
-    }
+	@GetMapping("/dashboard/staff")
+	public ResponseEntity<List<Ticket>> getTicketsAsStaff(HttpServletRequest request) {
+		// check session
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(dashboardServiceFacadeImpl.getTickets("staff", request));
+	}
 }
-

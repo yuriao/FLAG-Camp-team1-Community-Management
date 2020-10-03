@@ -38,7 +38,7 @@ public class ExampleController {
 
 	@Autowired
 	WorkAssignmentService workAssignmentService;
-	
+
 	@Autowired
 	IssueService issueService;
 
@@ -115,14 +115,14 @@ public class ExampleController {
 		}
 		try {
 			Issue issue = issueService.getIssueById(form.getIssueId());
-			
+
 			StaffCategory staffCategory = staffCategoryService.getStaffCategoryByName(form.getStaffCategoryName());
 			if (staffCategory == null) {
 				staffCategory = new StaffCategory();
 				staffCategory.setCategory(form.getStaffCategoryName());
 				staffCategoryService.addStaffCategory(staffCategory);
 			}
-			
+
 			WorkAssignment workAssignment = new WorkAssignment();
 			workAssignment.setIssue(issue);
 			workAssignment.setStaffCategory(staffCategory);
@@ -143,5 +143,4 @@ public class ExampleController {
 		}
 		return response;
 	}
-
 }

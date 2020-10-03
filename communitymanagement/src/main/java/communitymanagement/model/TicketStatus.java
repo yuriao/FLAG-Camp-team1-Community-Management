@@ -2,7 +2,7 @@ package communitymanagement.model;
 
 public enum TicketStatus {
 	OPEN,
-	ASSINGED,
+	ASSIGNED,
 	COMPLETE,
 	INPROGRESS,
 	DONE;
