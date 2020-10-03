@@ -9,7 +9,7 @@ class RegisterPage extends Component {
     constructor(){
         super();
         this.state ={
-            user_type: "resident"
+            user_type: "maintanence"
         };
     }
    
@@ -28,8 +28,8 @@ class RegisterPage extends Component {
                 <div className="main">
                 
                   <div className = "registerPart">
-
-                  <RegistrationForm user_type = {this.getUserType()}/>
+                
+                  <RegistrationForm  user_type = {this.getUserType()}/>
                     
                   </div>
                 </div>

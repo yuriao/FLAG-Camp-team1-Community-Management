@@ -15,23 +15,23 @@ class Home extends Component {
             <div className="vertical-center">
                 <h1 className="home-title"> Welcome to WeLive Portal! </h1>
                 <Login />
-                <div>
+                <div className ="home-content">
                     <p className="text-center">New user? Register here:</p>
                     <p className="text-center">I am a:</p>
                     <div className="avatar-registration-page" >
-                        <a href="/register?usertype=resident">
-                            <Avatar size={80}>
+                        <a href="/communitymanagement/register?usertype=resident">
+                            <Avatar size={100}>
                                 Resident
                         </Avatar>
                         </a>
-                        <a href="/register?usertype=manager">
-                            <Avatar size={80}>
+                        <a href="/communitymanagement/register?usertype=manager">
+                            <Avatar size={100}>
                                 Manager
                         </Avatar>
                         </a>
-                        <a href="/register?usertype=technician">
-                            <Avatar size={80}>
-                                Technician
+                        <a href="/communitymanagement/register?usertype=maintanence">
+                            <Avatar size={100}>
+                            Maintanence
                         </Avatar>
                         </a>
                     </div>
