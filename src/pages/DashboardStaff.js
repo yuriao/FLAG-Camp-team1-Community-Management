@@ -6,43 +6,14 @@ import WorkOrder from '../components/WorkOrder';
 import { Table } from 'antd';
 import News from "../components/News";
 import ChatDashboard from '../components/ChatDashboard';
+import StatusTag from "../components/StatusTag";
+import PriorityTag from "../components/PriorityTag";
 
 class DashboardStaff extends Component {
     constructor() {
         super();
         this.state = {
-            allTicketsTag: ['tk1', 'tk2', 'tk3'],
-            allTicketsContent: [{
-                "ticket_id": "0001233",
-                "unit": '711',
-                "subject": "water leak",
-                "created": "2020-09-18T14:48:00",
-                "category": "water",
-                "priority": "high",
-                "status": "assigned",
-                "review": <Button className="review-btn" content="view" />
-            },
-            {
-                "ticket_id": "0032134",
-                "unit": '711',
-                "subject": "bear sleeping on sofa",
-                "created": "2020-09-11T14:48:00",
-                "category": "misc",
-                "priority": "medium",
-                "status": "assigned",
-                "review": <Button className="review-btn" content="view" />
-            },
-            {
-                "ticket_id": "0123435",
-                "unit": '711',
-                "subject": "sink clog",
-                "created": "2020-09-11T14:48:00",
-                "category": "sink",
-                "priority": "medium",
-                "status": "assigned",
-                "review": <Button className="review-btn" content="view" />
-            }
-            ],
+            allTicketsContent: [],
             news: [{
                 "subject": "news1",
                 "date": "mm/dd/yy"
@@ -87,19 +58,33 @@ class DashboardStaff extends Component {
         }
     }
 
+    componentDidMount() {
+        fetch("/communitymanagement/dashboard/staff")
+            .then(res => res.json())
+            .then(
+                (res) => {
+                    let items = res;
+                    if (!items || items.length === 0) {
+                        alert('No tickets.');
+                    } else {
+                        this.setState({ allTicketsContent: items });
+                        console.log(this.state.allTicketsContent);
+                    }
+
+                },
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                    //   this.setState({
+                    //     isLoaded: true,
+                    //     error
+                    //   });
+                }
+            )
+    }
+
     render() {
-        let ticketDivs = [];
-        this.state.allTicketsTag.map((cdiv, i) => {
-            ticketDivs.push(<WorkOrder
-                id={this.state.allTicketsContent[i].id}
-                unit={this.state.allTicketsContent[i].unit}
-                category={this.state.allTicketsContent[i].category}
-                description={this.state.allTicketsContent[i].description}
-                status={this.state.allTicketsContent[i].status}
-                key={cdiv}
-                id={cdiv}
-            />);
-        })
 
         let newsDivs = [];
         this.state.news.map((subject, i) => {
