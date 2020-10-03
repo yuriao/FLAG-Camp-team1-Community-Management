@@ -28,9 +28,6 @@ public class HomePageController {
 
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
-		System.out.println(user.getPassword());
-		System.out.println(user.getUsername());
-		
 		User attemptUser = null;
 		attemptUser = userService.getUserByUsername(user.getUsername());
 		Map<String, String> result = new HashMap<>();
