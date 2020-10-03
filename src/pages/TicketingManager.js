@@ -19,19 +19,19 @@ class TicketingManager extends Component {
             allTicketsTag: ['tk1','tk2'],    // set initial state with one div
             allTicketsContent: [{
                 "ticket_id":"0001233",
-                "unit": '711',
+                "unit_number": '711',
                 "subject": "water leak",
-                "created": "2020-09-18T14:48:00",
-                "category": "water",
-                "priority": "high"
+                "submitted_date": "2020-09-18T14:48:00",
+                "issue": "water",
+                "recommend_staff": []
             },
             {
                 "ticket_id":"0032134",
-                "unit": '711',
+                "unit_number": '711',
                 "subject": "bear sleeping on sofa",
-                "created": "2020-09-11T14:48:00",
-                "category": "misc",
-                "priority": "medium"                
+                "submitted_date": "2020-09-11T14:48:00",
+                "issue": "misc",
+                "recommend_staff": []                
             },
             ],
            ticketSubmitMessage:"",
@@ -47,6 +47,7 @@ class TicketingManager extends Component {
            assignment:[],
            datasource:[],
            recommend_staff:["engineer1","engineer2"],
+           assignee:["engineer1"],
            possible_issue_categories:{
              "kitchen": ["sink", "dishwasher"], 
              "bathroom": ["sink", "furniture","floor"],
@@ -64,12 +65,12 @@ class TicketingManager extends Component {
     }
     
     componentDidMount(){
-        this.ReloadTickets();
+        this.refershTickets();
         this.loadIssueCategory();
     }
 
     loadIssueCategory=()=>{
-      Ajax('GET', "/tickets/ticket-issue-categories", [],
+      Ajax('GET', "/communitymanagement/tickets/ticket-issue-categories", [],
           // successful callback
           function(res) {
             let items = JSON.parse(res);
@@ -86,11 +87,11 @@ class TicketingManager extends Component {
     // refersh page function 
     ReloadTickets = ()=>{
       
-      let all_assignees=this.state.recommend_staff;
       let dsource=[];
 
       this.state.allTicketsTag.map((cdiv, i) => {
         
+        let all_assignees=this.state.allTicketsContent[i].recommend_staff;
         let assigneeTag_1=
         <div>
           <Space direction="vertical">
@@ -118,17 +119,21 @@ class TicketingManager extends Component {
 
         dsource.push({
             key: i,
-            ticket_id: <a href=''>{this.state.allTicketsContent[i].ticket_id}</a>, 
-            unit: this.state.allTicketsContent[i].unit, 
+            ticket_id: <Button href='/communitymanagement/TicketingDetail' onClick={this.TicketIdStore(this.state.allTicketsContent[i].ticket_id)} type="link">{this.state.allTicketsContent[i].ticket_id}</Button>, 
+            unit: this.state.allTicketsContent[i].unit_number, 
             subject: this.state.allTicketsContent[i].subject, 
-            created: this.state.allTicketsContent[i].created, 
-            category: this.state.allTicketsContent[i].category, 
+            created: this.state.allTicketsContent[i].submitted_date, 
+            category: this.state.allTicketsContent[i].issue, 
             priority: this.state.allTicketsContent[i].priority,
             assignee: assigneeTag,
         })
       });
       this.setState({datasource:dsource}); // it is suggested that try not to directly change state var as next setState may discard the change, use setsTATE instead
       
+    }
+
+    TicketIdStore = (tid) =>{
+      sessionStorage.setItem('inquiredTicketID', 'tid');
     }
 
     // if need props, use this.props to access
@@ -208,7 +213,7 @@ class TicketingManager extends Component {
           "priority": this.state.priorty,
           "subject": this.state.subject,
           "location": this.state.location,
-          "issue": this.state.location,
+          "issue_category_id": 1,
           "description": this.state.description,
           "category": this.state.category,
           "created": time,
@@ -221,7 +226,7 @@ class TicketingManager extends Component {
         };
         console.log(ticketData);
         //fetchAPI to create ticket
-        Ajax('POST', "/tickets/submit", ticketData,
+        Ajax('POST', "/communitymanagement/tickets/submit", ticketData,
           // successful callback
           function(res) {
             console.log("good");
@@ -237,7 +242,7 @@ class TicketingManager extends Component {
       }
 
     refershTickets=()=>{
-        Ajax('GET', '/tickets/manager', [],
+        Ajax('GET', '/communitymanagement/tickets/manager', [],
           // successful callback
           function(res) {
             let items = JSON.parse(res);
@@ -303,7 +308,7 @@ class TicketingManager extends Component {
         obj={i:this.state.recommend_staff[0]};
       }
 
-      Ajax('PUT', "/tickets/"+tid.toString()+"/assignees", obj[i],
+      Ajax('PUT', "/communitymanagement/tickets/"+tid.toString()+"/assignees", obj[i],
           // successful callback
           function(res) {
             console.log("good");

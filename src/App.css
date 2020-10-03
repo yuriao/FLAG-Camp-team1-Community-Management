@@ -11,7 +11,7 @@
 
 @import "./styles/Login.css";
 @import "./styles/Registration.css";
-
+@import "./styles/Home.css";
 
 .App {
   text-align: center;

@@ -14,13 +14,12 @@ import org.springframework.stereotype.Repository;
 
 import communitymanagement.model.Ticket;
 
-
 @Repository
 public class TicketDao {
-	
+
 	@Autowired
 	private SessionFactory sessionFactory;
-	
+
 	public void addTicket(Ticket ticket) {
 		Session session = null;
 		try {
@@ -35,9 +34,9 @@ public class TicketDao {
 			if (session != null) {
 				session.close();
 			}
-		} 
+		}
 	}
-	
+
 	public Ticket getTicketById(int ticketId) {
 		Ticket ticket = null;
 		try (Session session = sessionFactory.openSession()) {
@@ -71,6 +70,7 @@ public class TicketDao {
 
 	public List<Ticket> getTicketsByUserIdWithTimeRange(int userId, Timestamp start, Timestamp end) {
 		List<Ticket> tickets = null;
+
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -90,6 +90,7 @@ public class TicketDao {
 
 	public List<Ticket> getAllTicketsWithTimeRange(Timestamp start, Timestamp end) {
 		List<Ticket> tickets = null;
+    
 		try (Session session = sessionFactory.openSession()) {
 			session.beginTransaction();
 			CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -104,7 +105,7 @@ public class TicketDao {
 		}
 		return tickets;
 	}
-	
+
 	public List<Ticket> getAllTicketsByUserId(int userId) {
 		List<Ticket> tickets = null;
 		try (Session session = sessionFactory.openSession()) {
@@ -136,7 +137,7 @@ public class TicketDao {
 		}
 		return tickets;
 	}
-	
+
 	public void removeTicket(int ticketId) {
 		Session session = null;
 		try {
@@ -153,5 +154,4 @@ public class TicketDao {
 			}
 		}
 	}
-
 }

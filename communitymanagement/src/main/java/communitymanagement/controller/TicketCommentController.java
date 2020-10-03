@@ -30,7 +30,6 @@ import communitymanagement.service.TicketService;
 import communitymanagement.service.TicketWorkAssigneeService;
 import communitymanagement.service.UserService;
 import communitymanagement.service.WorkAssignmentService;
-import communitymanagement.servicefacade.AssigneeRecommendationFacadeImpl;
 
 @RestController
 public class TicketCommentController {
@@ -54,15 +53,11 @@ public class TicketCommentController {
 	WorkAssignmentService workAssignmentService;
 
 	@Autowired
-	AssigneeRecommendationFacadeImpl assigneeRecommendationFacadeImpl;
-
-	@Autowired
 	IssueCategoryService issueCategoryService;
 
 	@PutMapping("/tickets/{ticket_id}/staff-update")
 	public ResponseEntity<String> staffUpdate(@RequestBody TicketCommentForm form,
 			@PathVariable("ticket_id") int ticketId, BindingResult result) {
-		
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Fail to build the ticket comment form");
@@ -78,16 +73,17 @@ public class TicketCommentController {
 		String msg = "";
 		try {
 			// get user from authentication
-	    	Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+            Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 			String username = loggedInUser.getName();
 			User currentUser = userService.getUserByUsername(username);
 			int userId = currentUser.getId();
 
 			// get Ticket
 			Ticket ticket = ticketService.getTicketById(ticketId);
-			
+
 			// check if user is the assignee -- MVP: one ticket has only one assignee
-			List<TicketWorkAssignee> ticketWorkAssignees = ticketWorkAssigneeService.getAllTicketWorkAssineeByTicketId(ticketId);
+			List<TicketWorkAssignee> ticketWorkAssignees = ticketWorkAssigneeService
+					.getAllTicketWorkAssineeByTicketId(ticketId);
 			if (ticketWorkAssignees == null | ticketWorkAssignees.size() == 0) {
 				return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is not an assignee of this ticket");
 			}
@@ -119,17 +115,17 @@ public class TicketCommentController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(msg);
 	}
-	
+
 	@GetMapping("/tickets/{ticket_id}")
 	public ResponseEntity<TicketForm> getTicketDetail(@PathVariable("ticket_id") int ticketId) {
 		// get user from authentication
-    	Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = loggedInUser.getName();
 		User user = userService.getUserByUsername(username);
-		
-		// TODO: check if user can see the ticket -- manager, assigned staff, resident that created the ticket
+
+		// TODO: check if user can see the ticket -- manager, assigned staff, resident
+		// that created the ticket
 		// add code here
-		
 		TicketForm ticketForm = new TicketForm();
 		Ticket ticket = ticketService.getTicketById(ticketId);
 		List<TicketComment> ticketComment = ticketCommentService.getAllTicketComments(ticketId);
@@ -137,33 +133,35 @@ public class TicketCommentController {
 		ticketForm.setTicketComment(ticketComment);
 		return ResponseEntity.status(HttpStatus.OK).body(ticketForm);
 	}
-	
+
 	@PutMapping("/tickets/{ticket_id}/update")
-	public ResponseEntity<String> update(@RequestBody SimpleComment comment, @PathVariable("ticket_id") int ticketId, BindingResult result) {
+	public ResponseEntity<String> update(@RequestBody SimpleComment comment, @PathVariable("ticket_id") int ticketId,
+			BindingResult result) {
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body("Fail to build the ticket comment form");
 		}
-		
 		// get user from authentication
-    	Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = loggedInUser.getName();
 		User user = userService.getUserByUsername(username);
 		int userId = user.getId();
-		
-		// TODO: check if user can update the ticket -- manager, assigned staff, resident that created the ticket
+
+		// TODO: check if user can update the ticket -- manager, assigned staff,
+		// resident that created the ticket
 		// add code here
-		
+
 		TicketComment ticketComment = new TicketComment();
 		ticketComment.setBody(comment.getComment());
 		ticketComment.setTicket(ticketService.getTicketById(ticketId));
 		ticketComment.setUser(userService.getUserByUserId(userId));
-		
+
 		Date date = new Date();
 		Timestamp curTime = new Timestamp(date.getTime());
-		ticketComment.setCreated(curTime);;
+		ticketComment.setCreated(curTime);
+		;
 		ticketCommentService.addTicketComment(ticketComment);
-		
+
 		String msg = "Comment Added.";
 		return ResponseEntity.status(HttpStatus.OK).body(msg);
 	}

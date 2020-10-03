@@ -9,10 +9,15 @@ class RegisterPage extends Component {
     constructor(){
         super();
         this.state ={
-            user_type: "resident"
+            user_type: "maintanence"
         };
     }
    
+    getUserType() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('usertype');
+        return myParam;
+    }
 
     render() {
         
@@ -23,8 +28,8 @@ class RegisterPage extends Component {
                 <div className="main">
                 
                   <div className = "registerPart">
-
-                  <RegistrationForm user_type = {this.state.user_type}/>
+                
+                  <RegistrationForm  user_type = {this.getUserType()}/>
                     
                   </div>
                 </div>

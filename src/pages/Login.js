@@ -9,7 +9,7 @@ class LoginPage extends Component {
     constructor(){
         super();
         this.state ={
-            formType: "Maintanence"
+            // formType: "Maintanence"
         };
     }
    
@@ -19,7 +19,6 @@ class LoginPage extends Component {
         return (
             
             <div className="registerLogin">
-                <Navigation />
                 <div className="main">
                   
                   <div className = "centerPart">
@@ -28,8 +27,6 @@ class LoginPage extends Component {
                   </div>
 
                 </div>
-            
-               <Footer/>
                
             </div>
             

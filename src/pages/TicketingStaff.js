@@ -48,6 +48,10 @@ class TicketingStaff extends Component {
        }
     }
 
+    componentDidMount(){
+      this.reloadTickets();
+    }
+
     reloadTickets=()=>{
             
       let dsource=[];
@@ -76,7 +80,7 @@ class TicketingStaff extends Component {
         let acceptDeclineTagContent_3=<Button iid={i} type="primary">Complete</Button>
 
         console.log(this.state.allTicketsContent[i].status);
-        if(this.state.allTicketsContent[i].status==="in progress"){
+        if(this.state.allTicketsContent[i].status==="INPROGRESS"){
           if(this.state.allTicketsContent[i].fix_date){ // ticket status: in progress, fixdate provided, indicate staff is on their way
             acceptDeclineTagContent=acceptDeclineTagContent_3;
           }else{// ticket status: in progress, no fix date, staff is considering their fixdate
@@ -89,7 +93,7 @@ class TicketingStaff extends Component {
 
         dsource.push({
             key: i,
-            ticket_id: <a href=''>{this.state.allTicketsContent[i].ticket_id}</a>, 
+            ticket_id: <Button href="/communitymanagement/TicketingDetail" onClick={this.TicketIdStore(this.state.allTicketsContent[i].ticket_id)} type="link">{this.state.allTicketsContent[i].ticket_id}</Button>, 
             unit: this.state.allTicketsContent[i].unit, 
             subject: this.state.allTicketsContent[i].subject, 
             created: this.state.allTicketsContent[i].created, 
@@ -100,10 +104,9 @@ class TicketingStaff extends Component {
     });
     this.setState({datasource:dsource});
   }
-    // the point is, we only display 7 days on page, so only need 7 arrays. for exact days info, will pass from db and will add checking codes later
-    // if need props, use this.props to access
-    componentDidMount(){
-      this.reloadTickets();
+    
+  TicketIdStore = (tid) =>{
+      sessionStorage.setItem('inquiredTicketID', 'tid');
     }
 
     refershTickets=()=>{
@@ -146,7 +149,7 @@ class TicketingStaff extends Component {
     
     acceptTicket=(event,i)=>{
       let dsource=this.state.allTicketsContent;
-      dsource[i].status="in progress";
+      dsource[i].status="INPROGRESS";
 
       this.setState({allTicketsContent:dsource});
       this.reloadTickets();
@@ -171,7 +174,7 @@ class TicketingStaff extends Component {
     confirmTickets=(event,i)=>{
       let obj=this.state.fix_date.find(o=>Object.keys(o)==i);
       
-      Ajax("POST","/tickets/"+sessionStorage.username+"/staff-action", {"status":"in progress"},
+      Ajax("POST","/tickets/"+sessionStorage.username+"/staff-action", {"action":"accept"},
           // successful callback
           function(res) {
             console.log("good");

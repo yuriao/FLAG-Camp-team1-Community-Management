@@ -41,14 +41,17 @@ public class TicketIssueController {
 	@GetMapping("/ticket-issue-categories")
 	public Map<String, Map<String, Integer>> allIssueLocationCategory() {
 		Map<String, Map<String, Integer>> allIssueLocationCategory = new HashMap<>();
+		List<IssueCategory> allIssueCategories = issueCategoryService.getAlIssueCategories();
 		List<Location> locations = locationService.getAllLocations();
 		List<Issue> issues = issueService.getAllIssues();
-		
 		for (Location location : locations) {
 			Map<String, Integer> issueList = new HashMap<>();
 			for (Issue issue : issues) {
-				IssueCategory issueCategory = issueCategoryService.getIssueCategoryByLocationIssue(location, issue);
-				issueList.put(issue.getIssueType(), issueCategory.getId());
+				for (IssueCategory issueCategory : allIssueCategories) {
+					if (issueCategory.getIssue().getId() == issue.getId() && issueCategory.getLocation().getId() == location.getId()) {
+						issueList.put(issue.getIssueType(), issueCategory.getId());
+					} 
+				}
 			}
 			allIssueLocationCategory.put(location.getLocationType(),issueList);
 		}

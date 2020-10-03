@@ -20,16 +20,16 @@ import lombok.Setter;
 @Table(name = "issue_category")
 public class IssueCategory implements Serializable {
 	private static final long serialVersionUID = 2683331852299968105L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	
-	@ManyToOne(fetch=FetchType.EAGER)
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "location_id")
 	private Location location;
-	
-	@ManyToOne(fetch=FetchType.EAGER)
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "issue_id")
 	private Issue issue;
 }

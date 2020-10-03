@@ -7,55 +7,133 @@ import ResidentSignUp from './ResidentSignUp';
 import ManagerSignUp from './ManagerSignUp';
 import StaffSignUp from './StaffSignUp';
 import {RegisterRequest} from './AccountAxios';
+// import {withRouter} from 'react-router-dom';
 
 class RegisterForm extends Component{
     constructor(){
         super();
         this.state  = {
-        //    type: "",
+          
+            // first_name: "",
+            // last_name: "",
+            // email: "",
+            // password: "",
+            // phone_number: "",
+            // unit_number: "",
+            // birthday: "",
+            // category: "",
         };
-      
+       
     }
+    
    
+
+    inputChangePassword=(e)=>{
+         
+        // let value = e.target.value;
+        // this.setState({
+        //    password: value,
+        // })
+
+     }
+     
+     inputChangeFirstName=(e)=>{
+         
+        // let value = e.target.value;
+        // this.setState({
+        //    first_name: value,
+        // })
+
+     }
+
+     inputChangeLastName=(e)=>{
+         
+        // let value = e.target.value;
+        // this.setState({
+        //    last_name: value,
+        // })
+
+     }
+
+     inputChangeEmail=(e)=>{
+         
+        // let value = e.target.value;
+        // this.setState({
+        //    email: value,
+        // })
+
+     }
+
+     inputChangePhoneNumber=(e)=>{
+         
+        // let value = e.target.value;
+        // this.setState({
+        //    phone_number: value,
+        // })
+
+     }
+
+    // residentData = ()=>{
+
+    // }
+
+    // staffData = ()=>{
+
+    // }
+
+
+    // getDataFromChild = (param)=>{
+
+    //     if(param == "resident"){
+               
+    //        <ResidentSignUp add1 = {this.residentData}/>;
+    //     }
+    //     else if (param == "maintanence") {
+           
+    //        <StaffSignUp add2 = {this.staffData}/>;
+    //     }
+    // }
       onFinish = (values) => {
-        const personType = this.props.user_type;
-        // this.dataFromChild(this.props.formType);
-       RegisterRequest(values,personType).then(response =>{          
-            console.log(response);
-        }).catch(error =>{
-            console.log(error);
-        })
-        // console.log('Received values of form: ', values);
+
+                const personType = this.props.user_type;
+                
+            RegisterRequest(values,personType).then(
+                        response =>{          
+                            const status = response.status;
+                            if(status == 200){
+                            //   this.props.history.push('/');
+                            }
+                            console.log(response);
+                        }
+                        ).catch(error =>{
+                            console.log("error info: ",error);
+                        })
+
+                console.log('Received values of form: ', values);
       };
 
-    //    dataFromChild = (data)=>{
-    //     this.setState({
-    //         type: data,
-    //     })
-    //     console.log(this.state);
-    //    }
-     
-
+   
     render(){
         
         const {user_type} = this.props;
        
         
         const result = () =>{
-            if(user_type === "resident"){
+            if(user_type == "resident"){
                
                 return <ResidentSignUp/>;
             }
-            else if(user_type === "manager"){
+            else if(user_type == "manager"){
               
                 return <ManagerSignUp/>;
             }
-            else if (user_type === "maintanence") {
+            else if (user_type == "maintanence") {
                
                 return <StaffSignUp/>;
             }
         
         }
+
         return(
                  <Fragment>
                      <h4>Welcome to {this.props.user_type} portal!</h4>
@@ -81,7 +159,7 @@ class RegisterForm extends Component{
                                     rules={[{ required: true, message: 'Please input your First Name!' }]}
                                 >
                                    
-                                <Input prefix={<UserOutlined className="site-form-item-icon" />}  placeholder="First Name" />
+                                <Input onChange = {this.inputChangeFirstName} prefix={<UserOutlined className="site-form-item-icon" />}  placeholder="First Name" />
                                 </Form.Item>
 
                                 <Form.Item
@@ -90,7 +168,7 @@ class RegisterForm extends Component{
                                     rules={[{ required: true, message: 'Please input your Last Name!' }]}
                                 >
                                    
-                                <Input prefix={<UserOutlined className="site-form-item-icon" />}  placeholder="Last Name" />
+                                <Input onChange = {this.inputChangeLastName} prefix={<UserOutlined className="site-form-item-icon" />}  placeholder="Last Name" />
                                 </Form.Item>
 
                                 <Form.Item
@@ -99,7 +177,7 @@ class RegisterForm extends Component{
                                     rules={[{ required: true, message: 'Please input your Email address!' }]}
                                 >
                                     
-                                <Input type = "email" prefix={<MailOutlined className="site-form-item-icon" />}  placeholder="Email Address" />
+                                <Input onChange = {this.inputChangeEmail} type = "email" prefix={<MailOutlined className="site-form-item-icon" />}  placeholder="Email Address" />
                                 </Form.Item>
 
                                 <Form.Item
@@ -113,7 +191,7 @@ class RegisterForm extends Component{
                                     ]}
                                     hasFeedback
                                 >
-                                    <Input type = "password" prefix={<LockOutlined className="site-form-item-icon" />}  placeholder="Paasowrd"   />
+                                    <Input onChange = {this.inputChangePassword} type = "password" prefix={<LockOutlined className="site-form-item-icon" />}  placeholder="Paasowrd"   />
                                 </Form.Item>
 
                                 <Form.Item
@@ -144,7 +222,7 @@ class RegisterForm extends Component{
                                     label="Phone Number"
                                     rules={[{ required: true, message: 'Please input your phone number!' }]}
                                 >
-                                    <Input prefix={<PhoneOutlined className="site-form-item-icon" />}  style={{ width: '100%' }} 
+                                    <Input onChange = {this.inputChangePhoneNumber} prefix={<PhoneOutlined className="site-form-item-icon" />}  style={{ width: '100%' }} 
                                     placeholder = "Input your phone number"/>
                                 </Form.Item>
 
@@ -165,11 +243,14 @@ class RegisterForm extends Component{
 
                                 <Form.Item>
                                     
+                              
                                     <Button type="primary" htmlType="submit" className="login-form-button" block>
                                         Register
                                     </Button>
-                                    
+                            
                                 </Form.Item>
+
+                              
                             </Form>
                     </div>
                 </Fragment>              
