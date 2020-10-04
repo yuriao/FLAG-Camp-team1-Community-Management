@@ -60,11 +60,9 @@ public class CalendarServiceFacadeImpl implements CalendarServiceFacade {
                 tickets = ticketService.getAllTicketsWithTimeRange(startTimestamp, endTimestamp);
             } else if (userType == UserType.STAFF) {
                 List<TicketWorkAssignee> ticketWorkAssignees = ticketWorkAssigneeService.getAllTicketWorkAssigneeByUserId(userId);
-                List<Ticket> curTickets = new ArrayList<>();
                 for (TicketWorkAssignee ticketWorkAssignee : ticketWorkAssignees) {
                     tickets.add(ticketService.getTicketByIdWithTimeRange(ticketWorkAssignee.getTicket().getId(), startTimestamp, endTimestamp));
                 }
-                tickets = curTickets;
             }
         } catch (ParseException e) {
             e.printStackTrace();
