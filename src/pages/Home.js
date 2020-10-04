@@ -29,9 +29,9 @@ class Home extends Component {
                                 Manager
                         </Avatar>
                         </a>
-                        <a href="/communitymanagement/register?usertype=maintanence">
+                        <a href="/communitymanagement/register?usertype=staff">
                             <Avatar size={100}>
-                            Maintanence
+                              Staff
                         </Avatar>
                         </a>
                     </div>

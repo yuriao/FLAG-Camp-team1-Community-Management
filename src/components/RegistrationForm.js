@@ -14,14 +14,14 @@ class RegisterForm extends Component{
         super();
         this.state  = {
           
-            // first_name: "",
-            // last_name: "",
-            // email: "",
-            // password: "",
-            // phone_number: "",
-            // unit_number: "",
-            // birthday: "",
-            // category: "",
+            first_name: "",
+            last_name: "",
+            email: "",
+            password: "",
+            phone_number: "",
+            unit_number: "",
+            birthday: "",
+            staffCategoryId: "",
         };
        
     }
@@ -82,22 +82,31 @@ class RegisterForm extends Component{
     // }
 
 
-    // getDataFromChild = (param)=>{
-
-    //     if(param == "resident"){
-               
-    //        <ResidentSignUp add1 = {this.residentData}/>;
-    //     }
-    //     else if (param == "maintanence") {
-           
-    //        <StaffSignUp add2 = {this.staffData}/>;
-    //     }
-    // }
+    getDataFromChild = (param)=>{
+               this.setState({
+                    staffCategoryId: param,
+               })
+    }
       onFinish = (values) => {
-
-                const personType = this.props.user_type;
                 
-            RegisterRequest(values,personType).then(
+                const personType = this.props.user_type;
+                const{staffCategoryId} = this.state;
+                const value1 ={
+                    
+                    first_name: values.first_name,
+                    last_name: values.last_name,
+                    username: values.username,
+                    password: values.password,
+                    phone_number: values.phone_number,
+                    unit_number: values.unit_number,
+                    birthday: values.birthday,
+                    staffCategoryId: this.state.staffCategoryId,
+                    
+                }
+                console.log(value1);
+                
+                console.log("registration form user type is: ", personType);
+            RegisterRequest(value1,personType).then(
                         response =>{          
                             const status = response.status;
                             if(status == 200){
@@ -127,9 +136,9 @@ class RegisterForm extends Component{
               
                 return <ManagerSignUp/>;
             }
-            else if (user_type == "maintanence") {
+            else if (user_type == "staff") {
                
-                return <StaffSignUp/>;
+                return <StaffSignUp category = {this.getDataFromChild}/>;
             }
         
         }

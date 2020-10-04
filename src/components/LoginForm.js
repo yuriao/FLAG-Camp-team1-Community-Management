@@ -5,6 +5,7 @@ import React,{Component,Fragment} from "react";
 import Password from "antd/lib/input/Password";
  import {setToken,setUserID} from './UserToken';
 import {withRouter} from 'react-router-dom';
+import {Route, Redirect} from "react-router-dom";
 
  class Login extends Component{
      constructor(){
@@ -61,6 +62,7 @@ import {withRouter} from 'react-router-dom';
                         setUserID(userID);
 
                         if (userTypeSession == "RESIDENT"){
+                            // return(<Redirect to ="/DashboardResident"/>);
                             this.props.history.push('/DashboardResident');
                         }
                         else if (userTypeSession == "MANAGER"){
