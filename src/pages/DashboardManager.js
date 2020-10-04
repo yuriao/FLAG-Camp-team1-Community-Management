@@ -60,7 +60,7 @@ class DashboardManager extends Component {
 
     componentDidMount() {
         fetch("/communitymanagement/dashboard/manager")
-            .then(res => res.json())
+            .then((res) => {console.log(res.json())})
             .then(
                 (res) => {
                     let items = res;
@@ -71,15 +71,6 @@ class DashboardManager extends Component {
                         console.log(this.state.allTicketsContent);
                     }
 
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                    //   this.setState({
-                    //     isLoaded: true,
-                    //     error
-                    //   });
                 }
             )
     }
@@ -107,7 +98,6 @@ class DashboardManager extends Component {
         let columns = [{
             title: 'Ticket ID',
             dataIndex: 'ticket_id',
-            render: (text) => <a>{text}</a>,
         },
         {
             title: 'Subject',
@@ -131,24 +121,24 @@ class DashboardManager extends Component {
             if (content.status === "COMPLETED") {
                 completedOrder.push({
                     key: i,
-                    ticket_id: <a href=''>{content.id}</a>,
+                    ticket_id:content.id,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
-                    priority: <PriorityTag priority={content.priority} />,
-                    status: <StatusTag status={content.status} />,
+                    priority: content.priority,
+                    status: content.status,
                     description: content.description,
                     fixDate: content.fixDate,
                 })
             } else {
                 existingOrder.push({
                     key: i,
-                    ticket_id: <a href=''>{content.id}</a>,
+                    ticket_id:content.id,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
-                    priority: <PriorityTag priority={content.priority} />,
-                    status: <StatusTag status={content.status} />,
+                    priority: content.priority,
+                    status: content.status,
                     description: content.description,
                     fixDate: content.fixDate,
                 })

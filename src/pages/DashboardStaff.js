@@ -59,7 +59,7 @@ class DashboardStaff extends Component {
     }
 
     componentDidMount() {
-        fetch("/communitymanagement/dashboard/staff")
+        fetch("/communitymanagement/dashboard/manager")
             .then(res => res.json())
             .then(
                 (res) => {
@@ -103,19 +103,20 @@ class DashboardStaff extends Component {
             />)
         })
 
-        let datasource = [];
+        let assignedOrder = [];
+        let completedOrder = [];
+        let inprogressOrder = [];
         let columns = [{
             title: 'Ticket ID',
             dataIndex: 'ticket_id',
-            render: (text) => <a>{text}</a>,
         },
         {
             title: 'Subject',
             dataIndex: 'subject',
         },
         {
-            title: 'Category',
-            dataIndex: 'category',
+            title: 'Description',
+            dataIndex: 'description',
         },
         {
             title: 'Priority',
@@ -127,42 +128,44 @@ class DashboardStaff extends Component {
         },
         ];
 
-
-        let completed = [{
-            title: 'Ticket ID',
-            dataIndex: 'ticket_id',
-            render: (text) => <a>{text}</a>,
-        },
-        {
-            title: 'Subject',
-            dataIndex: 'subject',
-        },
-        {
-            title: 'Category',
-            dataIndex: 'category',
-        },
-        {
-            title: 'Priority',
-            dataIndex: 'priority',
-        },
-        {
-            title: 'Review',
-            dataIndex: 'review',
-        },
-        ];
-
-        this.state.allTicketsTag.map((cdiv, i) => {
-            datasource.push({
-                key: i,
-                ticket_id: <a href=''>{this.state.allTicketsContent[i].ticket_id}</a>,
-                unit: this.state.allTicketsContent[i].unit,
-                subject: this.state.allTicketsContent[i].subject,
-                created: this.state.allTicketsContent[i].created,
-                category: this.state.allTicketsContent[i].category,
-                priority: this.state.allTicketsContent[i].priority,
-                status: this.state.allTicketsContent[i].status,
-                review: this.state.allTicketsContent[i].review,
-            })
+        this.state.allTicketsContent.map((content, i) => {
+            if (content.status === "COMPLETED") {
+                completedOrder.push({
+                    key: i,
+                    ticket_id: content.id,
+                    unit: content.unitNumber,
+                    subject: content.subject,
+                    created: content.created,
+                    priority: content.priority,
+                    status: content.status,
+                    description: content.description,
+                    fixDate: content.fixDate,
+                })
+            } else if (content.status === "ASSIGNED"){
+                assignedOrder.push({
+                    key: i,
+                    ticket_id: content.id,
+                    unit: content.unitNumber,
+                    subject: content.subject,
+                    created: content.created,
+                    priority: content.priority,
+                    status: content.status,
+                    description: content.description,
+                    fixDate: content.fixDate,
+                })
+            } else if (content.status === "IN PROGRESS"){
+                inprogressOrder.push({
+                    key: i,
+                    ticket_id: content.id,
+                    unit: content.unitNumber,
+                    subject: content.subject,
+                    created: content.created,
+                    priority: content.priority,
+                    status: content.status,
+                    description: content.description,
+                    fixDate: content.fixDate,
+                })
+            }
         });
 
         return (
@@ -172,7 +175,7 @@ class DashboardStaff extends Component {
                 <div className="dashboard-main">
                     <div className="work-order">
                         <h5>Assigned Work Orders</h5>
-                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={columns} />
+                        <Table scroll={{ y: 500 }} dataSource={assignedOrder} columns={columns} />
                         <div>
                             <Button content="Manage Your Orders"></Button>
                         </div>
@@ -182,14 +185,14 @@ class DashboardStaff extends Component {
 
                     <div className="work-order">
                         <h5>Completed Work Orders</h5>
-                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={completed} />
+                        <Table scroll={{ y: 500 }} dataSource={completedOrder} columns={columns} />
                     </div>
                 </div>
 
                 <div className="dashboard-main">
                     <div className="work-order">
                         <h5> Work Order In Progress</h5>
-                        <Table scroll={{ y: 500 }} dataSource={datasource} columns={columns} />
+                        <Table scroll={{ y: 500 }} dataSource={inprogressOrder} columns={columns} />
                         <div>
                             <Button content="View Calendar"></Button>
                         </div>
