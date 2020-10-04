@@ -7,7 +7,8 @@ import {InfoCircleOutlined,FieldNumberOutlined,UserOutlined} from '@ant-design/i
 class StaffSignUp extends Component {
     
     handleChange = (param)=>{
-       return param.key;
+        console.log(param.value);
+     this.props.category(param.value);
     }
 
     render() {
@@ -29,13 +30,20 @@ class StaffSignUp extends Component {
                         style={{ width: '100%' }}
                         onChange={this.handleChange}
                     >
-                        <Option value="001">Appliances</Option>
-                        <Option value="002">Cable</Option>
-                        <Option value="003">Water</Option>
-                        <Option value="004">Electricity</Option>
-                        <Option value="005">Floor</Option>
-                        <Option value="006">Door</Option>
+                        <Option value="147">Appliances Repair</Option>
+                        <Option value="1">Appliances</Option>
+                        <Option value="2">Cable</Option>
+                        <Option value="3">Water</Option>
+                        <Option value="4">Electricity</Option>
+                        <Option value="5">Floor</Option>
+                        <Option value="6">Door</Option>
+                        <Option value="144">Plumbing</Option>
+                        <Option value="149">Handyman</Option>
+{/*                         
+                        {"Plumbing":144,"Appliance Repair":147,
+                        "Cable":2,"Water":3,"Floor":5,"Appliances":1,
                         
+                        "Electricity":4,"Door":6,"Handyman":149} */}
                     </Select>
                     </Form.Item>
 
