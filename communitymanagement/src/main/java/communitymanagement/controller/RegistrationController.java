@@ -44,8 +44,8 @@ public class RegistrationController {
 		}
 
 		// add user
+		User user = new User();
 		try {
-			User user = new User();
 			user.setFirstName(form.getFirst_name());
 			user.setLastName(form.getLast_name());
 			user.setUsername(form.getUsername());
@@ -83,13 +83,13 @@ public class RegistrationController {
 
 				break;
 			}
-			userService.addUser(user);
-			authoritiesService.addAuthorities(user);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
 		}
+		userService.addUser(user);
+		authoritiesService.addAuthorities(user);
 		return ResponseEntity.status(HttpStatus.OK).body("Successfully registered");
 	}
 }
