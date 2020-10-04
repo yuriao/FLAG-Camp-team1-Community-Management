@@ -1,20 +1,27 @@
 .nav{
     width: 100%;
-    padding: 20px;
+    padding: 10px;
 
     background-color: grey;
 }
 
 .left-nav {
+    margin-top: 20px;
     margin-left: 20px;
     margin-right:5%;
     color:white;
-    font-weight: bold;
+    font-size: 25px;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.left-nav:hover {
+    color:rgb(180, 180, 180);
+    cursor: pointer;
 }
 
 .right-nav {
     float:right;
     margin-right:5%;
     color:white;
-    font-weight: bold;
+    font-size: 25px;
 }

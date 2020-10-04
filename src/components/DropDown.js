@@ -4,7 +4,7 @@ class DropDown extends Component {
     constructor(props) {
         super();
         this.state = {
-            value: ''
+            allItems: []
         };
     
     }
@@ -15,7 +15,10 @@ class DropDown extends Component {
 
     sendData = (event) => {
         console.log(event.target.value);
-        this.props.parentCallback(event.target.value,this.props);
+        const elements = this.props.elements;
+
+        let idx=elements.findIndex((e) => e===event.target.value);
+        this.props.parentCallback(event.target.value,this.props,idx);
     }
 
     render() {
@@ -23,9 +26,9 @@ class DropDown extends Component {
 
         const items = [];
 
-        for (const [index, value] of elements.entries()) {
-            items.push(<option key={index}>{value}</option>)
-        }
+        elements.map((val,i)=>{
+            items.push(<option key={i}>{val}</option>)
+        });
 
         return (
             <div className="DropDown">

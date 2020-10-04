@@ -1,39 +1,21 @@
 import React, {Component} from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import {Table} from 'antd';
-import {Button} from 'antd';
-import {Space} from 'antd';
+import {Table, Spin, Button,Space} from 'antd';
 import Blank from '../components/Blank';
 import DropDown from "../components/DropDown";
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import Ajax from '../components/AJAX'
-
+import axios from 'axios'
+import { Redirect } from "react-router-dom";
 
 class TicketingManager extends Component {
     constructor(){
         super();
         this.state = {
-            allTicketsTag: ['tk1','tk2'],    // set initial state with one div
-            allTicketsContent: [{
-                "ticket_id":"0001233",
-                "unit_number": '711',
-                "subject": "water leak",
-                "submitted_date": "2020-09-18T14:48:00",
-                "issue": "water",
-                "recommend_staff": []
-            },
-            {
-                "ticket_id":"0032134",
-                "unit_number": '711',
-                "subject": "bear sleeping on sofa",
-                "submitted_date": "2020-09-11T14:48:00",
-                "issue": "misc",
-                "recommend_staff": []                
-            },
-            ],
+            allTicketsTag: [],    // set initial state with one div
+            allTicketsContent: [],
            ticketSubmitMessage:"",
            unit:'',
            lastName:'',
@@ -44,10 +26,10 @@ class TicketingManager extends Component {
            priorty:'',
            subject:'',
            description:'',
+           issue_category_id:0,
+           issue_category_id_current:0,
            assignment:[],
            datasource:[],
-           recommend_staff:["engineer1","engineer2"],
-           assignee:["engineer1"],
            possible_issue_categories:{
              "kitchen": ["sink", "dishwasher"], 
              "bathroom": ["sink", "furniture","floor"],
@@ -59,77 +41,95 @@ class TicketingManager extends Component {
              "trash":[],
              "misc":[]
             },
-            possible_locs:[]
+          possible_locs:[],
+          loading:true,
+          movingTo:-1
           // possible_loc:['kitchen','water','flooring','painting','windows/doors','yard','pest control','locksmith','trash','yard/pool','misc'],
          }
     }
     
     componentDidMount(){
-        this.refershTickets();
-        this.loadIssueCategory();
+        if(sessionStorage.getItem("user_type")!="MANAGER"){
+            alert("Only manager can access management ticketing system");
+            this.setState({movingTo:7});
+        }else{
+          this.refreshTickets();
+          this.loadIssueCategory();
+        }
+        
     }
 
     loadIssueCategory=()=>{
-      Ajax('GET', "/communitymanagement/tickets/ticket-issue-categories", [],
-          // successful callback
-          function(res) {
-            let items = JSON.parse(res);
-            this.setState({possible_issue_categories:items})
-            console.log("good");
-          },
-          // failed callback
-          function() {
-            console.log('fail');
-          }
-        );
+      axios.get('/communitymanagement/ticket-issue-categories')
+      .then((response) => {
+        let items =response.data;
+        this.setState({possible_issue_categories:items})
+        console.log("good");
+        console.log(Object.keys(items));
+      })
+      .catch((error)=> {
+        console.log(error);
+      });
     }
 
-    // refersh page function 
-    ReloadTickets = ()=>{
+    // refresh page function 
+    ReloadTickets = (items,tags)=>{
       
       let dsource=[];
 
-      this.state.allTicketsTag.map((cdiv, i) => {
+      tags.map((cdiv, i) => {
         
-        let all_assignees=this.state.allTicketsContent[i].recommend_staff;
+        let recommend_assignees_dat=items[i].recommendStaff;       
+        
+        let recommend_assignees=[];
+        let recommend_assignees_idx=[];
+         
+        if(recommend_assignees_dat){
+            recommend_assignees_dat.map((c,i)=>{
+            recommend_assignees.push(recommend_assignees_dat[i].name);
+            recommend_assignees_idx.push(recommend_assignees_dat[i].userId);
+          })
+        }else{
+          recommend_assignees=["Not available"];
+        }
+        
         let assigneeTag_1=
-        <div>
-          <Space direction="vertical">
-            <DropDown iid={i} parentCallback = {this.AssignmentCallBack} elements={all_assignees}/>
-            <Button iid={i} onClick={(event)=>this.assignTickets(event,i)} shape="round">Confirm</Button> 
+        <div>  
+          <Space direction='horizontal'>
+            <DropDown iid={i} parentCallback = {this.AssignmentCallBack} elements={recommend_assignees}/>
+            <Button iid={i} onClick={(event)=>this.assignTickets(event,i)} size="small" shape="round">Confirm</Button> 
           </Space>
         </div>;  //(event)=>this.assignTickets(event,i): add a parameter i to callback
   
         //let assigneeTag_2=<div><Button iid={i} onClick={(event)=>this.cancelAssignment(event,i)} danger>Cancel Assignment</Button></div>;
 
-        //1. trim assignees by category (unfinished)
-        let cCategory=this.state.allTicketsContent[i].category;
-
-        //2.check if assignee exists for current ticket
+        //1.check if assignee exists for current ticket
         let assigneeTag=[];
-        if (this.state.allTicketsContent[i].assignee){
-          console.log(this.state.allTicketsContent[i].assignee);
-          
-          let assigneeTag_2=<div>Assigned: {this.state.allTicketsContent[i].assignee} </div>;
-          
+        if (items[i].assignees){
+          let assigneeTag_2=<div>Assigned: {items[i].assignees[0].name} </div>;
           assigneeTag=assigneeTag_2;
+        
         }else{
           assigneeTag=assigneeTag_1;
         }
 
+        let dateObject = new Date(items[i].submittedDate);
+        let humanDateFormat = dateObject.toLocaleString(); //2019-12-9 10:30:15
+        
         dsource.push({
             key: i,
-            ticket_id: <Button href='/communitymanagement/TicketingDetail' onClick={this.TicketIdStore(this.state.allTicketsContent[i].ticket_id)} type="link">{this.state.allTicketsContent[i].ticket_id}</Button>, 
-            unit: this.state.allTicketsContent[i].unit_number, 
-            subject: this.state.allTicketsContent[i].subject, 
-            created: this.state.allTicketsContent[i].submitted_date, 
-            category: this.state.allTicketsContent[i].issue, 
-            priority: this.state.allTicketsContent[i].priority,
+            ticket_id: <Button href='/communitymanagement/TicketingDetail' onClick={this.TicketIdStore(items[i].ticketId)} type="link">{items[i].ticketId}</Button>, 
+            //unit: items[i].unit_number, 
+            subject: items[i].issue, 
+            created: humanDateFormat, 
+            //category: items[i].issue, 
+            //priority: items[i].priority,
             assignee: assigneeTag,
         })
+        
       });
+      this.setState({loading:false});
       this.setState({datasource:dsource}); // it is suggested that try not to directly change state var as next setState may discard the change, use setsTATE instead
-      
     }
 
     TicketIdStore = (tid) =>{
@@ -141,7 +141,7 @@ class TicketingManager extends Component {
       this.setState({
         unit: childData,
       });
-      //console.log(childData);
+      console.log(childData);
       
     }
     
@@ -166,17 +166,37 @@ class TicketingManager extends Component {
     }
 
     locationDropDownCallBack = (childData,childProps) => {
+      console.log(this.state.issue_category_id_current);
+      let idx=this.state.possible_locs.findIndex(o=>o==childData);
+      console.log(this.state.issue_category_id_current[idx]);
       this.setState({
         location: childData,
+        issue_category_id: this.state.issue_category_id_current[idx]
       })
     }
 
-    categoryDropDownCallBack = (childData,childProps) => {
+    categoryDropDownCallBack = (childData,childProps,idx) => { // how backend's issue-category-id works? issue-category-id has pre-defined id for pre-defined categoty-locatoin combinations
+      console.log(this.state.possible_issue_categories);
+      
       let pos_locs=this.state.possible_issue_categories[childData];
+      let pos_loc_name=[];
+      let issue_category_id_c=[];
+      if(pos_locs){
+        for(var k in pos_locs){
+          pos_loc_name.push(k);
+          issue_category_id_c.push(pos_locs[k]);
+        } 
+
+      }else{
+        pos_locs=["not aviliable"];
+      }
+
       this.setState({
         category: childData,
-        possible_locs: pos_locs
+        issue_category_id_current:issue_category_id_c,
+        possible_locs: pos_loc_name
       })
+      
     }
 
     priortyDropDownCallBack = (childData,childProps) => {
@@ -201,95 +221,84 @@ class TicketingManager extends Component {
 
     SubmitTickets=()=>{
         console.log(this.state.unit);
-        let today = new Date();
-        let time = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()+"T"+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        this.setState({ticketSubmitMessage:"Submitting Ticket..."})
+        // let today = new Date();
+        // let time = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()+"T"+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        //Be aware... Backend need to accept json, so no "string" for keys
         let ticketData = {
-          "ticket_id": Math.random().toString(12).substring(2, 9) + Math.random().toString(12).substring(2, 9),
-          //"user_id": sessionStorage.user_id,
-          "user_id": '123',
-          "firstName": this.state.firstName,
-          "lastName":  this.state.lastName,
-          "unit":this.state.unit,
-          "priority": this.state.priorty,
-          "subject": this.state.subject,
-          "location": this.state.location,
-          "issue_category_id": 1,
-          "description": this.state.description,
-          "category": this.state.category,
-          "created": time,
-          "availability": "",
-          "assignee": "",
-          "fix_date":"",
-          "ticket_status":"",
-          "contact_method":this.state.contact_method,
-          "status":"open"
+          unitNumber: this.state.unit,
+          subject: this.state.subject,
+          issueCategoryId: this.state.issue_category_id,
+          description: this.state.description+"\n"+"location: "+this.state.location,
+          availability: "available",
+          priority:this.state.priorty
         };
         console.log(ticketData);
-        //fetchAPI to create ticket
-        Ajax('POST', "/communitymanagement/tickets/submit", ticketData,
-          // successful callback
-          function(res) {
-            console.log("good");
-          },
-          // failed callback
-          function() {
-            console.log('fail');
-          }
-        );
+
+        axios.post('/communitymanagement/tickets/submit', ticketData)
+        .then((response)=> {
+          console.log(response);
+          this.setState({ticketSubmitMessage:"Thank you! Ticket has been submitted"})
+          this.refreshTickets();
+        })
+        .catch((error)=> {
+          console.log(error);
+          this.setState({ticketSubmitMessage:"Ticket submission failed. Check console log for details"})
+        });
         
-        this.setState({ticketSubmitMessage:"ticket "+ticketData.ticket_id.toString()+" has been submitted"})
         
       }
 
-    refershTickets=()=>{
-        Ajax('GET', '/communitymanagement/tickets/manager', [],
-          // successful callback
-          function(res) {
-            let items = JSON.parse(res);
-            if (!items || items.length === 0) {
-              console.log('No tickets.');
-            } else {
-              
-              let ttags = [];
-            
-                //convert priorty for sorting
-              items.map((cdiv,i)=>{
-              if(items[i].priorty==="high"){
-                items[i].priortyidx=3;
-              }
-              if(items[i].priorty==="medium"){
-                items[i].priortyidx=2;
-              }
-              if(items[i].priorty==="low"){
-                items[i].priortyidx=1;
-              }
-  
-              ttags.push(i);
-            })
-  
-            this.setState({allticketsContent:items});
-            this.setState({allTicketsTag:ttags});
-            this.ReloadTickets();
+    refreshTickets=()=>{
+        this.setState({loading:true});
+        this.setState({ticketSubmitMessage:""})
+        axios.get('/communitymanagement/tickets/manager')
+        .then((response) => {
+          console.log(response);
+          let items =response.data.tickets;
+          let tags =[];
+          if (!items || items.length === 0) {
+            console.log('No tickets.');
+            this.setState({loading:false});
+          } else {
+              //convert priorty for sorting
+            items.map((cdiv,i)=>{
+            if(items[i].priorty==="HIGH"){
+              items[i].priortyidx=3;
             }
-          },
-          // failed callback
-          function() {
-            console.log('Cannot load tickets.');
+            if(items[i].priorty==="MEDIUM"){
+              items[i].priortyidx=2;
+            }
+            if(items[i].priorty==="LOW"){
+              items[i].priortyidx=1;
+            }
+
+            tags.push(i);
+            })
+
+            this.setState({allTicketsTag:tags});
+            this.setState({allticketsContent:items},()=>{console.log(items);this.ReloadTickets(items,tags);});//setState is async
           }
-        );
-        
+        })
+        .catch((error)=> {
+          console.log(error);
+          this.setState({loading:false});
+        });
       }
       
     AssignmentCallBack = (childData,childProps) => {
       let existingAssignments=this.state.assignment;
-      
-      let tiid=childProps.iid;
-      let asm=childData;
+      let iid=childProps.iid;
+      //console.log(this.state.allticketsContent);
+      let recommend_assignees_dat=this.state.allticketsContent[iid].recommendStaff; //{name,id}
+      //console.log(recommend_assignees_dat);
+      let assigneeName=childData;
+      let assigneeIdx=recommend_assignees_dat[recommend_assignees_dat.findIndex(o=>o.name==assigneeName)].userId;
       let obj={};
-      obj[tiid]=asm;
+      obj[iid]=[assigneeName,assigneeIdx];
       
-      if(existingAssignments.find(o=>Object.keys(o)==tiid)){
-        existingAssignments[existingAssignments.findIndex(o=>Object.keys(o)==tiid)]=obj; // change assignment
+      if(existingAssignments.find(o=>Object.keys(o)==iid)){
+        existingAssignments[existingAssignments.findIndex(o=>Object.keys(o)==iid)]=obj; // change assignment
       }else{
         existingAssignments.push(obj);
       }
@@ -301,30 +310,24 @@ class TicketingManager extends Component {
     assignTickets=(event,i)=>{
       console.log(this.state.assignment);
       let obj=this.state.assignment.find(o=>Object.keys(o)==i);
-      let tid=this.state.allTicketsContent[i].ticket_id;
-
-      //if directly click confirm, set the first assignee
-      if(!obj){ 
-        obj={i:this.state.recommend_staff[0]};
-      }
-
-      Ajax('PUT', "/communitymanagement/tickets/"+tid.toString()+"/assignees", obj[i],
-          // successful callback
-          function(res) {
-            console.log("good");
-          },
-          // failed callback
-          function() {
-            console.log('fail');
-          }
-        );
-      this.refershTickets();
-
-        // test without backend communication
-      let items=this.state.allTicketsContent;
-      items[i].assignee=obj[i];
-      this.setState({allTicketsContent:items})
-      this.ReloadTickets();
+      console.log(obj[i][1]);
+      console.log(this.state.allticketsContent[i]);
+      let tid=this.state.allticketsContent[i].ticketId;
+      console.log("/communitymanagement/tickets/"+tid.toString()+"/assignees");
+      axios.put("/communitymanagement/tickets/"+tid.toString()+"/assignees", {assignees:[obj[i][1]]}) // return userId
+        .then((response)=> {
+          console.log(response);
+          let items=this.state.allticketsContent;
+          items[i].assignees=[];
+          items[i].assignees.push({name:[obj[i][0]],userId:[obj[i][1]]});
+          this.setState({allticketsContent:items});
+          this.reloadTickets();
+          this.refreshTickets();
+        })
+        .catch((error)=>  {
+          console.log(error);
+        });
+      
     }
 
     // cancelAssignemnt=(event,i)=>{
@@ -340,19 +343,24 @@ class TicketingManager extends Component {
     //         console.log('fail');
     //       }
     //     );
-    //     this.refershTickets();
+    //     this.refreshTickets();
     // }
 
     render() {
+      
+      if(this.state.movingTo==7){
+        return (<Redirect to="/" />)
+      } 
+
       const columns=[{
         title: 'Ticket ID',
         dataIndex: 'ticket_id',
         render: (text) => <a>{text}</a>,
       },
-      {
-        title: 'Unit',
-        dataIndex: 'unit',
-      },
+      //{
+      //  title: 'Unit',
+      //  dataIndex: 'unit',
+      //},
       {
         title: 'Subject',
         dataIndex: 'subject',
@@ -363,16 +371,16 @@ class TicketingManager extends Component {
         sorter: (a, b) => Date.parse(a.created) - Date.parse(b.created),
         sortDirections: ['descend', 'ascend'],
       },
-      {
-        title: 'Category',
-        dataIndex: 'category',
-      },
-      {
-        title: 'Priority',
-        dataIndex: 'priority',
-        sorter: (a, b) => a.priortyidx - b.priortyidx,
-        sortDirections: ['descend', 'ascend'],
-      },    
+      //{
+      //  title: 'Category',
+      //  dataIndex: 'category',
+      //},
+      //{
+        //title: 'Priority',
+        //dataIndex: 'priority',
+        //sorter: (a, b) => a.priortyidx - b.priortyidx,
+        //sortDirections: ['descend', 'ascend'],
+      //},    
       {
         title: 'Assign Staff',
         dataIndex: 'assignee',
@@ -406,7 +414,7 @@ class TicketingManager extends Component {
                             
                             <DropDown elements={Object.keys(this.state.possible_issue_categories)} description="Category" parentCallback = {this.categoryDropDownCallBack} />
                             <DropDown elements={this.state.possible_locs} description="Location" parentCallback = {this.locationDropDownCallBack} />
-                            <DropDown elements={["high",'medium','low']} description="Priority" parentCallback = {this.priortyDropDownCallBack} />
+                            <DropDown elements={["HIGH",'MEDIUM','LOW']} description="Priority" parentCallback = {this.priortyDropDownCallBack} />
                         
                         </Col>    
                       </Row>
@@ -417,11 +425,11 @@ class TicketingManager extends Component {
                   </div> 
                 </Col>
                 
-                <Col>
+                <Col xs={8}>
                   <h3> Existing Work Orders </h3>
                   <Space direction="vertical">
-                    <Button>Refersh Ticket</Button>
-                    <Table scroll={{y:400}} dataSource={this.state.datasource} columns={columns} />
+                    <Button onClick={this.refreshTickets}>refresh Ticket</Button>
+                    {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{y:600}} dataSource={this.state.datasource} columns={columns} />}
                   </Space>
                 </Col>
               </Row>
