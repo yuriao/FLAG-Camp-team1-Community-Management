@@ -3,7 +3,7 @@ import React,{Component,Fragment} from "react";
  import { UserOutlined, LockOutlined } from '@ant-design/icons';
  import {LoginRequest} from './AccountAxios';
 import Password from "antd/lib/input/Password";
- import {setToken} from './UserToken';
+ import {setToken,setUserID} from './UserToken';
 import {withRouter} from 'react-router-dom';
 
  class Login extends Component{
@@ -51,12 +51,31 @@ import {withRouter} from 'react-router-dom';
                         loading:false,
                     })
                     const status = response.status;
-                    console.log("status is: ", status);
-                    setToken(status);
+                    if(status == 200){
+                     
+                        const userTypeSession = response.data.userType;
+                        const userID = response.data.userId;
+
+                        console.log("user type is: ", userTypeSession, "and user id is: ", userID);
+                        setToken(userTypeSession);
+                        setUserID(userID);
+
+                        if (userTypeSession == "RESIDENT"){
+                            this.props.history.push('/DashboardResident');
+                        }
+                        else if (userTypeSession == "MANAGER"){
+                            this.props.history.push('/DashboardManager');
+                        }
+                        else {
+                            this.props.history.push('/DashboardStaff');
+                        }
+
+                    }
+                    // console.log("status is: ", status);
+                    // setToken(status);
                     //在此处做判断看是转到哪里去
-                    this.props.history.push('/DashboardResident');
-                    
-                   
+                    // this.props.history.push('/DashboardResident');
+                             
                     console.log(response);
 
            }).catch(error =>{

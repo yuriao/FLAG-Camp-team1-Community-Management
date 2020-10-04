@@ -40,11 +40,11 @@ function App() {
         <Registration />
       } />
 
-      <PrivateRouter component = {DashboardResident} path = '/dashboard/resident'/>
+      <PrivateRouter component = {DashboardResident} path = '/DashboardResident'/>
       
-      <PrivateRouter component = {DashboardManager} path = '/dashboard/manager'/>
+      <PrivateRouter component = {DashboardManager} path = '/DashboardManager'/>
       
-      <PrivateRouter component = {DashboardStaff} path = '/dashboard/staff'/>
+      <PrivateRouter component = {DashboardStaff} path = '/DashboardStaff'/>
 
 
 
