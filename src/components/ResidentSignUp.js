@@ -46,7 +46,7 @@ class ResidentSignUp extends Component {
                     {/* <h1>This is RESIDENT additional components</h1> */}
                    <Form.Item
                          label ="Unit Number " 
-                         name="unit_num"
+                         name="unit_number"
                          rules={[{ required: true, message: 'Please input your Unit Number!' }]}
                     >
                                    
