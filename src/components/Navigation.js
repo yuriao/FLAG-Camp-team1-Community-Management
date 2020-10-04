@@ -14,25 +14,23 @@ class Navigation extends Component {
     }
 
     logoutFunc= () => {
-
-    LogoutRequest().then(
+        LogoutRequest().then(
         response =>{          
             const status = response.status;
             if(status == 200){
                 alert("You have logged out successfully!");
-                this.props.history.push('/');
-
+                this.setState({movingTo:7});
             }
             console.log(response);
         }
         ).catch(error =>{
             console.log("error info: ",error);
-        })};
+    })};
 
 
 
     redirectDashboard= (event)=>{
-        let userType=sessionStorage.getItem("userType");
+        let userType=sessionStorage.getItem("user_type");
         if(userType){
             if(userType=="RESIDENT"){
                 this.setState({movingTo:0});
@@ -49,7 +47,7 @@ class Navigation extends Component {
         }
     }
     redirectTicketing= ()=>{
-        let userType=sessionStorage.getItem("userType");
+        let userType=sessionStorage.getItem("user_type");
         if(userType){
             if(userType=="RESIDENT"){
                 this.setState({movingTo:3});
@@ -67,10 +65,6 @@ class Navigation extends Component {
 
     redirectChat= ()=>{
         this.setState({movingTo:6});
-    }
-
-    redirectLogout= ()=>{
-        this.setState({movingTo:7});
     }
 
    
@@ -103,7 +97,7 @@ class Navigation extends Component {
                 <p onClick={this.redirectDashboard} className = "left-nav">Dashboard</p>
                 <p onClick={this.redirectTicketing} className = "left-nav">Ticket</p>
                 <p onClick={this.redirectChat} className = "left-nav">Chat</p>
-                <p onClick={this.redirectLogout} className = "left-nav">Logout</p>
+                <p onClick={this.logoutFunc} className = "left-nav">Logout</p>
             </div>
         );
     }

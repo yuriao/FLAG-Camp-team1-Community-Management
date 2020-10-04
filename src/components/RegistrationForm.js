@@ -15,24 +15,10 @@ class RegisterForm extends Component{
         super();
         this.state  = {
         //    type: "",
-        registerFin:0
+        movingTo:-1
         };
        
     }
-    
-   
-    onFinish = (values) => {
-        const personType = this.props.user_type;
-        // this.dataFromChild(this.props.formType);
-       RegisterRequest(values,personType).then(response =>{          
-            console.log(response);
-            this.setState({registerFin:1})
-        }).catch(error =>{
-            console.log(error);
-            this.setState({registerFin:1})
-        })
-        // console.log('Received values of form: ', values);
-    };
 
     inputChangePassword=(e)=>{
     }
@@ -56,14 +42,13 @@ class RegisterForm extends Component{
                 const status = response.status;
                 if(status == 200){
                     alert("You have successfully registered your profile!")
-                    this.props.history.push('/');
                 }
                 console.log(response);
             }
         ).catch(error =>{
             console.log("error info: ",error);
         })
-
+        this.setState({movingTo:7});
         console.log('Received values of form: ', values);
     };
 
@@ -80,16 +65,17 @@ class RegisterForm extends Component{
               
                 return <ManagerSignUp/>;
             }
-            else if (user_type == "maintanence") {
+            else if (user_type == "staff") {
                
                 return <StaffSignUp/>;
             }
         
         }
 
-        if(this.state.registerFin==1) {
-            return <Redirect to="/" />
-        }
+        if(this.state.movingTo==7){
+            return (<Redirect to="/" />)
+        }        
+
         return(
                  <Fragment>
                      <h4>Welcome to {this.props.user_type} portal!</h4>

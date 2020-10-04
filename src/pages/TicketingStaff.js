@@ -1,69 +1,44 @@
 import React, {Component} from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
-import {Table} from 'antd';
-import {Button} from 'antd';
-import {Space} from 'antd';
-import {DatePicker} from 'antd';
-import Ajax from '../components/AJAX'
+import { Spin, Table,Button,Space,DatePicker} from 'antd';
+import axios from 'axios'
+import { Redirect } from "react-router-dom";
 
 class TicketingStaff extends Component {
     constructor(){
         super();
         this.state = {
-            allTicketsTag: ['tk1','tk2','tk3'],    // set initial state with one div
-            allTicketsContent: [{
-                "ticket_id":"0001233",
-                "unit": '711',
-                "subject": "water leak",
-                "created": "2020-09-18T14:48:00",
-                "category": "water",
-                "priority": "high",
-                "fix_date":"09/09/2021",
-                "status":"in progress"
-            },
-            {
-                "ticket_id":"0032134",
-                "unit": '711',
-                "subject": "bear sleeping on sofa",
-                "created": "2020-09-11T14:48:00",
-                "category": "misc",
-                "priority": "medium",  
-                "fix_date":"",
-                "status":"assigned"              
-            },
-            {
-                "ticket_id":"0123435",
-                "unit": '711',
-                "subject": "sink clog",
-                "created": "2020-09-11T14:48:00",
-                "category": "sink",
-                "priority": "medium",  
-                "fix_date":"",
-                "status":"assigned"                
-            }
-          ],
-          fix_date:[],
-          datasource:[]
+          allTicketsTag: [],    // set initial state with one div
+          allTicketsContent: [],
+          fixDate:[],
+          datasource:[],
+          loading:true,
+          movingTo:-1
        }
     }
 
     componentDidMount(){
-      this.reloadTickets();
-    }
+      if(sessionStorage.getItem("user_type")!="STAFF"){
+        alert("Only staff can access staff ticketing system");
+        this.setState({movingTo:7});
+      }else{
+          this.refreshTickets();
+      }
+    } 
 
-    reloadTickets=()=>{
+    reloadTickets=(items,tags)=>{
             
       let dsource=[];
 
-      this.state.allTicketsTag.map((cdiv, i) => {
+      tags.map((cdiv, i) => {
      
         let acceptDeclineTagContent=[];
       
         let acceptDeclineTagContent_1=
         <div>
-          <Button iid={i} onClick={(event)=>this.acceptTicket(event,i)}>Accept</Button>
-          <Button iid={i} onClick={(event)=>this.declineTicket(event,i)}>Decline</Button>
+          <Button iid={i} onClick={(event)=>this.acceptTicket(event,i)} size="small" shape="round">Accept</Button>
+          <Button iid={i} onClick={(event)=>this.declineTicket(event,i)} size="small" shape="round">Decline</Button>
         </div>;
         
         let acceptDeclineTagContent_2=
@@ -71,17 +46,17 @@ class TicketingStaff extends Component {
           <Space direction="vertical">
             <DatePicker iid={i} onChange={(date, dateString) => this.pushFixDate(date, dateString, i)}>select fix date</DatePicker>
             <div>
-              <Button iid={i} onClick={(event)=>this.confirmTickets(event,i)}>Confirm</Button>
-              <Button iid={i} onClick={(event)=>this.BacktoAcceptDecline(event,i)}>Back</Button>
+              <Button iid={i} onClick={(event)=>this.confirmTickets(event,i)} size="small" shape="round">Confirm</Button>
+              <Button iid={i} onClick={(event)=>this.BacktoAcceptDecline(event,i)} size="small" shape="round">Back</Button>
             </div>
           </Space>
         </div>;
         
-        let acceptDeclineTagContent_3=<Button iid={i} type="primary">Complete</Button>
+        let acceptDeclineTagContent_3=<Button iid={i} onClick={(event)=>this.completeTickets(event,i)} type="primary" size="small" shape="round">Complete</Button>
 
-        console.log(this.state.allTicketsContent[i].status);
-        if(this.state.allTicketsContent[i].status==="INPROGRESS"){
-          if(this.state.allTicketsContent[i].fix_date){ // ticket status: in progress, fixdate provided, indicate staff is on their way
+        console.log(items[i].status);
+        if(items[i].status==="INPROGRESS"){
+          if(items[i].fixDate){ // ticket status: in progress, fixdate provided, indicate staff is on their way
             acceptDeclineTagContent=acceptDeclineTagContent_3;
           }else{// ticket status: in progress, no fix date, staff is considering their fixdate
             acceptDeclineTagContent=acceptDeclineTagContent_2;
@@ -94,14 +69,15 @@ class TicketingStaff extends Component {
         dsource.push({
             key: i,
             ticket_id: <Button href="/communitymanagement/TicketingDetail" onClick={this.TicketIdStore(this.state.allTicketsContent[i].ticket_id)} type="link">{this.state.allTicketsContent[i].ticket_id}</Button>, 
-            unit: this.state.allTicketsContent[i].unit, 
-            subject: this.state.allTicketsContent[i].subject, 
-            created: this.state.allTicketsContent[i].created, 
-            category: this.state.allTicketsContent[i].category, 
-            priority: this.state.allTicketsContent[i].priority,
+            unit: items[i].unit, 
+            subject: items[i].subject, 
+            created: items[i].created, 
+            category: items[i].category, 
+            priority: items[i].priority,
             acceptDecline: acceptDeclineTagContent
         })
     });
+    this.setState({loading:false});
     this.setState({datasource:dsource});
   }
     
@@ -109,43 +85,43 @@ class TicketingStaff extends Component {
       sessionStorage.setItem('inquiredTicketID', 'tid');
     }
 
+   
     refreshTickets=()=>{
-      Ajax('GET', '/communitymanagement/tickets/staff?'+sessionStorage.username, [],
-        // successful callback
-        function(res) {
-          let items = JSON.parse(res);
+        this.setState({loading:true});
+        this.setState({ticketSubmitMessage:""})
+        axios.get('/communitymanagement/tickets/staff')
+        .then((response) => {
+          console.log(response);
+          let items =response.data.tickets;
+          let tags =[];
           if (!items || items.length === 0) {
             console.log('No tickets.');
+            this.setState({loading:false});
           } else {
-          let ttags = [];
-          
-            //convert priorty for sorting
-          items.map((cdiv,i)=>{
-            if(items[i].priorty==="high"){
+              //convert priorty for sorting
+            items.map((cdiv,i)=>{
+            if(items[i].priorty==="HIGH"){
               items[i].priortyidx=3;
             }
-            if(items[i].priorty==="medium"){
+            if(items[i].priorty==="MEDIUM"){
               items[i].priortyidx=2;
             }
-            if(items[i].priorty==="low"){
+            if(items[i].priorty==="LOW"){
               items[i].priortyidx=1;
             }
 
-            ttags.push(i);
-          })
+            tags.push(i);
+            })
 
-          this.setState({allticketsContent:items});
-          this.setState({allTicketsTag:ttags});
-          this.reloadTickets();
+            this.setState({allTicketsTag:tags});
+            this.setState({allticketsContent:items},()=>{console.log(items);this.ReloadTickets(items,tags);});//setState is async
           }
-        },
-        // failed callback
-        function() {
-          console.log('Cannot load tickets.');
-        }
-      );
-      
-    }
+        })
+        .catch((error)=> {
+          console.log(error);
+          this.setState({loading:false});
+        });
+      }
     
     acceptTicket=(event,i)=>{
       let dsource=this.state.allTicketsContent;
@@ -158,61 +134,68 @@ class TicketingStaff extends Component {
     pushFixDate=(date, dateString,iid)=>{ 
       let obj={};
       obj[iid]=dateString;
-      let existing_fix_date=this.state.fix_date;
-      existing_fix_date.push(obj);
-      this.setState({fix_date:existing_fix_date});
+      let existing_fixDate=this.state.fixDate;
+      existing_fixDate.push(obj);
+      this.setState({fixDate:existing_fixDate});
     }
 
     BacktoAcceptDecline=(event,i)=>{
       let dsource=this.state.allTicketsContent;
-      dsource[i].status="assigned";
+      dsource[i].status="ASSIGNED";
 
       this.setState({allTicketsContent:dsource});
       this.reloadTickets();
     }
 
     confirmTickets=(event,i)=>{
-      let obj=this.state.fix_date.find(o=>Object.keys(o)==i);
+      let obj=this.state.fixDate.find(o=>Object.keys(o)==i);
       
-      Ajax("POST","/communitymanagement/tickets/"+sessionStorage.username+"/staff-action", {"action":"accept"},
-          // successful callback
-          function(res) {
-            console.log("good");
-          },
-          // failed callback
-          function() {
-            console.log('fail');
-          }
-        );
-      Ajax('PUT', "/communitymanagement/tickets/"+sessionStorage.username+"/staff-update", {"fix_date":obj[i]},
-          // successful callback
-          function(res) {
-            console.log("good");
-          },
-          // failed callback
-          function() {
-            console.log('fail');
-          }
-        );
-      
-      let existingTicketContent=this.state.allTicketsContent;
-      existingTicketContent[i].status="in progress";
-      existingTicketContent[i].fix_date=obj[i];
-      this.setState({allTicketsContent:existingTicketContent});
-      this.reloadTickets();
+      axios.post("/communitymanagement/tickets/"+this.state.allTicketsContent[i].ticketId+"/staff-action", {action:"accept"})
+      .then((response)=> {
+        console.log(response);
+      })
+      .catch((error)=> {
+        console.log(error);
+      });
+      axios.put("/communitymanagement/tickets/"+this.state.allTicketsContent[i].ticketId+"/staff-update", {fixDate:obj[i]},)
+      .then((response)=> {
+        console.log(response);
+        alert('Work in progress. Consult resident and manager if further info is needed')
+        this.refreshTickets();
+      })
+      .catch((error)=> {
+        console.log(error);
+      });
+
+      // let existingTicketContent=this.state.allTicketsContent;
+      // existingTicketContent[i].status="INPROGRESS";
+      // existingTicketContent[i].fixDate=obj[i];
+      // this.setState({allTicketsContent:existingTicketContent});
+      // this.reloadTickets();
     }
 
-    declineTicket=()=>{
-      Ajax("POST","/communitymanagement/tickets/"+sessionStorage.username+"/staff-action", {"action":"decline"},
-      // successful callback
-      function(res) {
-        console.log("good");
-      },
-      // failed callback
-      function() {
-        console.log('fail');
-      }
-    );
+    declineTicket=(event,i)=>{
+      axios.post("/communitymanagement/tickets/"+this.state.allTicketsContent[i].ticketId+"/staff-action", {action:"decline"})
+      .then((response)=> {
+        console.log(response);
+        alert('Ticket declined')
+        this.refreshTickets();
+      })
+      .catch((error)=> {
+        console.log(error);
+      });
+    }
+
+    completeTicket=(event,i)=>{
+      axios.post("/communitymanagement/tickets/"+this.state.allTicketsContent[i].ticketId+"/staff-action", {action:"complete"})
+      .then((response)=> {
+        console.log(response);
+        alert('Ticket completed! Your work is greatly appriciated!')
+        this.refreshTickets();
+      })
+      .catch((error)=> {
+        console.log(error);
+      });
     }
     
     render() {
@@ -251,6 +234,10 @@ class TicketingStaff extends Component {
           dataIndex: 'acceptDecline',
         },      
       ];
+        if(this.state.movingTo==7){
+          return (<Redirect to="/" />)
+        } 
+
         return(
             <div>
                 <Navigation/>
@@ -260,8 +247,8 @@ class TicketingStaff extends Component {
                 </div>
                 <h3> Your Orders </h3>
                 <Space direction="vertical">
-                  <Button onClick={this.refreshTickets()}>Refresh Ticket</Button>
-                  <Table scroll={{y:500}} dataSource={this.state.datasource} columns={columns} />
+                <Button onClick={this.refreshTickets}>refresh Ticket</Button>
+                    {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{y:600}} dataSource={this.state.datasource} columns={columns} />}
                 </Space>
                 
                 <Footer/>
