@@ -5,10 +5,13 @@ export function setToken(value){
     sessionStorage.setItem(USER_TYPE,value);
     console.log("set user type successfully");
 }
-export function getToken(){
+export function hasToken(){
     if(sessionStorage.getItem(USER_TYPE)){
         return true;
     }
+}
+export function getToken(){
+   return sessionStorage.getItem(USER_TYPE);
 }
 export function setUserID(value){
     sessionStorage.setItem(USER_ID,value);

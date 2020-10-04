@@ -1,6 +1,6 @@
 import React from 'react';
 import {Route, Redirect} from "react-router-dom";
-import {getToken} from './UserToken';
+import {hasToken} from './UserToken';
 
 const PrivateRouter = ({ component: Component, ...rest }) =>{
     return (
@@ -8,7 +8,7 @@ const PrivateRouter = ({ component: Component, ...rest }) =>{
         {...rest}
         render={
             routeProps => (
-           getToken()? <Component {...routeProps} /> : <Redirect to ='/'/>        
+           hasToken()? <Component {...routeProps} /> : <Redirect to ='/'/>        
         )}
       />
     );
