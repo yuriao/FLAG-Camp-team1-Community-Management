@@ -67,9 +67,27 @@ import {Route, Redirect} from "react-router-dom";
                     // console.log("status is: ", status);
                     // setToken(status);
                     //在此处做判断看是转到哪里去
+<<<<<<< beb5224cf17eb05e23cd213b6d8f033c2bc30c6c
                     // this.props.history.push('/DashboardResident');
                              
                     console.log(response);
+=======
+                    if(status==200){
+                        let userfn=response.data.firstName;
+                        let userType=response.data.userType;
+                        sessionStorage.setItem('userfirstName',userfn);
+                        sessionStorage.setItem('userType',userType);
+                        if(userType=="RESIDENT"){
+                            this.props.history.push('/DashboardResident');
+                        }
+                        if(userType=="MANAGER"){
+                            this.props.history.push('/DashboardManager');
+                        }
+                        if(userType=="RESIDENT"){
+                            this.props.history.push('/DashboardStaff');
+                        }
+                    }
+>>>>>>> further ticketingmanager change
 
            }).catch(error =>{
                       
@@ -90,7 +108,6 @@ import {Route, Redirect} from "react-router-dom";
              <Fragment>
                      <div className = "form-header">
                          <p className = "column">Login</p>
-                     
                      </div>
                       
                      <div className = "form-content">

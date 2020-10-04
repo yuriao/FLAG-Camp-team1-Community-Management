@@ -43,9 +43,9 @@ class TicketingManager extends Component {
            subject:'',
            description:'',
            issue_category_id:0,
+           issue_category_id_current:0,
            assignment:[],
            datasource:[],
-           all_assignee:["engineer1","engineer2"],
            possible_issue_categories:{
              "kitchen": ["sink", "dishwasher"], 
              "bathroom": ["sink", "furniture","floor"],
@@ -65,8 +65,13 @@ class TicketingManager extends Component {
     }
     
     componentDidMount(){
-        this.refershTickets();
-        this.loadIssueCategory();
+        if(sessionStorage.getItem("userType")!="MANAGER"){
+            alert("Only manager can access management ticketing system");
+        }else{
+          this.refershTickets();
+          this.loadIssueCategory();
+        }
+        
     }
 
     loadIssueCategory=()=>{
@@ -86,34 +91,28 @@ class TicketingManager extends Component {
     ReloadTickets = (items,tags)=>{
       
       let dsource=[];
-      let all_assignees_dat=[];
 
       tags.map((cdiv, i) => {
         
-        let current_assignees_dat=items[i].recommendStaff;
+        let recommend_assignees_dat=items[i].recommendStaff;       
         
-        
-        let current_assignees=[];
-        let current_assignees_idx=[];
+        let recommend_assignees=[];
+        let recommend_assignees_idx=[];
          
-        if(current_assignees_dat){
-          current_assignees_dat.map((c,i)=>{
-            current_assignees.push(current_assignees_dat[i].name);
-            current_assignees_idx.push(current_assignees_dat[i].userId);
-
-            let obj={};
-            obj[current_assignees_dat[i].name]=current_assignees_dat[i].userId;
-            all_assignees_dat.push(obj);
+        if(recommend_assignees_dat){
+            recommend_assignees_dat.map((c,i)=>{
+            recommend_assignees.push(recommend_assignees_dat[i].name);
+            recommend_assignees_idx.push(recommend_assignees_dat[i].userId);
           })
         }else{
-          current_assignees=["Not available"];
+          recommend_assignees=["Not available"];
         }
 
-        console.log(current_assignees);
+        console.log(recommend_assignees);
         
         let assigneeTag_1=
         <div>  
-            <DropDown iid={i} parentCallback = {this.AssignmentCallBack} elements={current_assignees}/>
+            <DropDown iid={i} parentCallback = {this.AssignmentCallBack} elements={recommend_assignees}/>
             <Button iid={i} onClick={(event)=>this.assignTickets(event,i)} shape="round">Confirm</Button> 
         </div>;  //(event)=>this.assignTickets(event,i): add a parameter i to callback
   
@@ -121,10 +120,10 @@ class TicketingManager extends Component {
 
         //1.check if assignee exists for current ticket
         let assigneeTag=[];
-        if (items.assignee){
-          console.log(items.assignee);
-          
-          let assigneeTag_2=<div>Assigned: {items.assignee} </div>;
+        if (items[i].assignees){
+          console.log(items[i].assignees);
+          console.log(items[i].assignees[0]);
+          let assigneeTag_2=<div>Assigned: {items[i].assignees[0].name} </div>;
           assigneeTag=assigneeTag_2;
         
         }else{
@@ -144,12 +143,10 @@ class TicketingManager extends Component {
             //priority: items[i].priority,
             assignee: assigneeTag,
         })
-
-        all_assignees_dat.push(current_assignees_dat);
+        
       });
       this.setState({loading:false});
       this.setState({datasource:dsource}); // it is suggested that try not to directly change state var as next setState may discard the change, use setsTATE instead
-      this.setState({all_assignee:all_assignees_dat})
     }
 
     TicketIdStore = (tid) =>{
@@ -186,24 +183,35 @@ class TicketingManager extends Component {
     }
 
     locationDropDownCallBack = (childData,childProps) => {
+      let idx=this.state.issue_category_id_current.findIndex(o=>o==childData);
       this.setState({
         location: childData,
+        issue_category_id: this.state.issue_category_id_current[idx]
       })
     }
 
     categoryDropDownCallBack = (childData,childProps,idx) => {
+      console.log(this.state.possible_issue_categories);
+      
       let pos_locs=this.state.possible_issue_categories[childData];
+      let pos_loc_name=[];
+      let issue_category_id_c=[];
       if(pos_locs){
+        for(var k in pos_locs){
+          pos_loc_name.push(k);
+          issue_category_id_c.push(pos_locs.k);
+        } 
 
       }else{
         pos_locs=["not aviliable"];
       }
+      console.log(pos_loc_name);
       this.setState({
         category: childData,
-        issue_category_id:idx,
-        possible_locs: pos_locs
+        issue_category_id_current:issue_category_id_c,
+        possible_locs: pos_loc_name
       })
-      console.log(this.state.issue_category_id);
+      
     }
 
     priortyDropDownCallBack = (childData,childProps) => {
@@ -248,7 +256,7 @@ class TicketingManager extends Component {
           console.log(error);
         });
         this.setState({ticketSubmitMessage:"Thank you! Ticket has been submitted"})
-        
+        setTimeout(this.setState({ticketSubmitMessage:""}), 3000);
       }
 
     refershTickets=()=>{
@@ -290,10 +298,10 @@ class TicketingManager extends Component {
     AssignmentCallBack = (childData,childProps) => {
       let existingAssignments=this.state.assignment;
       let iid=childProps.iid;
-      let current_assignees_dat=this.state.all_assignee[iid];
+      let recommend_assignees_dat=this.state.allticketsContent[iid].recommendStaff; //{name,id}
 
       let assigneeName=childData;
-      let assigneeIdx=current_assignees_dat[current_assignees_dat.findIndex(o=>Object.keys(o)==assigneeName)];
+      let assigneeIdx=recommend_assignees_dat[recommend_assignees_dat.findIndex(o=>Object.keys(o)==assigneeName)];
       let obj={};
       obj[iid]=[assigneeName,assigneeIdx];
       
@@ -310,7 +318,7 @@ class TicketingManager extends Component {
     assignTickets=(event,i)=>{
       console.log(this.state.assignment);
       let obj=this.state.assignment.find(o=>Object.keys(o)==i);
-      let tid=this.state.allTicketsContent[i].ticket_id;
+      let tid=this.state.allTicketsContent[i].ticketId;
 
       axios.put("/communitymanagement/tickets/"+tid.toString()+"/assignees", obj[1]) // return userId
         .then((response)=> {
