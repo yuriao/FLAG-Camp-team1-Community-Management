@@ -61,8 +61,8 @@ class Dashboard extends Component {
 
 
     componentDidMount() {
-        fetch("/communitymanagement/dashboard/resident")
-            .then(res => res.json())
+        fetch("/communitymanagement/dashboard/manager")
+            .then((res) => {console.log(res.json())})
             .then(
                 (res) => {
                     let items = res;
@@ -72,16 +72,6 @@ class Dashboard extends Component {
                         this.setState({ allTicketsContent: items });
                         console.log(this.state.allTicketsContent);
                     }
-
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                    //   this.setState({
-                    //     isLoaded: true,
-                    //     error
-                    //   });
                 }
             )
     }
@@ -110,7 +100,6 @@ class Dashboard extends Component {
         let columns = [{
             title: 'Ticket ID',
             dataIndex: 'ticket_id',
-            render: (text) => <a>{text}</a>,
         },
         {
             title: 'Subject',
@@ -134,24 +123,24 @@ class Dashboard extends Component {
             if (content.status === "COMPLETED") {
                 completedOrder.push({
                     key: i,
-                    ticket_id: <a href=''>{content.id}</a>,
+                    ticket_id: content.id,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
-                    priority: <PriorityTag priority={content.priority} />,
-                    status: <StatusTag status={content.status} />,
+                    priority: content.priority,
+                    status: content.status,
                     description: content.description,
                     fixDate: content.fixDate,
                 })
             } else {
                 existingOrder.push({
                     key: i,
-                    ticket_id: <a href=''>{content.id}</a>,
+                    ticket_id: content.id,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
-                    priority: <PriorityTag priority={content.priority} />,
-                    status: <StatusTag status={content.status} />,
+                    priority: content.priority,
+                    status: content.status,
                     description: content.description,
                     fixDate: content.fixDate,
                 })
