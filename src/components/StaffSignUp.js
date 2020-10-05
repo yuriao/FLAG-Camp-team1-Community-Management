@@ -31,7 +31,6 @@ class StaffSignUp extends Component {
                         onChange={this.handleChange}
                     >
                         <Option value="147">Appliances Repair</Option>
-                        <Option value="1">Appliances</Option>
                         <Option value="2">Cable</Option>
                         <Option value="3">Water</Option>
                         <Option value="4">Electricity</Option>
