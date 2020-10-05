@@ -73,8 +73,7 @@ class TicketingManager extends Component {
     }
 
     // refresh page function 
-    ReloadTickets = (items,tags)=>{
-      
+    ReloadTickets = (items,tags)=>{      
       let dsource=[];
 
       tags.map((cdiv, i) => {
