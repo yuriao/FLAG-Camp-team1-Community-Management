@@ -59,11 +59,11 @@ class DashboardStaff extends Component {
     }
 
     componentDidMount() {
-        fetch("/communitymanagement/dashboard/manager")
+        fetch("/communitymanagement/dashboard/staff")
             .then(res => res.json())
             .then(
-                (res) => {
-                    let items = res;
+                (data) => {
+                    let items = data;
                     if (!items || items.length === 0) {
                         alert('No tickets.');
                     } else {

@@ -60,10 +60,10 @@ class DashboardManager extends Component {
 
     componentDidMount() {
         fetch("/communitymanagement/dashboard/manager")
-            .then((res) => {console.log(res.json())})
+            .then((res) => res.json())
             .then(
-                (res) => {
-                    let items = res;
+                (data) => {
+                    let items = data;
                     if (!items || items.length === 0) {
                         alert('No tickets.');
                     } else {
