@@ -361,7 +361,7 @@ class TicketingManager extends Component {
       //  dataIndex: 'unit',
       //},
       {
-        title: 'Subject',
+        title: 'issue type',
         dataIndex: 'subject',
       },
       {
@@ -411,8 +411,8 @@ class TicketingManager extends Component {
                             <Blank text="Ticket Title" parentCallback = {this.subjectBlankCallBack}/>
                             <DropDown elements={['phone','email']} description="Contact Method" parentCallback = {this.contactDropDownCallBack}/>
                             
-                            <DropDown elements={Object.keys(this.state.possible_issue_categories)} description="Category" parentCallback = {this.categoryDropDownCallBack} />
-                            <DropDown elements={this.state.possible_locs} description="Location" parentCallback = {this.locationDropDownCallBack} />
+                            <DropDown elements={Object.keys(this.state.possible_issue_categories)} description="Location" parentCallback = {this.categoryDropDownCallBack} />
+                            <DropDown elements={this.state.possible_locs} description="Category" parentCallback = {this.locationDropDownCallBack} />
                             <DropDown elements={["HIGH",'MEDIUM','LOW']} description="Priority" parentCallback = {this.priortyDropDownCallBack} />
                         
                         </Col>    
@@ -428,7 +428,7 @@ class TicketingManager extends Component {
                   <h3> Existing Work Orders </h3>
                   <Space direction="vertical">
                     <Button onClick={this.refreshTickets}>refresh Ticket</Button>
-                    {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{y:600}} dataSource={this.state.datasource} columns={columns} />}
+                    {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table dataSource={this.state.datasource} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 300 }}/>}
                   </Space>
                 </Col>
               </Row>
