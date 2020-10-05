@@ -61,17 +61,18 @@ class Dashboard extends Component {
 
 
     componentDidMount() {
-        fetch("/communitymanagement/dashboard/manager")
-            .then((res) => {console.log(res.json())})
+        fetch("/communitymanagement/dashboard/resident")
+            .then((res) => res.json())
             .then(
-                (res) => {
-                    let items = res;
+                (data) => {
+                    let items = data;
                     if (!items || items.length === 0) {
                         alert('No tickets.');
                     } else {
                         this.setState({ allTicketsContent: items });
                         console.log(this.state.allTicketsContent);
                     }
+
                 }
             )
     }
@@ -160,7 +161,9 @@ class Dashboard extends Component {
                         <div>Balance Due:</div>
                         <h1>$0.00</h1>
                         <Button className="center" content="Make a Payment" />
-                        <Button className="center" content="Submit a Work Order" />
+                        <a href = "/communitymanagement/TicketingResident">
+                            <Button className="center" content="Submit a Work Order" />
+                        </a>
                     </div>
                     <div className="chat-dashboard dashboard-item">
                         <h5 className="chat-title">Messages</h5>
