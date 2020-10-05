@@ -63,7 +63,7 @@ class Navigation extends Component {
         }   
     }
 
-    redirectChat= ()=>{
+    redirectCalendar= ()=>{
         this.setState({movingTo:6});
     }
 
@@ -88,6 +88,7 @@ class Navigation extends Component {
             return (<Redirect to="/TicketingStaff" />)
         }   
         if(this.state.movingTo==6){
+             return (<Redirect to="/Calender" />)
         }        
         if(this.state.movingTo==7){
             return (<Redirect to="/" />)
@@ -96,7 +97,7 @@ class Navigation extends Component {
             <div className = "nav">
                 <p onClick={this.redirectDashboard} className = "left-nav">Dashboard</p>
                 <p onClick={this.redirectTicketing} className = "left-nav">Ticket</p>
-                <p onClick={this.redirectChat} className = "left-nav">Chat</p>
+                <p onClick={this.redirectCalendar} className = "left-nav">Calendar</p>
                 <p onClick={this.logoutFunc} className = "left-nav">Logout</p>
             </div>
         );
