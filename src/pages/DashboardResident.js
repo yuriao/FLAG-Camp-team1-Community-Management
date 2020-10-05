@@ -88,44 +88,49 @@ class Dashboard extends Component {
         }
     }
 
-    getAllTickets = () => {
-        ajax('GET', '/dashboard/resident', [],
-          // successful callback
-          function(res) {
-            let items = JSON.parse(res);
-            if (!items || items.length === 0) {
-              console.log('No tickets.');
-            } else {
-              
-              let ttags = [];
-            
-                //convert priorty for sorting
-              items.map((cdiv,i)=>{
-              if(items[i].priorty==="high"){
-                items[i].priortyidx=3;
-              }
-              if(items[i].priorty==="medium"){
-                items[i].priortyidx=2;
-              }
-              if(items[i].priorty==="low"){
-                items[i].priortyidx=1;
-              }
-  
-              ttags.push(i);
-            })
-  
-            this.setState({allticketsContent:items});
-            this.setState({allTicketsTag:ttags});
-            this.ReloadTickets();
+
+    componentDidMount() {
+        this.getAllTickets();
+    }
+
+    getAllTickets() {
+        ajax('GET', '/communitymanagement/dashboard/resident', null,
+            // successful callback
+            function (res) {
+                let items = JSON.parse(res);
+                if (!items || items.length === 0) {
+                    alert('No tickets.');
+                } else {
+                    alert(items);
+                    let ttags = [];
+
+                    //convert priorty for sorting
+                    items.map((cdiv, i) => {
+                        if (items[i].priorty === "high") {
+                            items[i].priortyidx = 3;
+                        }
+                        if (items[i].priorty === "medium") {
+                            items[i].priortyidx = 2;
+                        }
+                        if (items[i].priorty === "low") {
+                            items[i].priortyidx = 1;
+                        }
+
+                        ttags.push(i);
+                    })
+
+                    this.setState({ allticketsContent: items });
+                    this.setState({ allTicketsTag: ttags });
+                    this.ReloadTickets();
+                }
+            },
+            // failed callback
+            function () {
+                alert('Cannot load tickets.');
             }
-          },
-          // failed callback
-          function() {
-            console.log('Cannot load tickets.');
-          }
         );
-        
-      }
+
+    }
 
     render() {
         let ticketDivs = [];
@@ -222,7 +227,12 @@ class Dashboard extends Component {
 
         return (
             <div className="dashboard">
-                <Navigation />
+                <Navigation
+                    dashboard="/DashboardResident"
+                    ticket = "/TicketingResident"
+                    chat = "/ChatResident"
+                    logout = "/logout"
+                />
                 <div className="dashboard-main">
                     <div className="balance">
                         <div>Balance Due:</div>
