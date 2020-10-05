@@ -11,11 +11,11 @@ class StatusTag extends Component {
 				return (
 					<Tag color="gold">ASSIGNED</Tag>
 				);
-			} else if (this.props.status === "IN PROGRESS"){
+			} else if (this.props.status === "INPROGRESS"){
 				return (
 					<Tag color="blue">IN PROGRESS</Tag>
 				);
-			} else if (this.props.status === "COMPLETED"){
+			} else if (this.props.status === "COMPLETE"){
 				return (
 					<Tag color="green">COMPLETED</Tag>
 				);

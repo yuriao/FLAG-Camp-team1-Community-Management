@@ -86,8 +86,8 @@ class TicketingResident extends Component {
             dataIndex: 'status',
         },
         {
-            title: 'Comment/Review',
-            dataIndex: 'review',
+            title: 'Action',
+            dataIndex: 'action',
         },
         ];
 

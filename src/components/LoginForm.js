@@ -66,7 +66,7 @@ import {Route, Redirect} from "react-router-dom";
             // this.props.history.push('/DashboardResident');
                         
             console.log(response);
-
+            console.log(response.data.firstName);
            }).catch(error =>{    
                 this.setState({
                     loading:false,
