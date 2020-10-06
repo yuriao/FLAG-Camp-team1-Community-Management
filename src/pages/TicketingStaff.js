@@ -87,7 +87,7 @@ class TicketingStaff extends Component {
 
         dsource.push({
             key: i,
-            ticket_id: <Button href="/communitymanagement/TicketingDetail" onClick={this.TicketIdStore(items[i].id)} type="link">{items[i].id}</Button>, 
+            ticket_id: <Button href={'/communitymanagement/TicketingDetail?ticket='+items[i].id.toString()} onClick={this.TicketIdStore(items[i].id)} type="link">{items[i].id}</Button>, 
             unit: items[i].unitNumber, 
             subject: items[i].subject, 
             created: items[i].created, 

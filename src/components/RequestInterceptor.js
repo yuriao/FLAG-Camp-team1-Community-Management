@@ -4,7 +4,7 @@ import axios from "axios";
 //1.创建instance
 const service = axios.create({
     baseURL: '',
-    timeout: 5000,
+    timeout: 20000,
     
   });
 
