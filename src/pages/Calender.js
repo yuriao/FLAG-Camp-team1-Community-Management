@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
 
-import { Calendar } from 'antd';
+import { Spin,Calendar } from 'antd';
 import {CalendarRequest} from '../components/CalendarAxios';
 import moment from 'moment';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import axios from 'axios'
 
 class Calender extends Component{
   constructor(){
     super();
     this.state = {
      allTicket:[], 
-   
+     ticketId:[],
+     loading:true
 
 //       ticketDetail: { "ticket_id": "1423124315",
 //           "user_name": "daloias",
@@ -44,10 +46,39 @@ class Calender extends Component{
 
 
 componentDidMount(){
- this.getAllData();
+    this.getAllData();
+    // let usr_type=sessionStorage.getItem("user_type");
+    // if(usr_type=="RESIDENT"){
+    //     this.setState({ticketId:sessionStorage.getItem("Resident_ticket_id").split(",")})
+    // }
+    // if(usr_type=="MANAGER"){
+    //     this.setState({ticketId:sessionStorage.getItem("Manager_ticket_id").split(",")})
+    // }
+    // if(usr_type=="STAFF"){
+    //     this.setState({ticketId:sessionStorage.getItem("Staff_ticket_id").split(",")})
+    // }
 }
 
  getAllData =()=>{
+  
+    // axios.get("http://localhost:8080/communitymanagement/calendar?from=2020-01-01&to=2021-01-01")
+    // .then((response) => {
+    // // successful callback
+    // console.log(response);
+    // let item=response.data;
+    // console.log("item is:", item);
+    // if (!item || item.length === 0) {
+    //   alert('No data!');
+    //   this.setState({ loading: false });
+    // } else {
+    //     this.setState({ loading: false });
+    //     this.setState({ allTicket: item });
+    //     console.log(this.state.allTicket);
+    // }
+    // }).catch((error)=> {
+    //         console.log(error);
+    //         this.setState({loading:false});
+    // });
    CalendarRequest().then(response=>{
      console.log("GET RESPONSE: ",response);
      if(response.status == 200){
@@ -56,11 +87,15 @@ componentDidMount(){
       console.log("item is:", item);
       if (!item || item.length === 0) {
         alert('No data!');
+        this.setState({ loading: false });
     } else {
+        this.setState({ loading: false });
         this.setState({ allTicket: item });
         console.log(this.state.allTicket);
     }
       
+    }else{
+      console.log(response);
     }
    })
  
@@ -73,11 +108,13 @@ componentDidMount(){
     this.state.allTicket.map((item, i) => {
       console.log(value);
       console.log("created:",item.created);
-
-      if (moment(value).format('YYYY-MM-DD') === moment(item.created).format('YYYY-MM-DD') ) {
+      console.log("fixed:",item.fixDate);
+      //if (moment(value).format('YYYY-MM-DD') === moment(item.fixDate).format('YYYY-MM-DD') && this.state.ticketId.includes(item.id)) {
+      if (moment(value).format('YYYY-MM-DD') === moment(item.fixDate).format('YYYY-MM-DD')) {
         listData.push(item);
       }
     })
+    
     return listData;
   }
 
@@ -88,14 +125,16 @@ componentDidMount(){
   dateCellRender=(value)=> {
  
     const listData = this.getListData(value);
-   
+    
     return (
       <ul className="events">
         {
           listData.map(item => (
             <li key={item.created}>
               <span className={`event-${item.priority}`}>●</span>
-              {item.description}
+              {/*<span className={`event-${item.priority}`}>●</span>*/}
+              {/* item.description} */}
+              <a href={'/communitymanagement/TicketingDetail?ticket='+item.id.toString()}>{item.id}</a>
             </li>
           ))
         }
@@ -124,13 +163,13 @@ componentDidMount(){
   render(){
     return (
       <div>
-        <div>
-
         <Navigation/>
+        <div class="calenderWelcome">
+            Ticket Calender (fix date)
         </div>
 
        <div>
-       <Calendar   dateCellRender={this.dateCellRender} monthCellRender={this.monthCellRender} />
+       {this.state.loading ? <div className="loadingSpin"><Spin tip="Loading Calendar..." /></div> :<Calendar   dateCellRender={this.dateCellRender} monthCellRender={this.monthCellRender} />}
        </div>
       
         <div>

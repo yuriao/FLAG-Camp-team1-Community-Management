@@ -73,6 +73,18 @@ class DashboardStaff extends Component {
                         console.log(this.state.allTicketsContent);
                     }
 
+                    let id_dat=[];
+                    let status_dat=[];
+                    let priority_dat=[];
+                    items.map((content)=>{
+                        id_dat.push(content.id);
+                        status_dat.push(content.status);
+                        priority_dat.push(content.priority);
+                    });
+                    sessionStorage.setItem("Staff_ticket_id",id_dat);
+                    sessionStorage.setItem("Staff_ticket_status",status_dat);
+                    sessionStorage.setItem("Staff_ticket_priority",priority_dat);
+
                 },
                 // Note: it's important to handle errors here
                 // instead of a catch() block so that we don't swallow

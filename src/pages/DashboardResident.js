@@ -75,6 +75,18 @@ class Dashboard extends Component {
                         console.log(this.state.allTicketsContent);
                     }
 
+                    let id_dat=[];
+                    let status_dat=[];
+                    let priority_dat=[];
+                    items.map((content)=>{
+                        id_dat.push(content.id);
+                        status_dat.push(content.status);
+                        priority_dat.push(content.priority);
+                    });
+                    sessionStorage.setItem("Resident_ticket_id",id_dat);
+                    sessionStorage.setItem("Resident_ticket_status",status_dat);
+                    sessionStorage.setItem("Resident_ticket_priority",priority_dat);
+
                 }
             )
     }
