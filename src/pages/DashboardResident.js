@@ -13,8 +13,6 @@ class Dashboard extends Component {
         this.state = {
             loading: true,
             allTicketsContent: [],
-            existingOrder: [],
-            completedOrder : [],
             news: [{
                 "subject": "Fitness Center COVID-19 Update",
                 "date": "08/05/2020"
@@ -62,7 +60,7 @@ class Dashboard extends Component {
 
     componentDidMount() {
         fetch("/communitymanagement/dashboard/resident")
-            .then((res) => res.json())
+            .then((res) => res.json()) 
             .then(
                 (data) => {
                     this.setState({ loading: false });
@@ -72,33 +70,6 @@ class Dashboard extends Component {
                     } else { // if there are tickets
                         this.setState({ allTicketsContent: items });
                         console.log(this.state.allTicketsContent);
-                        this.state.allTicketsContent.map((content, i) => {
-                            if (content.status === "COMPLETE") {
-                                this.state.completedOrder.push({
-                                    key: i,
-                                    ticket_id: <a href="/communitymanagement/TicketingDetail">{content.id}</a>,
-                                    unit: content.unitNumber,
-                                    subject: content.subject,
-                                    created: content.created,
-                                    priority: content.priority,
-                                    status: content.status,
-                                    description: content.description,
-                                    fixDate: content.fixDate,
-                                })
-                            } else {
-                                this.state.existingOrder.push({
-                                    key: i,
-                                    ticket_id: <a href="/communitymanagement/TicketingDetail">{content.id}</a>,
-                                    unit: content.unitNumber,
-                                    subject: content.subject,
-                                    created: content.created,
-                                    priority: content.priority,
-                                    status: content.status,
-                                    description: content.description,
-                                    fixDate: content.fixDate,
-                                })
-                            }
-                        });
                     }
 
                     let id_dat=[];
@@ -192,11 +163,18 @@ class Dashboard extends Component {
         }
         ];
 
+
+        const selectCounterValue = state => state.name;
+        const currentValue = selectCounterValue(store.getState());
+        // console.log("first name: "+currentValue);
+        let completedOrder = [];
+        let existingOrder = [];
+
         this.state.allTicketsContent.map((content, i) => {
             if (content.status === "COMPLETE") {
-                this.state.completedOrder.push({
+                completedOrder.push({
                     key: i,
-                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -206,9 +184,9 @@ class Dashboard extends Component {
                     fixDate: content.fixDate,
                 })
             } else {
-                this.state.existingOrder.push({
+                existingOrder.push({
                     key: i,
-                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -220,10 +198,6 @@ class Dashboard extends Component {
             }
         });
 
-        const selectCounterValue = state => state.name;
-        const currentValue = selectCounterValue(store.getState());
-        // console.log("first name: "+currentValue);
-
         return (
             <div className="dashboard">
                 <Navigation/>
@@ -233,9 +207,16 @@ class Dashboard extends Component {
                         <h1>$0.00</h1>
                         <Button className="center" content="Make a Payment" /> */}
                         <h2>Welcome back {currentValue} </h2>
-                        <a href="/communitymanagement/TicketingResident">
-                            <Button className="center" content="Submit a Work Order" />
-                        </a>
+                        <div>
+                            <a href="/communitymanagement/TicketingResident">
+                                <Button className="center" content="Submit a Work Order" />
+                            </a>
+                        </div>
+                        <div>
+                            <a href="/communitymanagement/Calender">
+                                <Button content="View Calendar"></Button>
+                            </a>
+                        </div>
                     </div>
                     <div className="chat-dashboard dashboard-item">
                         <h5 className="chat-title">Messages</h5>
@@ -253,17 +234,13 @@ class Dashboard extends Component {
                 <div className="dashboard-main">
                     <div className="work-order">
                         <h5>Existing Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={this.state.existingOrder} columns={columns} />}
-                        <div>
-                            <a href="/communitymanagement/Calender">
-                                <Button content="View Calendar"></Button>
-                            </a>
-                        </div>
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={existingOrder} columns={columns} />}
+                        
                     </div>
 
                     <div className="work-order work-order-bottom">
                         <h5>Completed Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={this.state.completedOrder} columns={columns} />}
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={completedOrder} columns={columns} />}
                     </div>
                 </div>
 

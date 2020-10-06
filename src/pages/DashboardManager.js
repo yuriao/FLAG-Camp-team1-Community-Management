@@ -62,7 +62,7 @@ class DashboardManager extends Component {
             .then((res) => res.json())
             .then(
                 (data) => {
-                    this.setState({loading:false});
+                    this.setState({ loading: false });
                     let items = data;
                     if (!items || items.length === 0) {
                         alert('No tickets.');
@@ -71,17 +71,17 @@ class DashboardManager extends Component {
                         console.log(this.state.allTicketsContent);
                     }
 
-                    let id_dat=[];
-                    let status_dat=[];
-                    let priority_dat=[];
-                    items.map((content)=>{
+                    let id_dat = [];
+                    let status_dat = [];
+                    let priority_dat = [];
+                    items.map((content) => {
                         id_dat.push(content.id);
                         status_dat.push(content.status);
                         priority_dat.push(content.priority);
                     });
-                    sessionStorage.setItem("Manager_ticket_id",id_dat);
-                    sessionStorage.setItem("Manager_ticket_status",status_dat);
-                    sessionStorage.setItem("Manager_ticket_priority",priority_dat);
+                    sessionStorage.setItem("Manager_ticket_id", id_dat);
+                    sessionStorage.setItem("Manager_ticket_status", status_dat);
+                    sessionStorage.setItem("Manager_ticket_priority", priority_dat);
 
                 }
             )
@@ -109,67 +109,67 @@ class DashboardManager extends Component {
         let completedOrder = [];
         let columns = [
             {
-            title: 'Ticket ID',
-            dataIndex: 'ticket_id',
-        },
-        {
-            title: 'Subject',
-            dataIndex: 'subject',
-        },
-        {
-            title: 'Description',
-            dataIndex: 'description',
-        },
-        {
-            title: 'Priority',
-            key: 'priority',
-            dataIndex: 'priority',
-            render: function (priority) {
-                let color = "";
-                if (priority === 'LOW') {
-                    color = 'green';
-                } else if (priority === "HIGH") {
-                    color = 'red';
-                } else if (priority === "MEDIUM"){
-                    color = 'blue';
+                title: 'Ticket ID',
+                dataIndex: 'ticket_id',
+            },
+            {
+                title: 'Subject',
+                dataIndex: 'subject',
+            },
+            {
+                title: 'Description',
+                dataIndex: 'description',
+            },
+            {
+                title: 'Priority',
+                key: 'priority',
+                dataIndex: 'priority',
+                render: function (priority) {
+                    let color = "";
+                    if (priority === 'LOW') {
+                        color = 'green';
+                    } else if (priority === "HIGH") {
+                        color = 'red';
+                    } else if (priority === "MEDIUM") {
+                        color = 'blue';
+                    }
+                    return (
+                        <Tag color={color} key={priority}>
+                            {priority}
+                        </Tag>
+                    );
                 }
-                return (
-                <Tag color={color} key={priority}>
-                {priority}
-                </Tag>
-                );
-            }
-        },
-        {
-            title: 'Status',
-            key: 'status',
-            dataIndex: 'status',
-            render: function(status) {
-                let color = "";
-                if (status ==='OPEN') {
-                    color = 'red';
-                } else if (status === "ASSIGNED") {
-                    color = 'gold';
-                } else if (status === "COMPLETE"){
-                    color = 'green';
-                } else if (status === "INPROGRESS"){
-                    color = 'blue';
+            },
+            {
+                title: 'Status',
+                key: 'status',
+                dataIndex: 'status',
+                render: function (status) {
+                    let color = "";
+                    if (status === 'OPEN') {
+                        color = 'red';
+                    } else if (status === "ASSIGNED") {
+                        color = 'gold';
+                    } else if (status === "COMPLETE") {
+                        color = 'green';
+                    } else if (status === "INPROGRESS") {
+                        color = 'blue';
+                    }
+                    return (
+                        <Tag color={color} key={status}>
+                            {status}
+                        </Tag>
+                    );
                 }
-                return (
-                    <Tag color={color} key={status}>
-                    {status}
-                    </Tag>
-                );
             }
-        }   
-           
+
         ];
 
         this.state.allTicketsContent.map((content, i) => {
             if (content.status === "COMPLETE") {
                 completedOrder.push({
                     key: i,
-                    ticket_id:<a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -181,7 +181,7 @@ class DashboardManager extends Component {
             } else {
                 existingOrder.push({
                     key: i,
-                    ticket_id:<a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -198,17 +198,24 @@ class DashboardManager extends Component {
 
         return (
             <div className="dashboard">
-                <Navigation/>
-                <h2>Welcome back {currentValue} </h2>
+                <Navigation />
                 <div className="dashboard-main">
-                    
+
                     <div className="balance">
-                        <h2 >Welcome Manager</h2>
+                        <h2 className="chat-title"> Welcome back {currentValue} </h2>
                         {/* <Button className="center" content="Manage All Payments" /> */}
                         {/* <a href = "/communitymanagement/TicketingManager">
-                        <a href = "/communitymanagement/TicketingManager">
-                            <Button className="center" content="Manage All Work Orders" />
-                            </a> */}
+                        */}
+                        <div>
+                            <a href="/communitymanagement/TicketingManager">
+                                <Button className="center" content="Manage All Work Orders" />
+                            </a>
+                        </div>
+                        <div>
+                            <a href = "/communitymanagement/Calender">
+                                <Button content="View Calendar"></Button>
+                            </a> 
+                        </div>
                     </div>
                     <div className="chat-dashboard dashboard-item">
                         <h5 className="chat-title">Messages</h5>
@@ -225,20 +232,15 @@ class DashboardManager extends Component {
                 <div className="dashboard-main">
                     <div className="work-order">
                         <h5>Existing Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table dataSource={existingOrder} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 160 }}/>}
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table dataSource={existingOrder} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 160 }} />}
                         {/* <div>
                             <Button content="Assign a Work Order"></Button>
                         </div> */}
-                        <div>
-                            {/* <a href = "/communitymanagement/Calender">
-                                <Button content="View Calendar"></Button>
-                                </a> */}
-                        </div>
                     </div>
 
                     <div className="work-order work-order-bottom">
                         <h5>Completed Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table dataSource={completedOrder} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 160 }}/>}
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table dataSource={completedOrder} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 160 }} />}
                     </div>
                 </div>
 
