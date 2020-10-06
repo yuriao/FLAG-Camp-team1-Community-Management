@@ -15,3 +15,13 @@
     text-align: center;
     margin-top: 20%;
 }
+
+.infoCol{
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 24px;
+}
+
+.infoCol_content{
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+}

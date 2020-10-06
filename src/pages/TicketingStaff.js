@@ -19,6 +19,7 @@ class TicketingStaff extends Component {
           loading:true,
           submitConfirm:false,
           submitComplete:false,
+          submitDecline:false,
           movingTo:-1
        }
     }
@@ -48,7 +49,7 @@ class TicketingStaff extends Component {
         
         let acceptDeclineTagContent_2=
         <div>
-          <Spin spinning={this.state.submitConfirm}>
+          
             <Space>
               <Space direction="vertical">
                 <DatePicker iid={i} onChange={(date, dateString) => this.pushFixDate(date, dateString, i)}>select fix date</DatePicker>
@@ -59,14 +60,12 @@ class TicketingStaff extends Component {
                 <Button iid={i} onClick={(event)=>this.confirmTickets(event,i)} size="small" shape="round">Confirm</Button>
                 <Button iid={i} onClick={(event)=>this.BacktoAcceptDecline(event,i)} size="small" shape="round">Back</Button>
               </Space>            
-            </Space>
-          </Spin>
-          
+            </Space>          
         </div>;
         
         let acceptDeclineTagContent_3=
         <Space direction="vertical">
-          <Spin spinning={this.state.submitComplete}><Button iid={i} onClick={(event)=>this.completeTicket(event,i)} type="primary" size="small" shape="round">Complete</Button></Spin>
+          <Button iid={i} onClick={(event)=>this.completeTicket(event,i)} type="primary" size="small" shape="round">Complete</Button>
           <div>{this.state.completeingMessage}</div>
         </Space>
 
@@ -192,6 +191,7 @@ class TicketingStaff extends Component {
       axios.put("/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-update", {fixDate:obj[i]+" "+obj1[i]},)
       .then((response)=> {
         console.log(response);
+        this.setState({submitConfirm:false});
         alert('Work in progress. Consult resident and manager if further info is needed');
         this.refreshTickets();
       })
@@ -207,10 +207,12 @@ class TicketingStaff extends Component {
     }
 
     declineTicket=(event,i)=>{
+      this.setState({submitDecline:true});
       axios.post("/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-action", {action:"decline"})
       .then((response)=> {
         console.log(response);
         alert('Ticket declined')
+        this.setState({submitDecline:false});
         this.refreshTickets();
       })
       .catch((error)=> {
@@ -223,6 +225,7 @@ class TicketingStaff extends Component {
       axios.post("/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-action", {action:"complete"})
       .then((response)=> {
         console.log(response);
+        this.setState({submitComplete:false});
         alert('Ticket completed! Your work is greatly appriciated!')
         this.refreshTickets();
       })
@@ -292,7 +295,7 @@ class TicketingStaff extends Component {
                 <div class="stafforderTable">
                 <Space direction="vertical">
                 <Button onClick={this.refreshTickets}>refresh Ticket</Button>
-                    {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table dataSource={this.state.datasource} columns={columns}  pagination={{ pageSize: 50 }} scroll={{ y: 450 }}/>}
+                    {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Spin spinning={this.state.submitConfirm||this.state.submitComplete||this.state.submitDecline} tip="submitting..." ><Table dataSource={this.state.datasource} columns={columns}  pagination={{ pageSize: 50 }} scroll={{ y: 450 }}/></Spin>}
                 </Space>
                 </div>
                 <Footer/>

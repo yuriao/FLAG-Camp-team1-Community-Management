@@ -212,11 +212,11 @@ class DashboardStaff extends Component {
                     <div className="work-order">
                         <h5>Assigned Work Orders</h5>
                         {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={assignedOrder} columns={columns} />}
-                        <div>
+                        {/* <div>
                             <a href = "/communitymanagement/TicketingStaff">
                                 <Button content="Manage Your Orders"></Button>
                             </a>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="work-order work-order-bottom">
@@ -229,11 +229,11 @@ class DashboardStaff extends Component {
                     <div className="work-order">
                         <h5> Work Order In Progress</h5>
                         {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={inprogressOrder} columns={columns} />}
-                        <div>
+                        {/* <div>
                             <a href = "/communitymanagement/Calender">
                                 <Button content="View Calendar"></Button>
                             </a>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 

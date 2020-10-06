@@ -97,13 +97,11 @@ class TicketingManager extends Component {
         }
         
         let assigneeTag_1=
-        <div>  
-          <Spin spinning={this.state.submitAssignment}>
+        <div>         
             <Space direction='horizontal'>
               <DropDown iid={i} parentCallback = {this.AssignmentCallBack} elements={recommend_assignees}/>
               <Button iid={i} onClick={(event)=>this.assignTickets(event,i)} size="small" shape="round">Confirm</Button>
             </Space>
-          </Spin>
         </div>;  //(event)=>this.assignTickets(event,i): add a parameter i to callback
   
         //let assigneeTag_2=<div><Button iid={i} onClick={(event)=>this.cancelAssignment(event,i)} danger>Cancel Assignment</Button></div>;
@@ -341,7 +339,7 @@ class TicketingManager extends Component {
           let items=this.state.allticketsContent;
           items[i].assignees=[];
           items[i].assignees.push({name:[obj[i][0]],userId:[obj[i][1]]});
-          this.setState({allticketsContent:items});
+          this.setState({allticketsContent:items,submitAssignment:false});
           this.reloadTickets(items,this.state.allTicketsTag);
           this.refreshTickets();
         })
@@ -427,7 +425,7 @@ class TicketingManager extends Component {
             <Navigation/>
 
             <div class="managerWelcome">
-                Welcome Manager
+                Manager updating tickets
             </div>
 
              <Container fluid>
@@ -466,7 +464,7 @@ class TicketingManager extends Component {
                   <h3> Existing Work Orders </h3>
                   <Space direction="vertical">
                     <Button onClick={this.refreshTickets}>refresh Ticket</Button>
-                    {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table dataSource={this.state.datasource} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 300 }}/>}
+                    {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Spin tip="Assigning ticket..."  spinning={this.state.submitAssignment}><Table dataSource={this.state.datasource} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 300 }}/></Spin>}
                   </Space>
                 </Col>
               </Row>

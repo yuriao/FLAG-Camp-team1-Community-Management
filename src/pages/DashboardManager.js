@@ -203,8 +203,11 @@ class DashboardManager extends Component {
                     chat="/ChatManager"
                     logout="/logout"
                 />
+                <h5 className="chat-title">Welcome Manager</h5>
                 <div className="dashboard-main">
+                    
                     <div className="balance">
+                        <h5 className="chat-title">Welcome Manager</h5>
                         {/* <Button className="center" content="Manage All Payments" /> */}
                         {/* <a href = "/communitymanagement/TicketingManager">
                             <Button className="center" content="Manage All Work Orders" />
