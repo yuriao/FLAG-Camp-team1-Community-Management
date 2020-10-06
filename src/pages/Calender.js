@@ -181,7 +181,7 @@ componentDidMount(){
         <div class="calenderWelcome">
             Ticket Calender
         </div>
-        <div >
+        <div className="calenderLegend" >
             <span className={`event-OPEN`}>●</span>submitted <span className={`event-ASSIGNED`}>●</span>Manager acknowledged <span className={`event-INPROGRESS`}>●</span>Staffs on their way <span className={`event-COMPLETE`}>●</span> Complete, please write review inside ticket
         </div>
        <div>
