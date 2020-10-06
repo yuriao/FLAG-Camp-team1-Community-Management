@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { List, Avatar, Space, Input, Button } from 'antd';
+import { Spin,List, Avatar, Space, Input, Button } from 'antd';
 import Ajax from '../components/AJAX'
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
@@ -36,32 +36,70 @@ class TicketingDetail extends Component {
                 "body": ["We will be there after preperation"],
             }],
             listData:[],
-            currentComment:[]
+            currentComment:[],
+            loading:true,
+            tid:0
         }
     }
     
     componentDidMount(){
-        this.loadTicketContent();
-        this.reloadTicketDetail();
+        //this.loadTicketContent();
     }
     // if need props, use this.props to access
     loadTicketContent = ()=>{
-        let tid=sessionStorage.getItem("inquiredTicketID");
-        Ajax('GET', "/tickets/"+tid.toString(), [],
-        // successful callback
-            function(res) {
-                let item=JSON.parse(res);
-                this.setState({
-                    ticketDetail:item.ticket_detail,
-                    ticketComments:item.comments
-                })
-                console.log("good");
-            },
-            // failed callback
-            function() {
-                console.log('fail');
+        this.setState({loading:true});
+        console.log(this.state.loading);
+        let queryString = window.location.search;
+        let urlParams = new URLSearchParams(queryString);
+        console.log(queryString);
+        let tidt=urlParams.get('ticket');
+        this.setState({tid:tidt});
+        console.log("/communitymanagement/tickets/"+tidt.toString());
+        // axios.get("/communitymanagement/tickets/"+tidt.toString(), [],
+        // // successful callback
+        //     function(res) {
+        //         console.log(res);
+        //         let item=res.data;
+        //         this.setState({
+        //             ticketDetail:item.ticket_detail,
+        //             ticketComments:item.comments
+        //         })
+        //         console.log("good");
+                
+        //         this.reloadTicketDetail();
+        //     },
+        //     // failed callback
+        //     function() {
+        //         console.log('fail');
+        //     }
+        // ); 
+        fetch("/communitymanagement/tickets/"+tidt.toString())
+        .then((res) => res.json())
+        .then(
+            (data) => {
+                this.setState({loading:false});
+                let items = data;
+                if (!items || items.length === 0) {
+                    alert('No tickets.');
+                } else {
+                    this.setState({ allTicketsContent: items });
+                    console.log(this.state.allTicketsContent);
+                }
+
+                let id_dat=[];
+                let status_dat=[];
+                let priority_dat=[];
+                items.map((content)=>{
+                    id_dat.push(content.id);
+                    status_dat.push(content.status);
+                    priority_dat.push(content.priority);
+                });
+                sessionStorage.setItem("Manager_ticket_id",id_dat);
+                sessionStorage.setItem("Manager_ticket_status",status_dat);
+                sessionStorage.setItem("Manager_ticket_priority",priority_dat);
+
             }
-        ); 
+        )
     }
 
     reloadTicketDetail = () =>{
@@ -79,17 +117,14 @@ class TicketingDetail extends Component {
                 description:<p className="commentDescription">{cdiv.body}</p>
             });
         });
+        this.setState({loading:false});
         this.setState({listData:listDataTemp});
     }
 
     postComment = () =>{
       
       // just practice axios a little bit...
-      axios.put('/ticket'+sessionStorage.getItem("inquiredTicketID")+'/update', {
-          params: {
-            comment: 12345
-          }
-        })
+      axios.put('/communitymanagement/ticket/'+this.state.tid.toString()+'/update', {comment:this.state.currentComment})
         .then(function (response) {
           console.log(response);
         })
@@ -109,6 +144,7 @@ class TicketingDetail extends Component {
         return(
             <div>
                 <Navigation/>
+                {this.state.loading ? <div className="loadingSpin"><Spin tip="Loading Ticket Detail..." /></div>:
                 <div>
                     <Container fluid>
                         <Row>
@@ -168,6 +204,7 @@ class TicketingDetail extends Component {
                         </Row>
                     </Container>
                 </div>
+}
                 
                 <Footer/>
             </div>

@@ -160,7 +160,7 @@ class Dashboard extends Component {
             if (content.status === "COMPLETE") {
                 completedOrder.push({
                     key: i,
-                    ticket_id: <a href = "/communitymanagement/TicketingDetail">{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -172,7 +172,7 @@ class Dashboard extends Component {
             } else {
                 existingOrder.push({
                     key: i,
-                    ticket_id: <a href = "/communitymanagement/TicketingDetail">{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,

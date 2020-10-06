@@ -73,6 +73,18 @@ class DashboardManager extends Component {
                         console.log(this.state.allTicketsContent);
                     }
 
+                    let id_dat=[];
+                    let status_dat=[];
+                    let priority_dat=[];
+                    items.map((content)=>{
+                        id_dat.push(content.id);
+                        status_dat.push(content.status);
+                        priority_dat.push(content.priority);
+                    });
+                    sessionStorage.setItem("Manager_ticket_id",id_dat);
+                    sessionStorage.setItem("Manager_ticket_status",status_dat);
+                    sessionStorage.setItem("Manager_ticket_priority",priority_dat);
+
                 }
             )
     }
@@ -159,7 +171,7 @@ class DashboardManager extends Component {
             if (content.status === "COMPLETE") {
                 completedOrder.push({
                     key: i,
-                    ticket_id:<a href = "/communitymanagement/TicketingDetail">{content.id}</a>,
+                    ticket_id:<a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -171,7 +183,7 @@ class DashboardManager extends Component {
             } else {
                 existingOrder.push({
                     key: i,
-                    ticket_id:<a href = "/communitymanagement/TicketingDetail">{content.id}</a>,
+                    ticket_id:<a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -194,9 +206,9 @@ class DashboardManager extends Component {
                 <div className="dashboard-main">
                     <div className="balance">
                         {/* <Button className="center" content="Manage All Payments" /> */}
-                        <a href = "/communitymanagement/TicketingManager">
+                        {/* <a href = "/communitymanagement/TicketingManager">
                             <Button className="center" content="Manage All Work Orders" />
-                        </a>
+                            </a> */}
                     </div>
                     <div className="chat-dashboard dashboard-item">
                         <h5 className="chat-title">Messages</h5>
@@ -213,20 +225,20 @@ class DashboardManager extends Component {
                 <div className="dashboard-main">
                     <div className="work-order">
                         <h5>Existing Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={existingOrder} columns={columns} />}
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table dataSource={existingOrder} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 160 }}/>}
                         {/* <div>
                             <Button content="Assign a Work Order"></Button>
                         </div> */}
                         <div>
-                            <a href = "/communitymanagement/Calender">
+                            {/* <a href = "/communitymanagement/Calender">
                                 <Button content="View Calendar"></Button>
-                            </a>
+                                </a> */}
                         </div>
                     </div>
 
                     <div className="work-order work-order-bottom">
                         <h5>Completed Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={completedOrder} columns={columns} />}
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table dataSource={completedOrder} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 160 }}/>}
                     </div>
                 </div>
 
