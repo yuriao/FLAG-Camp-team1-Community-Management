@@ -5,16 +5,6 @@ import {Form,Select } from 'antd';
 
 class StaffSignUp extends Component {
     
-    constructor(){
-        super();
-        this.state = {
-          allTicketsTag: [],    // set initial state with one div
-          allTicketsContent: [],
-          possible_issue_categories:[],
-          loading:true
-       }
-    }
-
     handleChange = (param)=>{
         console.log(param.value);
         this.props.category(param.value);
@@ -43,7 +33,7 @@ class StaffSignUp extends Component {
                          name="category"
                          rules={[{ required: true, message: 'Please select your category!' }]}
                     >
-                   {this.state.loading ? <Spin tip="Loading Options..." /> : 
+                    
                     <Select
                         labelInValue
                         defaultValue={{ value: 'Maintenance Category' }}
@@ -60,7 +50,6 @@ class StaffSignUp extends Component {
                         <Option value="144">Plumbing</Option>
                         <Option value="149">Handyman</Option>
                     </Select>
-                    }
                     </Form.Item>
 
                     
