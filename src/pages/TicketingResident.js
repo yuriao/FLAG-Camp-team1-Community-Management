@@ -87,15 +87,21 @@ class TicketingResident extends Component {
 
         let statusTag=<Tag color={tagColor} >{tagText}</Tag>;
 
-        let dateObject = new Date(items[i].submittedDate);
-        let humanDateFormat = dateObject.toLocaleString(); //2019-12-9 10:30:15
+        let humanDateFormat="N/A";
+        if(items[i].fixDate){
+            let dateObject = new Date(items[i].fixDate);
+            humanDateFormat = dateObject.toLocaleString(); //2019-12-9 10:30:15
+        }else{
+            humanDateFormat ="N/A";
+        }
+       
         
         dsource.push({
             key: i,
             ticket_id: <Button href={'/communitymanagement/TicketingDetail?ticket='+items[i].ticketId.toString()}  type="link">{items[i].ticketId}</Button>, 
             //unit: items[i].unit_number, 
             subject: items[i].subject, 
-            created: humanDateFormat, 
+            fix: humanDateFormat, 
             //category: items[i].issue, 
             status: statusTag,
         })
@@ -283,9 +289,9 @@ class TicketingResident extends Component {
             dataIndex: 'subject',
         },
         {
-            title: 'Created',
-            dataIndex: 'created',
-            sorter: (a, b) => Date.parse(a.created) - Date.parse(b.created),
+            title: 'Will be fixed at',
+            dataIndex: 'fix',
+            sorter: (a, b) => Date.parse(a.fix) - Date.parse(b.fix),
             sortDirections: ['descend', 'ascend'],
         },
         {

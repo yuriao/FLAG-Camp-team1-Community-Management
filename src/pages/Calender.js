@@ -182,7 +182,7 @@ componentDidMount(){
             Ticket Calender
         </div>
         <div className="calenderLegend" >
-            <span className={`event-OPEN`}>●</span>submitted <span className={`event-ASSIGNED`}>●</span>Manager acknowledged <span className={`event-INPROGRESS`}>●</span>Staffs on their way <span className={`event-COMPLETE`}>●</span> Complete, please write review inside ticket
+            <span className={`event-OPEN`}>●</span>Resident Submitted  <span className={`event-ASSIGNED`}>●</span>Manager acknowledged  <span className={`event-INPROGRESS`}>●</span>Staff working in progress  <span className={`event-COMPLETE`}>●</span> Complete, Resident may write review inside ticket
         </div>
        <div>
        {this.state.loading ? <div className="loadingSpin"><Spin tip="Loading Calendar..." /></div> :<Calendar   dateCellRender={this.dateCellRender} monthCellRender={this.monthCellRender} />}
