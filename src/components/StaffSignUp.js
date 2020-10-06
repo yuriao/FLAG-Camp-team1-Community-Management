@@ -8,17 +8,28 @@ class StaffSignUp extends Component {
     
     handleChange = (param)=>{
         console.log(param.value);
-     this.props.category(param.value);
+        this.props.category(param.value);
+      
     }
 
     render() {
         const { Option } = Select;
        
-
+        const formItemLayout = {
+            labelCol: {
+              xs: { span: 24 },
+              sm: { span: 8 },
+            },
+            wrapperCol: {
+              xs: { span: 24 },
+              sm: { span: 16 },
+            },
+          };
         return (
             <div className="additionalInfo">
                   
                    <Form.Item
+                   {...formItemLayout}
                          label ="Category " 
                          name="category"
                          rules={[{ required: true, message: 'Please select your category!' }]}

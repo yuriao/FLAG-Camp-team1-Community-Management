@@ -1,7 +1,11 @@
 .nav{
     width: 100%;
     padding: 3px;
-    background-color: grey;
+    background-color: lightgrey;
+    color:black;
+}
+.nav p{
+    color: black;
 }
 
 .left-nav {

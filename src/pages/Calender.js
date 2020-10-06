@@ -2,15 +2,16 @@ import React, {Component} from 'react';
 
 import { Calendar } from 'antd';
 import {CalendarRequest} from '../components/CalendarAxios';
+import moment from 'moment';
+import Navigation from '../components/Navigation';
+import Footer from '../components/Footer';
 
 class Calender extends Component{
   constructor(){
     super();
     this.state = {
-      singleTicket:
-      {
-        
-      }
+     allTicket:[], 
+   
 
 //       ticketDetail: { "ticket_id": "1423124315",
 //           "user_name": "daloias",
@@ -53,95 +54,48 @@ componentDidMount(){
 
       let item=response.data; 
       console.log("item is:", item);
-      this.setState({
-        singleTicket: item,
-      })   
-       console.log(this.state.singleTicket);
+      if (!item || item.length === 0) {
+        alert('No data!');
+    } else {
+        this.setState({ allTicket: item });
+        console.log(this.state.allTicket);
+    }
+      
     }
    })
  
  }
 
   getListData=(value)=> {
-    let listData;
-    this.state.singleTicket.map(item=>{
 
-      console.log("item created date:", item.created);
-      console.log(value.date());
 
-      //不能只用date()
-      if(value.date() == (item.created).date()){ //2020-10-04 time
-       listData = [{
-          type: item.priority,
-          content: item.description,
-      }]}
-    });
+    let listData = [];
+    this.state.allTicket.map((item, i) => {
+      console.log(value);
+      console.log("created:",item.created);
+
+      if (moment(value).format('YYYY-MM-DD') === moment(item.created).format('YYYY-MM-DD') ) {
+        listData.push(item);
+      }
+    })
     return listData;
-
-  //  const dataFromResponse = this.getAllData();
-  //   console.log("Come to getListData");
-  //   let listData; 
-       
-
-  //   this.dataFromResponse.map(element => {
-  //     console.log("item created date:", element.created);
-  //     console.log(value.date());
-  //       if(element.created == value.date()){         
-  //         this.listData = [{
-  //           type: element.priority,
-  //           content: element.description,
-  //         }]
-  //    }
-  //    return listData || [];
-
-  //   });
-  
-
-
-    // switch (value.date()) { //如果value.date()==8,显示8的内容，如果不符合以下任何一个case，什么也不显示
-    //   case 8:
-    //     listData = [
-    //       { type: 'warning', content: 'This is warning event.' },
-    //       { type: 'normal', content: 'This is usual event.' },
-    //     ]; break;
-    //   case 10:
-    //     listData = [
-    //       { type: 'warning', content: 'This is warning event.' },
-    //       { type: 'normal', content: 'This is usual event.' },
-    //       { type: 'error', content: 'This is error event.' },
-    //     ]; break;
-
-    //     case 13:
-    //       listData = [
-           
-    //         { type: 'error', content: 'TEST' },
-    //       ]; break;
-
-    //   case 15:
-    //     listData = [
-    //       { type: 'warning', content: 'This is warning event' },
-    //       { type: 'normal', content: 'This is very long usual event。。....' },
-    //       { type: 'error', content: 'This is error event 1.' },
-    //       { type: 'error', content: 'This is error event 2.' },
-    //       { type: 'error', content: 'This is error event 3.' },
-    //       { type: 'error', content: 'This is error event 4.' },
-    //     ]; break;
-    //   default:
-    // }
-    // return listData || [];
   }
+
+   
+   
+  
   
   dateCellRender=(value)=> {
-    //拿到每一个日期格子，去getListData看看这个格子有没有内容
+ 
     const listData = this.getListData(value);
-    // const listData = this.getAllData();
+   
     return (
       <ul className="events">
         {
           listData.map(item => (
-            <li key={item.content}>
-              <span className={`event-${item.type}`}>●</span>
-              {item.content}
+            <li key={item.created}>
+              <span className={`event-${item.priority}`}>●</span>
+              {item.description}
             </li>
           ))
         }
@@ -150,14 +104,14 @@ componentDidMount(){
   }
   
   getMonthData=(value)=> {
-    // console.log("get month data", value);
+   
     if (value.month() === 8) {
       return 1394;
     }
   }
   
   monthCellRender=(value)=> {
-    // console.log("month cell render value is: ", value); 
+   
     const num = this.getMonthData(value);
     return num ? (
       <div className="notes-month">
@@ -169,8 +123,22 @@ componentDidMount(){
   
   render(){
     return (
-     
-      <Calendar   dateCellRender={this.dateCellRender} monthCellRender={this.monthCellRender} />
+      <div>
+        <div>
+
+        <Navigation/>
+        </div>
+
+       <div>
+       <Calendar   dateCellRender={this.dateCellRender} monthCellRender={this.monthCellRender} />
+       </div>
+      
+        <div>
+        <Footer/>
+        </div>
+        
+      </div>
+      
     );
   }
 

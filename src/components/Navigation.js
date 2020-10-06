@@ -95,7 +95,7 @@ class Navigation extends Component {
         }                               
         return (
             <div className = "nav">
-                <p onClick={this.redirectDashboard} className = "left-nav">Dashboard</p>
+                <p onClick={this.redirectDashboard} className = "left-nav" >Dashboard</p>
                 <p onClick={this.redirectTicketing} className = "left-nav">Ticket</p>
                 <p onClick={this.redirectCalendar} className = "left-nav">Calendar</p>
                 <p onClick={this.logoutFunc} className = "left-nav">Logout</p>

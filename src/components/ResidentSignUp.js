@@ -39,12 +39,25 @@ class ResidentSignUp extends Component {
     }
     
     render() {
+
+        const formItemLayout = {
+            labelCol: {
+              xs: { span: 24 },
+              sm: { span: 8 },
+            },
+            wrapperCol: {
+              xs: { span: 24 },
+              sm: { span: 16 },
+            },
+          };
+          
         const dateFormat = 'YYYY-MM-DD';
 
         return (
             <div className="additionalInfo">
                     {/* <h1>This is RESIDENT additional components</h1> */}
-                   <Form.Item
+                   <Form.Item 
+                   {...formItemLayout}
                          label ="Unit Number " 
                          name="unit_number"
                          rules={[{ required: true, message: 'Please input your Unit Number!' }]}
@@ -54,6 +67,7 @@ class ResidentSignUp extends Component {
                     </Form.Item>
                     
                     <Form.Item
+                    {...formItemLayout}
                          label ="Birth Date " 
                          name="birthday"
                          rules={[{ required: true, message: 'Please select your birth date!' }]}
