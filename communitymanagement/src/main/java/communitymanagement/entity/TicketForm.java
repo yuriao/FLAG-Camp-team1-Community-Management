@@ -1,13 +1,13 @@
 package communitymanagement.entity;
 
 import java.util.List;
+import java.util.Map;
 
 import communitymanagement.model.Ticket;
-import communitymanagement.model.TicketComment;
 import lombok.Data;
 
 @Data
 public class TicketForm { 
 	private Ticket ticket;
-	private List<TicketComment> ticketComment;
+	private List<Map<String, String>> ticketComment;
 }

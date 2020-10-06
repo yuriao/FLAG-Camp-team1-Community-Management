@@ -1,8 +1,11 @@
 package communitymanagement.controller;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -134,9 +137,22 @@ public class TicketCommentController {
 		// add code here
 		TicketForm ticketForm = new TicketForm();
 		Ticket ticket = ticketService.getTicketById(ticketId);
-		List<TicketComment> ticketComment = ticketCommentService.getAllTicketComments(ticketId);
+		List<TicketComment> rawTicketComments = ticketCommentService.getAllTicketComments(ticketId);
+		List<Map<String, String>> ticketComments = new ArrayList<>();
+		if (rawTicketComments != null) {
+			for (TicketComment tc : rawTicketComments) {
+				Map<String, String> ticketComment = new HashMap<>();
+				User commendUser = tc.getUser();
+				ticketComment.put("userId", Integer.toString(commendUser.getId()));
+				ticketComment.put("userType", commendUser.getUserType().toString());
+				ticketComment.put("fullName", commendUser.getFirstName() + " " + commendUser.getLastName());
+				ticketComment.put("commendBody", tc.getBody());
+				ticketComment.put("created", tc.getCreated().toString());
+				ticketComments.add(ticketComment);
+			}
+		}
 		ticketForm.setTicket(ticket);
-		ticketForm.setTicketComment(ticketComment);
+		ticketForm.setTicketComment(ticketComments);
 		return ResponseEntity.status(HttpStatus.OK).body(ticketForm);
 	}
 
