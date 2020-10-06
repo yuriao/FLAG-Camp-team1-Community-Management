@@ -168,7 +168,7 @@ class DashboardStaff extends Component {
             if (content.status === "COMPLETE") {
                 completedOrder.push({
                     key: i,
-                    ticket_id: <a href = "/communitymanagement/TicketingDetail">{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -180,7 +180,7 @@ class DashboardStaff extends Component {
             } else if (content.status === "ASSIGNED"){
                 assignedOrder.push({
                     key: i,
-                    ticket_id: <a href = "/communitymanagement/TicketingDetail">{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -192,7 +192,7 @@ class DashboardStaff extends Component {
             } else if (content.status === "INPROGRESS"){
                 inprogressOrder.push({
                     key: i,
-                    ticket_id: <a href = "/communitymanagement/TicketingDetail">{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -212,11 +212,11 @@ class DashboardStaff extends Component {
                     <div className="work-order">
                         <h5>Assigned Work Orders</h5>
                         {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={assignedOrder} columns={columns} />}
-                        <div>
+                        {/* <div>
                             <a href = "/communitymanagement/TicketingStaff">
                                 <Button content="Manage Your Orders"></Button>
                             </a>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="work-order work-order-bottom">
@@ -229,11 +229,11 @@ class DashboardStaff extends Component {
                     <div className="work-order">
                         <h5> Work Order In Progress</h5>
                         {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={inprogressOrder} columns={columns} />}
-                        <div>
+                        {/* <div>
                             <a href = "/communitymanagement/Calender">
                                 <Button content="View Calendar"></Button>
                             </a>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 

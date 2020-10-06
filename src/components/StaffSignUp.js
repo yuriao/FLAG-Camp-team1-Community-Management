@@ -1,7 +1,6 @@
 
 import React, { Component } from 'react';
-import { Input, DatePicker,Tooltip,Form,Select } from 'antd';
-import {InfoCircleOutlined,FieldNumberOutlined,UserOutlined} from '@ant-design/icons';
+import {Form,Select } from 'antd';
 
 
 class StaffSignUp extends Component {
@@ -42,6 +41,7 @@ class StaffSignUp extends Component {
                         onChange={this.handleChange}
                     >
                         <Option value="147">Appliances Repair</Option>
+                        <Option value="1">Appliances</Option>
                         <Option value="2">Cable</Option>
                         <Option value="3">Water</Option>
                         <Option value="4">Electricity</Option>
@@ -49,11 +49,6 @@ class StaffSignUp extends Component {
                         <Option value="6">Door</Option>
                         <Option value="144">Plumbing</Option>
                         <Option value="149">Handyman</Option>
-{/*                         
-                        {"Plumbing":144,"Appliance Repair":147,
-                        "Cable":2,"Water":3,"Floor":5,"Appliances":1,
-                        
-                        "Electricity":4,"Door":6,"Handyman":149} */}
                     </Select>
                     </Form.Item>
 
