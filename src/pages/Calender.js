@@ -110,9 +110,22 @@ componentDidMount(){
       console.log("created:",item.created);
       console.log("fixed:",item.fixDate);
       //if (moment(value).format('YYYY-MM-DD') === moment(item.fixDate).format('YYYY-MM-DD') && this.state.ticketId.includes(item.id)) {
-      if (moment(value).format('YYYY-MM-DD') === moment(item.fixDate).format('YYYY-MM-DD')) {
-        listData.push(item);
+
+      let usrType=sessionStorage.getItem('user_type');
+      if(item.fixDate){ // show all tickets, if has a fix date then display fixDate, else display create date
+        if (moment(value).format('YYYY-MM-DD') === moment(item.fixDate).format('YYYY-MM-DD')) {
+          listData.push(item);
+        }
+      }else{
+        if (moment(value).format('YYYY-MM-DD') === moment(item.created).format('YYYY-MM-DD')) {
+          listData.push(item);
+        }
       }
+      
+
+      
+
+      
     })
     
     return listData;
@@ -131,10 +144,11 @@ componentDidMount(){
         {
           listData.map(item => (
             <li key={item.created}>
-              <span className={`event-${item.priority}`}>●</span>
+              
               {/*<span className={`event-${item.priority}`}>●</span>*/}
               {/* item.description} */}
-              <a href={'/communitymanagement/TicketingDetail?ticket='+item.id.toString()}>{item.id}</a>
+             
+              <a href={'/communitymanagement/TicketingDetail?ticket='+item.id.toString()}><span className={`event-${item.status}`}>●</span> {item.id}</a>
             </li>
           ))
         }
@@ -165,9 +179,11 @@ componentDidMount(){
       <div>
         <Navigation/>
         <div class="calenderWelcome">
-            Ticket Calender (fix date)
+            Ticket Calender
         </div>
-
+        <div className="calenderLegend" >
+            <span className={`event-OPEN`}>●</span>Resident Submitted  <span className={`event-ASSIGNED`}>●</span>Manager acknowledged  <span className={`event-INPROGRESS`}>●</span>Staff working in progress  <span className={`event-COMPLETE`}>●</span> Complete, Resident may write review inside ticket
+        </div>
        <div>
        {this.state.loading ? <div className="loadingSpin"><Spin tip="Loading Calendar..." /></div> :<Calendar   dateCellRender={this.dateCellRender} monthCellRender={this.monthCellRender} />}
        </div>
