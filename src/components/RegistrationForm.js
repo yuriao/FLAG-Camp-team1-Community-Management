@@ -42,24 +42,56 @@ class RegisterForm extends Component{
                 const status = response.status;
                 if(status == 200){
                     alert("You have successfully registered your profile!")
+                    this.setState({movingTo:7});
+                }
+                else if(status == 208){
+                    alert("This email has been registered!");
                 }
                 console.log(response);
             }
         ).catch(error =>{
             console.log("error info: ",error);
         })
-        this.setState({movingTo:7});
+       
         console.log('Received values of form: ', values);
     };
 
    
     render(){
         
+
+        //style 
+
+
+        const formItemLayout = {
+            labelCol: {
+              xs: { span: 24 },
+              sm: { span: 8 },
+            },
+            wrapperCol: {
+              xs: { span: 24 },
+              sm: { span: 16 },
+            },
+          };
+          const tailFormItemLayout = {
+            wrapperCol: {
+              xs: {
+                span: 24,
+                offset: 0,
+              },
+              sm: {
+                span: 16,
+                offset: 8,
+              },
+            },
+          };
+
+          //style end
         const {user_type} = this.props;
         const result = () =>{
             if(user_type == "resident"){
                
-                return <ResidentSignUp/>;
+                return <ResidentSignUp />;
             }
             else if(user_type == "manager"){
               
@@ -78,7 +110,7 @@ class RegisterForm extends Component{
 
         return(
                  <Fragment>
-                     <h4>Welcome to {this.props.user_type} portal!</h4>
+                     <h4 style={{marginLeft:"25%",}}>Welcome to {this.props.user_type} portal!</h4>
                      <br/>
                      <br/>
                     <div className = "registerform-header">
@@ -89,6 +121,7 @@ class RegisterForm extends Component{
                     <div className = "form-content">
 
                             <Form
+                            //  {...formItemLayout}
                                 name="normal_login"
                                 className="login-form"
                                 initialValues={{ remember: true }}
@@ -96,6 +129,7 @@ class RegisterForm extends Component{
                             >
                  
                                 <Form.Item
+                                {...formItemLayout}
                                     label ="First Name: " 
                                      name="first_name"
                                     rules={[{ required: true, message: 'Please input your First Name!' }]}
@@ -105,6 +139,7 @@ class RegisterForm extends Component{
                                 </Form.Item>
 
                                 <Form.Item
+                                {...formItemLayout}
                                     label ="Last Name: "
                                      name="last_name"
                                     rules={[{ required: true, message: 'Please input your Last Name!' }]}
@@ -114,6 +149,7 @@ class RegisterForm extends Component{
                                 </Form.Item>
 
                                 <Form.Item
+                                {...formItemLayout}
                                    label ="Email:"
                                       name="username"
                                     rules={[{ required: true, message: 'Please input your Email address!' }]}
@@ -123,6 +159,7 @@ class RegisterForm extends Component{
                                 </Form.Item>
 
                                 <Form.Item
+                                {...formItemLayout}
                                     name="password"
                                     label="Password"
                                     rules={[
@@ -137,6 +174,7 @@ class RegisterForm extends Component{
                                 </Form.Item>
 
                                 <Form.Item
+                                {...formItemLayout}
                                     name="confirm"
                                     label="Confirm Password"
                                     dependencies={['password']}
@@ -160,6 +198,7 @@ class RegisterForm extends Component{
                                 </Form.Item>
 
                                 <Form.Item
+                                {...formItemLayout}
                                     name="phone_number"
                                     label="Phone Number"
                                     rules={[{ required: true, message: 'Please input your phone number!' }]}
@@ -168,13 +207,13 @@ class RegisterForm extends Component{
                                     placeholder = "Input your phone number"/>
                                 </Form.Item>
 
-                                <Form.Item>     
+                                <Form.Item >     
                                 
                                 {result()}
                                
                                 </Form.Item>
                                 
-                                <Form.Item>
+                                <Form.Item  {...tailFormItemLayout} >
                                    
                               
                                    
@@ -183,7 +222,7 @@ class RegisterForm extends Component{
                                     </a>
                                 </Form.Item>
 
-                                <Form.Item>
+                                <Form.Item  {...tailFormItemLayout}> 
                                     
                               
                                     <Button type="primary" htmlType="submit" className="login-form-button" block>

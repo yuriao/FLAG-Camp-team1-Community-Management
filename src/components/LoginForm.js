@@ -40,6 +40,7 @@ import {Route, Redirect} from "react-router-dom";
             })
             const status = response.status;
             if(status == 200){
+
                 
                 const userTypeSession = response.data.userType;
                 const userID = response.data.userId;
@@ -60,17 +61,14 @@ import {Route, Redirect} from "react-router-dom";
                 }
 
             }
-            // console.log("status is: ", status);
-            // setToken(status);
-            //在此处做判断看是转到哪里去
-            // this.props.history.push('/DashboardResident');
-                        
+
             console.log(response);
             console.log(response.data.firstName);
            }).catch(error =>{    
                 this.setState({
                     loading:false,
                 })
+                alert("Your username or password is incorrect! Please try again!");
                 console.log(error);
            })
         

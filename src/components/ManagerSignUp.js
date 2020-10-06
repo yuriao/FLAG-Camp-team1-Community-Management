@@ -5,6 +5,17 @@ import {InfoCircleOutlined,FieldNumberOutlined,UserOutlined} from '@ant-design/i
 class ManagerSignUp extends Component {
    
     render() {
+        const formItemLayout = {
+            labelCol: {
+              xs: { span: 24 },
+              sm: { span: 8 },
+            },
+            wrapperCol: {
+              xs: { span: 24 },
+              sm: { span: 16 },
+            },
+          };
+          
         return (
             <div className="additionalInfo">
                     {/* <h1>This is Manager additional components</h1> */}
