@@ -179,7 +179,7 @@ componentDidMount(){
       <div>
         <Navigation/>
         <div class="calenderWelcome">
-            Ticket Calender
+            Ticket Calender : {sessionStorage.getItem("user_type")} {sessionStorage.getItem("user_id")}
         </div>
         <div className="calenderLegend" >
             <span className={`event-OPEN`}>●</span>Resident Submitted  <span className={`event-ASSIGNED`}>●</span>Manager acknowledged  <span className={`event-INPROGRESS`}>●</span>Staff working in progress  <span className={`event-COMPLETE`}>●</span> Complete, Resident may write review inside ticket
