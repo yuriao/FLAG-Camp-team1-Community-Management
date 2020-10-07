@@ -282,7 +282,6 @@ class TicketingResident extends Component {
         let columns = [{
             title: 'Ticket ID',
             dataIndex: 'ticket_id',
-            render: (text) => <a>{text}</a>,
         },
         {
             title: 'Subject',
@@ -299,6 +298,7 @@ class TicketingResident extends Component {
             dataIndex: 'status',
         },
         ];
+
 
         return (
             <div className="ticketing-resident">
@@ -341,7 +341,7 @@ class TicketingResident extends Component {
                     
                 </div>
                 <Footer />
-            </div>
+            </div >
         );
     }
 }

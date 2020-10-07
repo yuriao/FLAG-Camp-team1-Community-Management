@@ -13,6 +13,8 @@ class Dashboard extends Component {
         this.state = {
             loading: true,
             allTicketsContent: [],
+            existingOrder: [],
+            completedOrder : [],
             news: [{
                 "subject": "Fitness Center COVID-19 Update",
                 "date": "08/05/2020"
@@ -67,9 +69,36 @@ class Dashboard extends Component {
                     let items = data;
                     if (!items || items.length === 0) {
                         alert('No tickets.');
-                    } else {
+                    } else { // if there are tickets
                         this.setState({ allTicketsContent: items });
                         console.log(this.state.allTicketsContent);
+                        this.state.allTicketsContent.map((content, i) => {
+                            if (content.status === "COMPLETE") {
+                                this.state.completedOrder.push({
+                                    key: i,
+                                    ticket_id: <a href="/communitymanagement/TicketingDetail">{content.id}</a>,
+                                    unit: content.unitNumber,
+                                    subject: content.subject,
+                                    created: content.created,
+                                    priority: content.priority,
+                                    status: content.status,
+                                    description: content.description,
+                                    fixDate: content.fixDate,
+                                })
+                            } else {
+                                this.state.existingOrder.push({
+                                    key: i,
+                                    ticket_id: <a href="/communitymanagement/TicketingDetail">{content.id}</a>,
+                                    unit: content.unitNumber,
+                                    subject: content.subject,
+                                    created: content.created,
+                                    priority: content.priority,
+                                    status: content.status,
+                                    description: content.description,
+                                    fixDate: content.fixDate,
+                                })
+                            }
+                        });
                     }
 
                     let id_dat=[];
@@ -107,8 +136,6 @@ class Dashboard extends Component {
             />)
         })
 
-        let existingOrder = [];
-        let completedOrder = [];
         let columns = [{
             title: 'Ticket ID',
             dataIndex: 'ticket_id',
@@ -167,7 +194,7 @@ class Dashboard extends Component {
 
         this.state.allTicketsContent.map((content, i) => {
             if (content.status === "COMPLETE") {
-                completedOrder.push({
+                this.state.completedOrder.push({
                     key: i,
                     ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
@@ -179,7 +206,7 @@ class Dashboard extends Component {
                     fixDate: content.fixDate,
                 })
             } else {
-                existingOrder.push({
+                this.state.existingOrder.push({
                     key: i,
                     ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
@@ -226,7 +253,7 @@ class Dashboard extends Component {
                 <div className="dashboard-main">
                     <div className="work-order">
                         <h5>Existing Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={existingOrder} columns={columns} />}
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={this.state.existingOrder} columns={columns} />}
                         <div>
                             <a href="/communitymanagement/Calender">
                                 <Button content="View Calendar"></Button>
@@ -236,7 +263,7 @@ class Dashboard extends Component {
 
                     <div className="work-order work-order-bottom">
                         <h5>Completed Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={completedOrder} columns={columns} />}
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={this.state.completedOrder} columns={columns} />}
                     </div>
                 </div>
 
