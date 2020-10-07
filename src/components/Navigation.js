@@ -17,7 +17,7 @@ class Navigation extends Component {
         LogoutRequest().then(
         response =>{          
             const status = response.status;
-            if(status == 200){
+            if(status === 200){
                 alert("You have logged out successfully!");
                 this.setState({movingTo:7});
             }
@@ -32,14 +32,14 @@ class Navigation extends Component {
     redirectDashboard= (event)=>{
         let userType=sessionStorage.getItem("user_type");
         if(userType){
-            if(userType=="RESIDENT"){
+            if(userType==="RESIDENT"){
                 this.setState({movingTo:0});
             }
-            if(userType=="MANAGER"){
+            if(userType==="MANAGER"){
                 this.setState({movingTo:1});
                 console.log(this.state.movingTo)
             }
-            if(userType=="STAFF"){
+            if(userType==="STAFF"){
                 this.setState({movingTo:2});
             }
         }else{
@@ -49,13 +49,13 @@ class Navigation extends Component {
     redirectTicketing= ()=>{
         let userType=sessionStorage.getItem("user_type");
         if(userType){
-            if(userType=="RESIDENT"){
+            if(userType==="RESIDENT"){
                 this.setState({movingTo:3});
             }
-            if(userType=="MANAGER"){
+            if(userType==="MANAGER"){
                 this.setState({movingTo:4});
             }
-            if(userType=="STAFF"){
+            if(userType==="STAFF"){
                 this.setState({movingTo:5});
             }
         }else{
@@ -69,28 +69,28 @@ class Navigation extends Component {
 
    
     render() {
-        if(this.state.movingTo==0){
+        if(this.state.movingTo===0){
             return (<Redirect to="/DashboardResident" />)
         }
-        if(this.state.movingTo==1){
+        if(this.state.movingTo===1){
             return (<Redirect to="/DashboardManager" />)
         }        
-        if(this.state.movingTo==2){
+        if(this.state.movingTo===2){
             return (<Redirect to="/DashboardStaff" />)
         }         
-        if(this.state.movingTo==3){
+        if(this.state.movingTo===3){
             return (<Redirect to="/TicketingResident" />)
         }      
-        if(this.state.movingTo==4){
+        if(this.state.movingTo===4){
             return (<Redirect to="/TicketingManager" />)
         }  
-        if(this.state.movingTo==5){
+        if(this.state.movingTo===5){
             return (<Redirect to="/TicketingStaff" />)
         }   
-        if(this.state.movingTo==6){
+        if(this.state.movingTo===6){
              return (<Redirect to="/Calender" />)
         }        
-        if(this.state.movingTo==7){
+        if(this.state.movingTo===7){
             return (<Redirect to="/" />)
         }                               
         return (

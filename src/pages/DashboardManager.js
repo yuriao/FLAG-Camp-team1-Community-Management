@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
-import WorkOrder from '../components/WorkOrder';
 import { Table, Spin, Tag } from 'antd';
 import News from "../components/News";
 import ChatDashboard from '../components/ChatDashboard';
-import StatusTag from "../components/StatusTag";
-import PriorityTag from "../components/PriorityTag";
+import store from '../pages/redux/Store';
 
 class DashboardManager extends Component {
     constructor() {
@@ -16,45 +14,45 @@ class DashboardManager extends Component {
             loading: true,
             allTicketsContent: [],
             news: [{
-                "subject": "news1",
-                "date": "mm/dd/yy"
+                "subject": "Fitness Center COVID-19 Update",
+                "date": "08/05/2020"
             },
             {
-                "subject": "news2",
-                "date": "mm/dd/yy"
+                "subject": "New Amenity Guidelines",
+                "date": "07/24/2020"
             },
             {
-                "subject": "news3",
-                "date": "mm/dd/yy"
+                "subject": "4th of July Holiday",
+                "date": "07/03/2020"
             },
             {
-                "subject": "news4",
-                "date": "mm/dd/yy"
+                "subject": "Rooftop Lounge and BBQ Grill Now Open!",
+                "date": "06/04/2020"
             },
             {
-                "subject": "news5",
-                "date": "mm/dd/yy"
+                "subject": "Farewell from the manager",
+                "date": "05/10/2020"
             },
             ],
             messages: [{
                 "sender": "unit 101",
                 "message": "noise complaint",
-                "date": "mm/dd/yy"
+                "date": "10/01/2020"
             },
             {
                 "sender": "unit 202",
                 "message": "review submitted",
-                "date": "mm/dd/yy"
+                "date": "09/23/2020"
             },
             {
                 "sender": "unit 303",
                 "message": "package missing",
-                "date": "mm/dd/yy"
+                "date": "09/03/2020"
             },
             {
                 "sender": "staff Ben",
                 "message": "order completed",
-                "date": "mm/dd/yy"
+                "date": "08/20/2020"
             },]
         }
     }
@@ -195,20 +193,20 @@ class DashboardManager extends Component {
             }
         });
 
+        const selectCounterValue = state => state.name;
+        const currentValue = selectCounterValue(store.getState());
+
         return (
             <div className="dashboard">
-                <Navigation
-                    dashboard="/DashboardManager"
-                    ticket="/TicketingManager"
-                    chat="/ChatManager"
-                    logout="/logout"
-                />
+                <Navigation/>
+                <h2>Welcome back {currentValue} </h2>
                 <div className="dashboard-main">
                     
                     <div className="balance">
                         <h2 >Welcome Manager</h2>
                         {/* <Button className="center" content="Manage All Payments" /> */}
                         {/* <a href = "/communitymanagement/TicketingManager">
+                        <a href = "/communitymanagement/TicketingManager">
                             <Button className="center" content="Manage All Work Orders" />
                             </a> */}
                     </div>

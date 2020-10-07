@@ -6,8 +6,16 @@ import Password from "antd/lib/input/Password";
  import {setToken,setUserID} from './UserToken';
 import {withRouter} from 'react-router-dom';
 import {Route, Redirect} from "react-router-dom";
+import { configureStore } from '@reduxjs/toolkit';
+import loginReducer from '../pages/redux/Reducer';
+import loginAction from '../pages/redux/Actions';
+import store from '../pages/redux/Store';
+
+//redux
+console.log(store.getState());
 
  class Login extends Component{
+     
      constructor(){
          super();
          this.state  = {
@@ -63,7 +71,10 @@ import {Route, Redirect} from "react-router-dom";
             }
 
             console.log(response);
-            console.log(response.data.firstName);
+            // console.log(response.data.firstName);
+            //redux
+            store.dispatch(loginAction(response.data.firstName));
+            // console.log(store.getState());
            }).catch(error =>{    
                 this.setState({
                     loading:false,
@@ -73,10 +84,7 @@ import {Route, Redirect} from "react-router-dom";
            })
         
        };
- 
 
- 
- 
      render(){
         const {loading} = this.state;
         if(this.state.movingTo==0){

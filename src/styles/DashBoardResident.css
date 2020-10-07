@@ -67,3 +67,13 @@
 .review-btn{
     width:80px !important;
 }
+
+.staff-welcome{
+    margin-top: 10%;
+    text-align: center;
+    background: #dedcdc9d;
+    border-color:  #dedcdc9d;
+    border-width:1px;
+    border-style: solid;
+    margin-left: 5%;
+}

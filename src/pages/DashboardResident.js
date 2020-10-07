@@ -2,13 +2,10 @@ import React, { Component } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
-import WorkOrder from '../components/WorkOrder';
 import { Table, Spin, Tag } from 'antd';
 import News from "../components/News";
 import ChatDashboard from '../components/ChatDashboard';
-import ajax from '../components/AJAX';
-import StatusTag from "../components/StatusTag";
-import PriorityTag from "../components/PriorityTag";
+import store from '../pages/redux/Store';
 
 class Dashboard extends Component {
     constructor() {
@@ -17,45 +14,45 @@ class Dashboard extends Component {
             loading: true,
             allTicketsContent: [],
             news: [{
-                "subject": "news1",
-                "date": "mm/dd/yy"
+                "subject": "Fitness Center COVID-19 Update",
+                "date": "08/05/2020"
             },
             {
-                "subject": "news2",
-                "date": "mm/dd/yy"
+                "subject": "New Amenity Guidelines",
+                "date": "07/24/2020"
             },
             {
-                "subject": "news3",
-                "date": "mm/dd/yy"
+                "subject": "4th of July Holiday",
+                "date": "07/03/2020"
             },
             {
-                "subject": "news4",
-                "date": "mm/dd/yy"
+                "subject": "Rooftop Lounge and BBQ Grill Now Open!",
+                "date": "06/04/2020"
             },
             {
-                "subject": "news5",
-                "date": "mm/dd/yy"
+                "subject": "Farewell from the manager",
+                "date": "05/10/2020"
             },
             ],
             messages: [{
                 "sender": "manager",
                 "message": "your work order completed",
-                "date": "mm/dd/yy"
+                "date": "10/01/2020"
             },
             {
                 "sender": "manager",
                 "message": "your work order completed",
-                "date": "mm/dd/yy"
+                "date": "07/05/2020"
             },
             {
                 "sender": "manager",
                 "message": "your work order completed",
-                "date": "mm/dd/yy"
+                "date": "06/09/2020"
             },
             {
                 "sender": "manager",
                 "message": "your work order completed",
-                "date": "mm/dd/yy"
+                "date": "06/05/2020"
             },]
         }
     }
@@ -66,7 +63,7 @@ class Dashboard extends Component {
             .then((res) => res.json())
             .then(
                 (data) => {
-                    this.setState({loading:false});
+                    this.setState({ loading: false });
                     let items = data;
                     if (!items || items.length === 0) {
                         alert('No tickets.');
@@ -134,13 +131,13 @@ class Dashboard extends Component {
                     color = 'green';
                 } else if (priority === "HIGH") {
                     color = 'red';
-                } else if (priority === "MEDIUM"){
+                } else if (priority === "MEDIUM") {
                     color = 'blue';
                 }
                 return (
-                <Tag color={color} key={priority}>
-                {priority}
-                </Tag>
+                    <Tag color={color} key={priority}>
+                        {priority}
+                    </Tag>
                 );
             }
         },
@@ -148,24 +145,24 @@ class Dashboard extends Component {
             title: 'Status',
             key: 'status',
             dataIndex: 'status',
-            render: function(status) {
+            render: function (status) {
                 let color = "";
-                if (status ==='OPEN') {
+                if (status === 'OPEN') {
                     color = 'red';
                 } else if (status === "ASSIGNED") {
                     color = 'gold';
-                } else if (status === "COMPLETE"){
+                } else if (status === "COMPLETE") {
                     color = 'green';
-                } else if (status === "INPROGRESS"){
+                } else if (status === "INPROGRESS") {
                     color = 'blue';
                 }
                 return (
                     <Tag color={color} key={status}>
-                    {status}
+                        {status}
                     </Tag>
                 );
             }
-        }   
+        }
         ];
 
         this.state.allTicketsContent.map((content, i) => {
@@ -196,19 +193,19 @@ class Dashboard extends Component {
             }
         });
 
+        const selectCounterValue = state => state.name;
+        const currentValue = selectCounterValue(store.getState());
+        // console.log("first name: "+currentValue);
+
         return (
             <div className="dashboard">
-                <Navigation
-                    dashboard="/DashboardResident"
-                    ticket="/TicketingResident"
-                    chat="/ChatResident"
-                    logout="/logout"
-                />
+                <Navigation/>
                 <div className="dashboard-main">
                     <div className="balance">
                         {/* <div>Balance Due:</div>
                         <h1>$0.00</h1>
                         <Button className="center" content="Make a Payment" /> */}
+                        <h2>Welcome back {currentValue} </h2>
                         <a href="/communitymanagement/TicketingResident">
                             <Button className="center" content="Submit a Work Order" />
                         </a>
@@ -229,9 +226,9 @@ class Dashboard extends Component {
                 <div className="dashboard-main">
                     <div className="work-order">
                         <h5>Existing Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={existingOrder} columns={columns} />}
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={existingOrder} columns={columns} />}
                         <div>
-                            <a href = "/communitymanagement/Calender">
+                            <a href="/communitymanagement/Calender">
                                 <Button content="View Calendar"></Button>
                             </a>
                         </div>
@@ -239,7 +236,7 @@ class Dashboard extends Component {
 
                     <div className="work-order work-order-bottom">
                         <h5>Completed Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={completedOrder} columns={columns} />}
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={completedOrder} columns={columns} />}
                     </div>
                 </div>
 

@@ -330,8 +330,8 @@ class TicketingResident extends Component {
                             </Row>   
                       </Col>
                      
-                     
                         <Col xs={8}>
+
                             <h5>Maintenance History</h5>
                                 <Button onClick={this.refreshTickets}>refresh Ticket</Button>
                                 {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table dataSource={this.state.datasource} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 250 }}/>}
