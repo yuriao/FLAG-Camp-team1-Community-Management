@@ -4,7 +4,7 @@ class Footer extends Component {
     render() {
         return(
             <div className = "footer">
-                &copy; community management app
+                &copy; WeLive community management app
             </div>
         );
     }

@@ -2,59 +2,36 @@ import React, { Component } from 'react';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 import Button from '../components/Button';
-import WorkOrder from '../components/WorkOrder';
 import { Table, Spin, Tag } from 'antd';
 import News from "../components/News";
 import ChatDashboard from '../components/ChatDashboard';
-import StatusTag from "../components/StatusTag";
-import PriorityTag from "../components/PriorityTag";
+import store from '../pages/redux/Store';
 
 class DashboardStaff extends Component {
     constructor() {
         super();
         this.state = {
-            loading : true,
+            loading: true,
             allTicketsContent: [],
-            news: [{
-                "subject": "news1",
-                "date": "mm/dd/yy"
-            },
-            {
-                "subject": "news2",
-                "date": "mm/dd/yy"
-            },
-            {
-                "subject": "news3",
-                "date": "mm/dd/yy"
-            },
-            {
-                "subject": "news4",
-                "date": "mm/dd/yy"
-            },
-            {
-                "subject": "news5",
-                "date": "mm/dd/yy"
-            },
-            ],
             messages: [{
-                "sender": "unit 101",
-                "message": "noise complaint",
-                "date": "mm/dd/yy"
+                "sender": "manager",
+                "message": "a work order was assigned to you",
+                "date": "10/01/2020"
             },
             {
                 "sender": "unit 202",
                 "message": "review submitted",
-                "date": "mm/dd/yy"
+                "date": "09/23/2020"
             },
             {
-                "sender": "unit 303",
-                "message": "package missing",
-                "date": "mm/dd/yy"
+                "sender": "manager",
+                "message": "a work order was assigned to you",
+                "date": "09/03/2020"
             },
             {
-                "sender": "staff Ben",
-                "message": "order completed",
-                "date": "mm/dd/yy"
+                "sender": "unit 202",
+                "message": "review submitted",
+                "date": "08/20/2020"
             },]
         }
     }
@@ -64,7 +41,7 @@ class DashboardStaff extends Component {
             .then(res => res.json())
             .then(
                 (data) => {
-                    this.setState({loading : false});
+                    this.setState({ loading: false });
                     let items = data;
                     if (!items || items.length === 0) {
                         alert('No tickets.');
@@ -100,14 +77,6 @@ class DashboardStaff extends Component {
 
     render() {
 
-        let newsDivs = [];
-        this.state.news.map((subject, i) => {
-            newsDivs.push(<News
-                subject={this.state.news[i].subject}
-                date={this.state.news[i].date}
-            />)
-        })
-
         let messageDivs = [];
         this.state.messages.map((date, i) => {
             messageDivs.push(<ChatDashboard
@@ -132,7 +101,7 @@ class DashboardStaff extends Component {
             title: 'Description',
             dataIndex: 'description',
         },
-         {
+        {
             title: 'Priority',
             key: 'priority',
             dataIndex: 'priority',
@@ -142,13 +111,13 @@ class DashboardStaff extends Component {
                     color = 'green';
                 } else if (priority === "HIGH") {
                     color = 'red';
-                } else if (priority === "MEDIUM"){
+                } else if (priority === "MEDIUM") {
                     color = 'blue';
                 }
                 return (
-                <Tag color={color} key={priority}>
-                {priority}
-                </Tag>
+                    <Tag color={color} key={priority}>
+                        {priority}
+                    </Tag>
                 );
             }
         },
@@ -156,20 +125,20 @@ class DashboardStaff extends Component {
             title: 'Status',
             key: 'status',
             dataIndex: 'status',
-            render: function(status) {
+            render: function (status) {
                 let color = "";
-                if (status ==='OPEN') {
+                if (status === 'OPEN') {
                     color = 'red';
                 } else if (status === "ASSIGNED") {
                     color = 'gold';
-                } else if (status === "COMPLETE"){
+                } else if (status === "COMPLETE") {
                     color = 'green';
-                } else if (status === "INPROGRESS"){
+                } else if (status === "INPROGRESS") {
                     color = 'blue';
                 }
                 return (
                     <Tag color={color} key={status}>
-                    {status}
+                        {status}
                     </Tag>
                 );
             }
@@ -180,7 +149,7 @@ class DashboardStaff extends Component {
             if (content.status === "COMPLETE") {
                 completedOrder.push({
                     key: i,
-                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -189,10 +158,10 @@ class DashboardStaff extends Component {
                     description: content.description,
                     fixDate: content.fixDate,
                 })
-            } else if (content.status === "ASSIGNED"){
+            } else if (content.status === "ASSIGNED") {
                 assignedOrder.push({
                     key: i,
-                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -201,10 +170,10 @@ class DashboardStaff extends Component {
                     description: content.description,
                     fixDate: content.fixDate,
                 })
-            } else if (content.status === "INPROGRESS"){
+            } else if (content.status === "INPROGRESS") {
                 inprogressOrder.push({
                     key: i,
-                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket='+content.id.toString()}>{content.id}</a>,
+                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -216,36 +185,55 @@ class DashboardStaff extends Component {
             }
         });
 
+        const selectCounterValue = state => state.name;
+        const currentValue = selectCounterValue(store.getState());
+
         return (
             <div className="dashboard">
                 <Navigation />
+                <div className="dashboard-main">
+                    <div className="staff-welcome">
+                        {/* <Button className="center" content="Manage All Payments" /> */}
+                        <h2>Welcome back {currentValue} </h2>
+                        <div>
+                        <a href="/communitymanagement/TicketingStaff">
+                            <Button content="Manage Your Orders"></Button>
+                        </a>
+                        </div>
+                        
+                        <div>
+                        <a href="/communitymanagement/Calender">
+                            <Button content="View Calendar"></Button>
+                        </a>
+                        </div>
+
+                    </div>
+                    <div className="chat-dashboard dashboard-item">
+                        <h5 className="chat-title">Messages</h5>
+                        {messageDivs}
+                        {/* <Button className="chat-button" content="Let's Chat"></Button> */}
+                    </div>
+
+                </div>
 
                 <div className="dashboard-main">
                     <div className="work-order">
                         <h5>Assigned Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={assignedOrder} columns={columns} />}
-                        {/* <div>
-                            <a href = "/communitymanagement/TicketingStaff">
-                                <Button content="Manage Your Orders"></Button>
-                            </a>
-                        </div> */}
-                    </div>
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={assignedOrder} columns={columns} />}
 
-                    <div className="work-order work-order-bottom">
-                        <h5>Completed Work Orders</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={completedOrder} columns={columns} />}
                     </div>
-                </div>
-
-                <div className="dashboard-main work-order-bottom">
                     <div className="work-order">
                         <h5> Work Order In Progress</h5>
-                        {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table scroll={{ y: 500 }} dataSource={inprogressOrder} columns={columns} />}
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={inprogressOrder} columns={columns} />}
                         {/* <div>
                             <a href = "/communitymanagement/Calender">
                                 <Button content="View Calendar"></Button>
                             </a>
                         </div> */}
+                    </div>
+                    <div className="work-order work-order-bottom">
+                        <h5>Completed Work Orders</h5>
+                        {this.state.loading ? <Spin tip="Loading Tickets..." /> : <Table scroll={{ y: 500 }} dataSource={completedOrder} columns={columns} />}
                     </div>
                 </div>
 

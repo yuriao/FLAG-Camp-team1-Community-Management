@@ -282,7 +282,6 @@ class TicketingResident extends Component {
         let columns = [{
             title: 'Ticket ID',
             dataIndex: 'ticket_id',
-            render: (text) => <a>{text}</a>,
         },
         {
             title: 'Subject',
@@ -299,6 +298,7 @@ class TicketingResident extends Component {
             dataIndex: 'status',
         },
         ];
+
 
         return (
             <div className="ticketing-resident">
@@ -330,8 +330,8 @@ class TicketingResident extends Component {
                             </Row>   
                       </Col>
                      
-                     
                         <Col xs={8}>
+
                             <h5>Maintenance History</h5>
                                 <Button onClick={this.refreshTickets}>refresh Ticket</Button>
                                 {this.state.loading ? <Spin tip="Loading Tickets..." /> :<Table dataSource={this.state.datasource} columns={columns} pagination={{ pageSize: 50 }} scroll={{ y: 250 }}/>}
@@ -341,7 +341,7 @@ class TicketingResident extends Component {
                     
                 </div>
                 <Footer />
-            </div>
+            </div >
         );
     }
 }
