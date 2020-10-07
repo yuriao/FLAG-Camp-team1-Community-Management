@@ -60,9 +60,10 @@ class Dashboard extends Component {
 
     componentDidMount() {
         fetch("/communitymanagement/dashboard/resident")
-            .then((res) => res.json()) 
+            .then((res) => res.json())
             .then(
                 (data) => {
+                    console.log(data);
                     this.setState({ loading: false });
                     let items = data;
                     if (!items || items.length === 0) {

@@ -1,11 +1,11 @@
 body{
     height: 100%;
     width: 100%;
-    background-image:  url(../asset/back3.jpeg);
 }
 .home-title{
+    padding-top: 5%;
     text-align: center;
-    margin-top: 8%;
+    padding-top: 8%;
 }
 
 .ant-avatar {
@@ -16,6 +16,20 @@ body{
 .avatar-registration-page {
     text-align: center;
 }
-.home-content{
-    margin-bottom: 15%;
+
+.home-page {
+    /* background-image:url(../asset/bk2.jpg); */
+    background-image:url("https://cdn.vox-cdn.com/thumbor/XgAcHOivPBXYWnBZAyajVVwYgGc=/0x0:3000x2000/1920x0/filters:focal(0x0:3000x2000):format(webp):no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/16181906/190405_Curbed_MichaelYarinsky_1.jpg");
+    background-size: cover;
+    height: 110%;
+    position: absolute;
+    width: 100%;
+}
+
+.top-homepage{
+    margin: auto;
+    background: white;
+    width: 40%;
+    margin-top: 12%;
+    padding-bottom: 5%;
 }
