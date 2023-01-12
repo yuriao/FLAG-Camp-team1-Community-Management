@@ -31,8 +31,9 @@ public class DashboardServiceFacadeImpl implements DashboardServiceFacade {
     @Override
 	public User getLoggedInUser(HttpServletRequest request) {
 		// get user info from session
-		HttpSession session= request.getSession(false);
-		int userId = Integer.parseInt(session.getAttribute("userId").toString());
+		//HttpSession session= request.getSession(false);
+		//int userId = Integer.parseInt(session.getAttribute("userId").toString());
+    	int userId=Integer.parseInt(request.getHeader("userid"));
 		return userService.getUserByUserId(userId);
     }
 
@@ -40,7 +41,7 @@ public class DashboardServiceFacadeImpl implements DashboardServiceFacade {
     public List<Ticket> getTickets(String resSpec, HttpServletRequest request) {
         User user = this.getLoggedInUser(request);
         int userId = user.getId();
-
+        System.out.println(userId);
         if (resSpec.equals("resident")) {
             return ticketService.getTicketsByUser(userId);
         } else if (resSpec.equals("manager")) {

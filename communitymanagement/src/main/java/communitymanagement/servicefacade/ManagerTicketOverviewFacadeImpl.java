@@ -29,9 +29,12 @@ public class ManagerTicketOverviewFacadeImpl implements ManagerTicketOverviewFac
 		List<ManagerTicketOverview> result = new ArrayList<>();
 
 		// get result:
-		List<AssigneeRawData> ticketStaffRecommend = ticketWorkAssigneeService.getAllPossibleStaffRecommendation();
+		//List<AssigneeRawData> ticketStaffRecommend = ticketWorkAssigneeService.getAllPossibleStaffRecommendation();
+		List<AssigneeRawData> ticketStaffRecommend = ticketWorkAssigneeService.getAllSuitableStaffRecommendation();
 		List<AssigneeRawData> ticketStaffAssigned = ticketWorkAssigneeService.getAllExistingAssignment();
-
+		
+		//System.out.println(ticketStaffAssigned.get(0));
+		
 		// collect from ticketStaffAssigned:
 		Map<Integer, ManagerTicketOverview> ticketStaffAssignedMap = new HashMap<>();
 		for (AssigneeRawData e : ticketStaffAssigned) {

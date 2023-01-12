@@ -36,8 +36,8 @@ public class CalendarServiceFacadeImpl implements CalendarServiceFacade {
     @Override
     public User getLoggedInUser(HttpServletRequest request) {
     	// get user info from session
-		HttpSession session = request.getSession(false);
-		int userId = Integer.parseInt(session.getAttribute("userId").toString());
+		//HttpSession session = request.getSession(false);
+		int userId = Integer.parseInt(request.getHeader("userid"));
 		return userService.getUserByUserId(userId);
     }
 
@@ -47,7 +47,7 @@ public class CalendarServiceFacadeImpl implements CalendarServiceFacade {
         UserType userType = user.getUserType();
         int userId = user.getId();
         List<Ticket> tickets = new ArrayList<>();
-
+        
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date start = simpleDateFormat.parse(startDate);
