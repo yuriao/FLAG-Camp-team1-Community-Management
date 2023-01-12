@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class TicketSubmitForm {
 	
-	private int userId;
+	private String userId;
 	private String unitNumber;
 	private int issueCategoryId;
 	private String subject;
