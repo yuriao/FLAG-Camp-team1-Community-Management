@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +48,7 @@ public class ExampleController {
 
 	// Cannot use @RequestBody in GetMapping
 	// try to GET http://localhost:8080/communitymanagement/example/1234?key=xxy
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@GetMapping("/example/{example_id}")
 	public ResponseEntity<String> returnSimpleResponse(@PathVariable("example_id") int exampleId,
 			@RequestParam(value = "key", defaultValue = "") String key) {
@@ -67,6 +69,7 @@ public class ExampleController {
 	// "first_name": "This",
 	// "last_name": "that"
 	// }
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@PostMapping("/example/{example_id}")
 	public User returnUser(@RequestBody User user, @PathVariable("example_id") int exampleId,
 			@RequestParam(value = "key", defaultValue = "") String key) {
@@ -76,6 +79,7 @@ public class ExampleController {
 	}
 
 	// Admin end points
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@PostMapping("/addStaffCategory")
 	public ResponseEntity<String> addStaffCategory(@RequestBody StaffCategory staffCategory, BindingResult result) {
 		if (result.hasErrors()) {
@@ -90,6 +94,7 @@ public class ExampleController {
 		return ResponseEntity.status(HttpStatus.CREATED).body("Done");
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@PostMapping("/addIssueCategory")
 	public ResponseEntity<String> addIssueCategory(@RequestBody IssueCategoryForm form, BindingResult result) {
 		if (result.hasErrors()) {
@@ -108,6 +113,7 @@ public class ExampleController {
 
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@PostMapping("/addWorkAssignment")
 	public ResponseEntity<String> addWorkAssignment(@RequestBody WorkAssignmentForm form, BindingResult result) {
 		if (result.hasErrors()) {
@@ -134,6 +140,7 @@ public class ExampleController {
 		return ResponseEntity.status(HttpStatus.CREATED).body("Done");
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@GetMapping("/getStaffCategories")
 	public Map<String, Integer> getStaffCategories() {
 		Map<String, Integer> response = new HashMap<>();

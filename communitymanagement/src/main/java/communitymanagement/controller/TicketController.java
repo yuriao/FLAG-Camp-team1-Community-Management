@@ -3,6 +3,7 @@ package communitymanagement.controller;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import communitymanagement.entity.AssigneeForm;
@@ -26,6 +29,7 @@ import communitymanagement.entity.ManagerTicketSystemResponse;
 import communitymanagement.entity.TicketOverview;
 import communitymanagement.entity.TicketSubmitForm;
 import communitymanagement.entity.TicketsResident;
+import communitymanagement.entity.UserForm;
 import communitymanagement.model.Ticket;
 import communitymanagement.model.TicketStatus;
 import communitymanagement.model.TicketWorkAssignee;
@@ -55,17 +59,20 @@ public class TicketController {
 	@Autowired
 	private ManagerTicketOverviewFacadeImpl managerTicketOverviewFacadeImpl;
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@PostMapping("/tickets/submit")
 	public ResponseEntity<String> saveIssueCategory(@RequestBody TicketSubmitForm ticketForm,
 			HttpServletRequest request) {
 		try {
 			// get user info from session
-			HttpSession session = request.getSession(false);
-			if (session == null) {
-				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-			}
-			int userId = Integer.parseInt(session.getAttribute("userId").toString());
-
+			//HttpSession session = request.getSession(false);
+			//HttpSession session = request.getSession();
+			//if (session == null) {
+			//	return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+			//}
+			//int userId = Integer.parseInt(session.getAttribute("userId").toString());
+			System.out.println(ticketForm);
+			int userId =Integer.parseInt(ticketForm.getUserId());
 			// Create a new ticket
 			Ticket ticket = new Ticket();
 			ticket.setUser(userService.getUserByUserId(userId));
@@ -94,14 +101,25 @@ public class TicketController {
 		}
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@GetMapping("/tickets/resident")
 	public ResponseEntity<TicketsResident> getResidentTickets(HttpServletRequest request) {
 		// get user info from session
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		//HttpSession session = request.getSession(false);
+		//if (session == null) {
+		//	return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		//}
+		
+		Enumeration<String> headerNames = request.getHeaderNames();
+		while(headerNames.hasMoreElements()) {
+			String headerName = headerNames.nextElement();
+			System.out.println("Header Name - " + headerName + ", Value - " + request.getHeader(headerName));
 		}
-		int userId = Integer.parseInt(session.getAttribute("userId").toString());
+		
+		int userId = Integer.parseInt(request.getHeader("userid"));//Integer.parseInt(session.getAttribute("userId").toString());
+		
+		//int userId = Integer.parseInt(userIDquery.get("userID"));
+		
 		User user = userService.getUserByUserId(userId);
 
 		List<Ticket> tickets = ticketService.getTicketsByUser(userId);
@@ -133,14 +151,15 @@ public class TicketController {
 		return ResponseEntity.status(HttpStatus.OK).body(ticketsResident);
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@PostMapping("/tickets/{ticket_id}/staff-action")
 	public ResponseEntity<String> ticketStatusChangedByStaffAction(@PathVariable(value = "ticket_id") int ticketId,
 			@RequestBody Map<String, String> reqBody, HttpServletRequest request) {
 		// check session
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-		}
+		//HttpSession session = request.getSession(false);
+		//if (session == null) {
+		//	return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		//}
 
 		// Get ticket
 		Ticket ticket = ticketService.getTicketById(ticketId);
@@ -177,16 +196,18 @@ public class TicketController {
 		}
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@GetMapping("/tickets/manager")
 	public ResponseEntity<ManagerTicketSystemResponse> getManagerTicketSystem(HttpServletRequest request) {
 		ManagerTicketSystemResponse response = null;
 		try {
 			// get user info from session
-			HttpSession session = request.getSession(false);
-			if (session == null) {
-				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-			}
-			int userId = Integer.parseInt(session.getAttribute("userId").toString());
+			//HttpSession session = request.getSession(false);
+			//if (session == null) {
+			//	return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+			//}
+			//int userId = Integer.parseInt(session.getAttribute("userId").toString());
+			int userId=Integer.parseInt(request.getHeader("userid"));
 			User user = userService.getUserByUserId(userId);
 
 			List<ManagerTicketOverview> tickets = managerTicketOverviewFacadeImpl.getAllManagerTicketOverview();
@@ -201,6 +222,7 @@ public class TicketController {
 		}
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@PutMapping("/tickets/{ticket_id}/assignees")
 	public ResponseEntity<String> assignAssignee(@RequestBody AssigneeForm form,
 			@PathVariable("ticket_id") int ticketId, BindingResult result, HttpServletRequest request) {
@@ -210,11 +232,18 @@ public class TicketController {
 
 		try {
 			// get user info from session
-			HttpSession session = request.getSession(false);
-			if (session == null) {
-				return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+			//HttpSession session = request.getSession(false);
+			//if (session == null) {
+			//	return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+			//}
+			//int userId = Integer.parseInt(session.getAttribute("userId").toString());
+			Enumeration<String> headerNames = request.getHeaderNames();
+			while(headerNames.hasMoreElements()) {
+				String headerName = headerNames.nextElement();
+				System.out.println("Header Name - " + headerName + ", Value - " + request.getHeader(headerName));
 			}
-			int userId = Integer.parseInt(session.getAttribute("userId").toString());
+			
+			int userId=Integer.parseInt(request.getHeader("userid"));
 			User user = userService.getUserByUserId(userId);
 
 			// only manager can do assignment

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,7 @@ public class HomePageController {
 	@Autowired
 	private UserService userService;
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, String>> login(HttpServletRequest req, @RequestBody User user) {
 		User attemptUser = null;
@@ -47,6 +49,7 @@ public class HomePageController {
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(result);
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@GetMapping("/user-logout")
 	public ResponseEntity<String> logoutPage(HttpServletRequest request, HttpServletResponse response) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

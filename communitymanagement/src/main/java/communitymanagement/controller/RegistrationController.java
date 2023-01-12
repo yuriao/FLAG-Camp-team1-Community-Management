@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,8 @@ import communitymanagement.service.AuthoritiesService;
 import communitymanagement.service.StaffCategoryService;
 import communitymanagement.service.UserService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 @RestController
 public class RegistrationController {
 	@Autowired
@@ -33,10 +36,12 @@ public class RegistrationController {
 	@Autowired
 	private StaffCategoryService staffCategoryService;
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@PostMapping("/registration/{userType}")
 	public ResponseEntity<String> registerUser(@RequestBody RegistrationForm form,
 			@PathVariable("userType") String userType) {
 
+	    
 		// check if this username has been registered
 		String userName = form.getUsername();
 		if (userService.isUserNameExisted(userName)) {

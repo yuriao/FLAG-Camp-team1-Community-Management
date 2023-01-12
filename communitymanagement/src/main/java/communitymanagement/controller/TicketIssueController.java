@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,11 +34,13 @@ public class TicketIssueController {
 	@Autowired
 	private IssueCategoryService issueCategoryService;
 	
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@GetMapping("/tickets/staff")
 	public List<TicketAssigned> getTickets(@RequestParam(value = "user_id", defaultValue = "") int userId) {
 		return ticketAssignedService.getTicketAssignedByUserId(userId);
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000") // handle CORS error 011022
 	@GetMapping("/ticket-issue-categories")
 	public Map<String, Map<String, Integer>> allIssueLocationCategory() {
 		Map<String, Map<String, Integer>> allIssueLocationCategory = new HashMap<>();
