@@ -66,7 +66,8 @@ class RegisterForm extends Component{
         }
         console.log(value1);    
         RegisterRequest(value1,personType).then(
-            response =>{          
+            response =>{ 
+                console.log(response.headers);
                 const status = response.status;
                 if(status == 200){
                     alert("You have successfully registered your profile!")
@@ -81,7 +82,7 @@ class RegisterForm extends Component{
             console.log("error info: ",error);
         })
        
-        console.log('Received values of form: ', values);
+        
     };
 
    

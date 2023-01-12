@@ -2,10 +2,9 @@ import service from './RequestInterceptor';
 
 export function LoginRequest(data){
     return service.request({  //返回给调用此方法的caller
-        url:"/communitymanagement/login/",
+        url:"http://localhost:8081/communitymanagement/login/",
         method: "post",
         data: data,
-       
     })
 }
 
@@ -20,16 +19,15 @@ export function LoginRequest(data){
 
 export function RegisterRequest(data,type){
     return service.request({  //返回给调用此方法的caller
-        url:"/communitymanagement/registration/" + type,
+        url:"http://localhost:8081/communitymanagement/registration/" + type,
         method: "post",
         data: data,
-        
     })
 }
 
 export function LogoutRequest(){
     return service.request({
-        url:"/communitymanagement/user-logout/",
+        url:"http://localhost:8081/communitymanagement/user-logout/",
         method: "get",
     })
 }
