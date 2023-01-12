@@ -35,6 +35,10 @@ public class TicketWorkAssigneeService {
 		return ticketWorkAssigneeDao.getAllPossibleStaffRecommendation();
 	}
 	
+	public List<AssigneeRawData> getAllSuitableStaffRecommendation() {
+		return ticketWorkAssigneeDao.getAllSuitableStaff();
+	}
+	
 	public List<AssigneeRawData> getAllExistingAssignment() {
 		return ticketWorkAssigneeDao.getAllExistingAssignment();
 	}
