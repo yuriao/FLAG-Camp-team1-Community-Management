@@ -257,7 +257,7 @@ class TicketingManager extends Component {
     refreshTickets=()=>{
         this.setState({loading:true});
         this.setState({ticketSubmitMessage:""})
-        axios.get('/communitymanagement/tickets/manager')
+        axios.get('http://localhost:8081/communitymanagement/tickets/manager',{headers:{"userid":sessionStorage.user_id}})
         .then((response) => {
           console.log(response);
           let items =response.data.tickets;
@@ -332,8 +332,8 @@ class TicketingManager extends Component {
       console.log(obj[i][1]);
       console.log(this.state.allticketsContent[i]);
       let tid=this.state.allticketsContent[i].ticketId;
-      console.log("/communitymanagement/tickets/"+tid.toString()+"/assignees");
-      axios.put("/communitymanagement/tickets/"+tid.toString()+"/assignees", {assignees:[obj[i][1]]}) // return userId
+      console.log("http://localhost:8081/communitymanagement/tickets/"+tid.toString()+"/assignees");
+      axios.put("http://localhost:8081/communitymanagement/tickets/"+tid.toString()+"/assignees", {assignees:[obj[i][1]]}, {headers:{userid:sessionStorage.user_id}}) // return userId
         .then((response)=> {
           console.log(response);
           let items=this.state.allticketsContent;

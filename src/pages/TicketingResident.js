@@ -7,6 +7,7 @@ import {Table, Spin, Button,Space, Tag} from 'antd';
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import {getToken,getUserID} from '../components/UserToken';
 import axios from 'axios'
 
 class TicketingResident extends Component {
@@ -25,7 +26,7 @@ class TicketingResident extends Component {
             priorty:'',
             subject:'',
             description:'',
-            issue_category_id:0,
+            issue_category_id:[1,2,3,4,5,6,7,8,9],
             issue_category_id_current:0,
             assignment:[],
             datasource:[],
@@ -33,12 +34,12 @@ class TicketingResident extends Component {
               "kitchen": ["sink", "dishwasher"], 
               "bathroom": ["sink", "furniture","floor"],
               "toilet":["sink","bathtub","clog"],
-              "yard maintaince": ['pool','yard'],
+              "yard": ['pool','yard'],
               "water":["pipe explode","pipe clog","pipe freeze"],
               "pest control":["kitchen","bedroom","toliet","living room","patio","storage","basement"],
               "locksmith":[],
               "trash":[],
-              "misc":[]
+              "cable":[]
              },
              possible_locs:[],
              loading:true,
@@ -47,11 +48,11 @@ class TicketingResident extends Component {
 
     componentDidMount(){
           this.refreshTickets();
-          this.loadIssueCategory();       
+          //this.loadIssueCategory();       
     }
 
     loadIssueCategory=()=>{
-      axios.get('/communitymanagement/ticket-issue-categories')
+      axios.get('http://localhost:8081/communitymanagement/ticket-issue-categories')
       .then((response) => {
         let items =response.data;
         this.setState({possible_issue_categories:items})
@@ -98,7 +99,7 @@ class TicketingResident extends Component {
         
         dsource.push({
             key: i,
-            ticket_id: <Button href={'/communitymanagement/TicketingDetail?ticket='+items[i].ticketId.toString()}  type="link">{items[i].ticketId}</Button>, 
+            ticket_id: <Button href={'http://localhost:8081/communitymanagement/TicketingDetail?ticket='+items[i].ticketId.toString()}  type="link">{items[i].ticketId}</Button>, 
             //unit: items[i].unit_number, 
             subject: items[i].subject, 
             fix: humanDateFormat, 
@@ -139,36 +140,26 @@ class TicketingResident extends Component {
       })
     }
 
-    locationDropDownCallBack = (childData,childProps) => {
-      console.log(this.state.issue_category_id_current);
-      let idx=this.state.possible_locs.findIndex(o=>o==childData);
-      console.log(this.state.issue_category_id_current[idx]);
+    locationDropDownCallBack = (childData,childProps) => { 
+      console.log(childData); // childData is the selection
+      let pos_locs=Object.keys(this.state.possible_issue_categories)
+      console.log(pos_locs);
+      let idx=pos_locs.findIndex(o=>o==childData);
+      let pos_sublocs=this.state.possible_issue_categories[childData];
+      console.log(pos_sublocs);
       this.setState({
         location: childData,
-        issue_category_id: this.state.issue_category_id_current[idx]
-      })
+        issue_category_id_current: this.state.issue_category_id[idx],
+        possible_locs: pos_sublocs
+      });
     }
 
     categoryDropDownCallBack = (childData,childProps,idx) => { // how backend's issue-category-id works? issue-category-id has pre-defined id for pre-defined categoty-locatoin combinations
       console.log(this.state.possible_issue_categories);
-      
-      let pos_locs=this.state.possible_issue_categories[childData];
-      let pos_loc_name=[];
-      let issue_category_id_c=[];
-      if(pos_locs){
-        for(var k in pos_locs){
-          pos_loc_name.push(k);
-          issue_category_id_c.push(pos_locs[k]);
-        } 
-
-      }else{
-        pos_locs=["not aviliable"];
-      }
+      console.log(childData);
 
       this.setState({
-        category: childData,
-        issue_category_id_current:issue_category_id_c,
-        possible_locs: pos_loc_name
+        category: childData,       
       })
       
     }
@@ -199,16 +190,17 @@ class TicketingResident extends Component {
         // let time = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()+"T"+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
         //Be aware... Backend need to accept json, so no "string" for keys
         let ticketData = {
+          userId: sessionStorage.user_id, // 030222 fix session ==null issue, change the way of passing userId
           unitNumber: this.state.unit,
           subject: this.state.subject,
-          issueCategoryId: this.state.issue_category_id,
-          description: this.state.description+"\n"+"location: "+this.state.location+"\n"+"Contact method: "+this.state.contact_method,
+          issueCategoryId: this.state.issue_category_id_current,
+          description: this.state.description+" "+"location: "+this.state.location+" "+"Contact method: "+this.state.contact_method,
           availability: "available",
           priority:this.state.priorty
         };
         console.log(ticketData);
 
-        axios.post('/communitymanagement/tickets/submit', ticketData)
+        axios.post('http://localhost:8081/communitymanagement/tickets/submit', ticketData)
         .then((response)=> {
           console.log(response);
           alert("Thank you! Ticket has been submitted");
@@ -223,7 +215,8 @@ class TicketingResident extends Component {
       refreshTickets=()=>{
         this.setState({loading:true});
         this.setState({ticketSubmitMessage:""})
-        axios.get('/communitymanagement/tickets/resident')
+
+        axios.get('http://localhost:8081/communitymanagement/tickets/resident',{headers:{"userid":sessionStorage.user_id}}) // 010923 use this way to pass userid with header
         .then((response) => {
           console.log(response);
           let items =response.data.tickets;
@@ -322,8 +315,8 @@ class TicketingResident extends Component {
                                     <Blank text="Ticket Title" parentCallback = {this.subjectBlankCallBack}/>
                                     <DropDown elements={['phone','email','textMassage']} description="Contact Method" parentCallback = {this.contactDropDownCallBack}/>
                                     
-                                    <DropDown elements={Object.keys(this.state.possible_issue_categories)} description="Location" parentCallback = {this.categoryDropDownCallBack} />
-                                    <DropDown elements={this.state.possible_locs} description="Category" parentCallback = {this.locationDropDownCallBack} />
+                                    <DropDown elements={Object.keys(this.state.possible_issue_categories)} description="Location" parentCallback = {this.locationDropDownCallBack} />
+                                    <DropDown elements={this.state.possible_locs} description="Category" parentCallback = {this.categoryDropDownCallBack} />
                                     <DropDown elements={["HIGH",'MEDIUM','LOW']} description="Priority" parentCallback = {this.priortyDropDownCallBack} />
                                 
                                 </Col> 

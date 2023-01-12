@@ -14,51 +14,21 @@ class DashboardManager extends Component {
             loading: true,
             allTicketsContent: [],
             news: [{
-                "subject": "Fitness Center COVID-19 Update",
+                "subject": "n/a",
                 "date": "08/05/2020"
-            },
-            {
-                "subject": "New Amenity Guidelines",
-                "date": "07/24/2020"
-            },
-            {
-                "subject": "4th of July Holiday",
-                "date": "07/03/2020"
-            },
-            {
-                "subject": "Rooftop Lounge and BBQ Grill Now Open!",
-                "date": "06/04/2020"
-            },
-            {
-                "subject": "Farewell from the manager",
-                "date": "05/10/2020"
             },
             ],
             messages: [{
-                "sender": "unit 101",
-                "message": "noise complaint",
+                "sender": "n/a",
+                "message": "n/a",
                 "date": "10/01/2020"
             },
-            {
-                "sender": "unit 202",
-                "message": "review submitted",
-                "date": "09/23/2020"
-            },
-            {
-                "sender": "unit 303",
-                "message": "package missing",
-                "date": "09/03/2020"
-            },
-            {
-                "sender": "staff Ben",
-                "message": "order completed",
-                "date": "08/20/2020"
-            },]
+            ]
         }
     }
 
     componentDidMount() {
-        fetch("/communitymanagement/dashboard/manager")
+        fetch("http://localhost:8081/communitymanagement/dashboard/manager",{headers:{"userid":sessionStorage.user_id}})
             .then((res) => res.json())
             .then(
                 (data) => {
@@ -169,7 +139,7 @@ class DashboardManager extends Component {
             if (content.status === "COMPLETE") {
                 completedOrder.push({
                     key: i,
-                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
+                    ticket_id: <a href={'http://localhost:8081/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -181,7 +151,7 @@ class DashboardManager extends Component {
             } else {
                 existingOrder.push({
                     key: i,
-                    ticket_id: <a href={'/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
+                    ticket_id: <a href={'http://localhost:8081/communitymanagement/TicketingDetail?ticket=' + content.id.toString()}>{content.id}</a>,
                     unit: content.unitNumber,
                     subject: content.subject,
                     created: content.created,
@@ -218,14 +188,14 @@ class DashboardManager extends Component {
                         </div>
                     </div>
                     <div className="chat-dashboard dashboard-item">
-                        <h5 className="chat-title">Messages</h5>
+                        {/* <h5 className="chat-title">Messages</h5>
                         {messageDivs}
-                        {/* <Button className="chat-button" content="Let's Chat"></Button> */}
+                        <Button className="chat-button" content="Let's Chat"></Button> */}
                     </div>
                     <div className="news dashboard-item">
-                        <h5 className="news-title">Community News</h5>
+                        {/* <h5 className="news-title">Community News</h5>
                         {newsDivs}
-                        {/* <Button className="chat-button" content="Write a Notice"></Button> */}
+                        <Button className="chat-button" content="Write a Notice"></Button> */}
                     </div>
                 </div>
 

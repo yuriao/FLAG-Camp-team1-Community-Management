@@ -13,31 +13,11 @@ class DashboardStaff extends Component {
         this.state = {
             loading: true,
             allTicketsContent: [],
-            messages: [{
-                "sender": "manager",
-                "message": "a work order was assigned to you",
-                "date": "10/01/2020"
-            },
-            {
-                "sender": "unit 202",
-                "message": "review submitted",
-                "date": "09/23/2020"
-            },
-            {
-                "sender": "manager",
-                "message": "a work order was assigned to you",
-                "date": "09/03/2020"
-            },
-            {
-                "sender": "unit 202",
-                "message": "review submitted",
-                "date": "08/20/2020"
-            },]
         }
     }
 
     componentDidMount() {
-        fetch("/communitymanagement/dashboard/staff")
+        fetch("http://localhost:8081/communitymanagement/dashboard/staff",{headers:{userid:sessionStorage.user_id}})
             .then(res => res.json())
             .then(
                 (data) => {
@@ -66,25 +46,26 @@ class DashboardStaff extends Component {
                 // Note: it's important to handle errors here
                 // instead of a catch() block so that we don't swallow
                 // exceptions from actual bugs in components.
-                (error) => {
+                //(error) => {
                     //   this.setState({
                     //     isLoaded: true,
                     //     error
                     //   });
-                }
+                    //console.log(error);
+                //}
             )
     }
 
     render() {
 
         let messageDivs = [];
-        this.state.messages.map((date, i) => {
-            messageDivs.push(<ChatDashboard
-                sender={this.state.messages[i].sender}
-                message={this.state.messages[i].message}
-                date={this.state.messages[i].date}
-            />)
-        })
+        //this.state.messages.map((date, i) => {
+        //    messageDivs.push(<ChatDashboard
+        //        sender={this.state.messages[i].sender}
+        //        message={this.state.messages[i].message}
+        //        date={this.state.messages[i].date}
+        //    />)
+        //})
 
         let assignedOrder = [];
         let completedOrder = [];
@@ -209,9 +190,9 @@ class DashboardStaff extends Component {
 
                     </div>
                     <div className="chat-dashboard dashboard-item">
-                        <h5 className="chat-title">Messages</h5>
+                         {/* <h5 className="chat-title">Messages</h5>
                         {messageDivs}
-                        {/* <Button className="chat-button" content="Let's Chat"></Button> */}
+                       <Button className="chat-button" content="Let's Chat"></Button> */}
                     </div>
 
                 </div>

@@ -55,8 +55,15 @@ class TicketingDetail extends Component {
         console.log(queryString);
         let tidt=urlParams.get('ticket');
         this.setState({tid:tidt});
-        console.log("/communitymanagement/tickets/"+tidt.toString());
-        axios.get("/communitymanagement/tickets/"+tidt.toString())
+        console.log("http://localhost:8081/communitymanagement/tickets/"+tidt.toString());
+
+        let config={
+            headers:{
+                "userid":sessionStorage.user_id
+            }
+          }
+
+        axios.get("http://localhost:8081/communitymanagement/tickets/"+tidt.toString(),{},config)
         .then((response) => {
         // successful callback
                 console.log(response);
@@ -110,8 +117,19 @@ class TicketingDetail extends Component {
       
       // just practice axios a little bit...
       console.log(this.state.currentComment);
-      axios.put('/communitymanagement/tickets/'+this.state.tid.toString()+'/update', {comment:this.state.currentComment})
-        .then((response)=> {
+      
+      let data={
+            comment:this.state.currentComment, 
+      }
+
+      let config={
+        headers:{
+            "userid":sessionStorage.user_id
+        }
+      }
+
+      axios.put('http://localhost:8081/communitymanagement/tickets/'+this.state.tid.toString()+'/update', data, config)
+      .then((response)=> {
           console.log(response);
           this.loadTicketContent();
         })

@@ -14,52 +14,26 @@ class Dashboard extends Component {
             loading: true,
             allTicketsContent: [],
             news: [{
-                "subject": "Fitness Center COVID-19 Update",
+                "subject": "n/a",
                 "date": "08/05/2020"
-            },
-            {
-                "subject": "New Amenity Guidelines",
-                "date": "07/24/2020"
-            },
-            {
-                "subject": "4th of July Holiday",
-                "date": "07/03/2020"
-            },
-            {
-                "subject": "Rooftop Lounge and BBQ Grill Now Open!",
-                "date": "06/04/2020"
-            },
-            {
-                "subject": "Farewell from the manager",
-                "date": "05/10/2020"
             },
             ],
             messages: [{
-                "sender": "manager",
-                "message": "your work order completed",
+                "sender": "n/a",
+                "message": "n/a",
                 "date": "10/01/2020"
             },
-            {
-                "sender": "manager",
-                "message": "your work order completed",
-                "date": "07/05/2020"
-            },
-            {
-                "sender": "manager",
-                "message": "your work order completed",
-                "date": "06/09/2020"
-            },
-            {
-                "sender": "manager",
-                "message": "your work order completed",
-                "date": "06/05/2020"
-            },]
+            ]
         }
     }
 
 
     componentDidMount() {
-        fetch("/communitymanagement/dashboard/resident")
+        fetch("http://localhost:8081/communitymanagement/dashboard/resident",{
+            headers:{
+                "userid":sessionStorage.user_id
+            }
+        })
             .then((res) => res.json())
             .then(
                 (data) => {
@@ -220,15 +194,15 @@ class Dashboard extends Component {
                         </div>
                     </div>
                     <div className="chat-dashboard dashboard-item">
-                        <h5 className="chat-title">Messages</h5>
+                        {/*<h5 className="chat-title">Messages</h5>
                         {messageDivs}
-                        {/* <a href="/communitymanagement/Chat">
+                         <a href="/communitymanagement/Chat">
                             <Button className="chat-button" content="Let's Chat"></Button>
                         </a> */}
                     </div>
                     <div className="news dashboard-item">
-                        <h5 className="news-title">Community News</h5>
-                        {newsDivs}
+                        {/*<h5 className="news-title">Community News</h5>
+                        {newsDivs}*/}
                     </div>
                 </div>
 

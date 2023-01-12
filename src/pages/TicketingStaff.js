@@ -87,7 +87,7 @@ class TicketingStaff extends Component {
 
         dsource.push({
             key: i,
-            ticket_id: <Button href={'/communitymanagement/TicketingDetail?ticket='+items[i].id.toString()} onClick={this.TicketIdStore(items[i].id)} type="link">{items[i].id}</Button>, 
+            ticket_id: <Button href={'http://localhost:8081/communitymanagement/TicketingDetail?ticket='+items[i].id.toString()} onClick={this.TicketIdStore(items[i].id)} type="link">{items[i].id}</Button>, 
             unit: items[i].unitNumber, 
             subject: items[i].subject, 
             created: items[i].created, 
@@ -107,7 +107,7 @@ class TicketingStaff extends Component {
     refreshTickets=()=>{
         this.setState({loading:true});
         this.setState({ticketSubmitMessage:""})
-        axios.get('/communitymanagement/dashboard/staff')
+        axios.get('http://localhost:8081/communitymanagement/dashboard/staff',{headers:{userid:sessionStorage.user_id}})
         .then((response) => {
           console.log(response);
           let items =response.data;
@@ -179,7 +179,7 @@ class TicketingStaff extends Component {
       this.setState({submitConfirm:true})
       let obj=this.state.fixDate.find(o=>Object.keys(o)==i);
       let obj1=this.state.fixTime.find(o=>Object.keys(o)==i);
-      axios.post("/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-action", {action:"accept"})
+      axios.post("http://localhost:8081/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-action", {action:"accept"},{headers:{userid:sessionStorage.user_id}})
       .then((response)=> {
         console.log(response);
       })
@@ -188,7 +188,7 @@ class TicketingStaff extends Component {
       });
 
       console.log(obj[i]+" "+obj1[i]);
-      axios.put("/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-update", {fixDate:obj[i]+" "+obj1[i]},)
+      axios.put("http://localhost:8081/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-update", {fixDate:obj[i]+" "+obj1[i]},{headers:{userid:sessionStorage.user_id}})
       .then((response)=> {
         console.log(response);
         this.setState({submitConfirm:false});
@@ -208,7 +208,7 @@ class TicketingStaff extends Component {
 
     declineTicket=(event,i)=>{
       this.setState({submitDecline:true});
-      axios.post("/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-action", {action:"decline"})
+      axios.post("http://localhost:8081/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-action", {action:"decline"},{headers:{userid:sessionStorage.user_id}})
       .then((response)=> {
         console.log(response);
         alert('Ticket declined')
@@ -222,7 +222,7 @@ class TicketingStaff extends Component {
 
     completeTicket=(event,i)=>{
       this.setState({submitComplete:true})
-      axios.post("/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-action", {action:"complete"})
+      axios.post("http://localhost:8081/communitymanagement/tickets/"+this.state.allTicketsContent[i].id+"/staff-action", {action:"complete"},{headers:{userid:sessionStorage.user_id}})
       .then((response)=> {
         console.log(response);
         this.setState({submitComplete:false});
